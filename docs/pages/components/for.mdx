@@ -1,0 +1,223 @@
+# For Component
+
+A flexible, type-safe React component that provides a powerful alternative to the JavaScript `map()` function with enhanced rendering capabilities.
+
+## Props
+
+### ForProps
+
+| Prop           | Type                                                | Required | Default     | Description                                             |
+| -------------- | --------------------------------------------------- | -------- | ----------- | ------------------------------------------------------- |
+| `each`         | `T[]`                                               | Yes      | -           | The array of data to iterate over                       |
+| `children`     | `(item: T, index: number, array: T[]) => ReactNode` | Yes      | -           | Render function that returns a React node for each item |
+| `getKey`       | `(item: T, index: number) => string \| number`      | No       | `undefined` | Custom key extractor function                           |
+| `empty`        | `() => ReactNode`                                   | No       | `undefined` | Render function for when the array is empty             |
+| `loading`      | `() => ReactNode`                                   | No       | `undefined` | Render function for when data is loading                |
+| `isLoading`    | `boolean`                                           | No       | `false`     | Boolean to indicate if data is loading                  |
+| `as`           | `ElementType`                                       | No       | `'div'`     | Wrapper element or component type                       |
+| `wrapperProps` | `Omit<ComponentProps<E>, 'children'>`               | No       | `{}`        | Props to pass to the wrapper element                    |
+
+## Component
+
+```tsx filename="For.tsx" copy
+import React, { ComponentProps, ElementType, ReactNode } from "react";
+
+/**
+ * Props for the For component
+ * @template T - The type of items in the data array
+ * @template E - The element type for the wrapper component
+ */
+interface ForProps<T, E extends ElementType = "div"> {
+  each: T[];
+  children: (item: T, index: number, array: T[]) => ReactNode;
+  getKey?: (item: T, index: number) => string | number;
+  empty?: () => ReactNode;
+  loading?: () => ReactNode;
+  isLoading?: boolean;
+  as?: E;
+  wrapperProps?: Omit<ComponentProps<E>, "children">;
+}
+
+/**
+ * A flexible component that works like Array.map() but with React-specific optimizations
+ */
+function For<T, E extends ElementType = "div">({
+  each,
+  children,
+  getKey,
+  empty,
+  loading,
+  isLoading = false,
+  as,
+  wrapperProps = {} as Omit<ComponentProps<E>, "children">,
+}: ForProps<T, E>) {
+  if (isLoading && loading) return <>{loading()}</>;
+  if (each.length === 0 && empty) return <>{empty()}</>;
+
+  const items = each.map((item, index, array) => {
+    const key = getKey ? getKey(item, index) : index;
+    return (
+      <React.Fragment key={key}>{children(item, index, array)}</React.Fragment>
+    );
+  });
+
+  if (as) {
+    const Component = as;
+    return React.createElement(Component, wrapperProps, items);
+  }
+
+  return <>{items}</>;
+}
+
+export default For;
+```
+
+## Basic Usage
+
+### Simple Iteration
+
+```tsx
+<For each={users}>{(user) => <UserCard user={user} />}</For>
+```
+
+### Custom Key Extraction
+
+```tsx
+<For each={users} getKey={(user) => user.id}>
+  {(user) => <UserCard user={user} />}
+</For>
+```
+
+### Loading State
+
+```tsx
+<For each={products} isLoading={isLoading} loading={() => <LoadingSpinner />}>
+  {(product) => <ProductItem product={product} />}
+</For>
+```
+
+### Empty State
+
+```tsx
+<For each={products} empty={() => <EmptyState message="No products found" />}>
+  {(product) => <ProductItem product={product} />}
+</For>
+```
+
+### Wrapper Elements
+
+```tsx
+<For each={todos} as="ul" wrapperProps={{ className: "todo-list" }}>
+  {(todo) => <li>{todo.text}</li>}
+</For>
+```
+
+### Complete Example
+
+```tsx
+function ProductList() {
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProducts().then((data) => {
+      setProducts(data);
+      setIsLoading(false);
+    });
+  }, []);
+
+  return (
+    <For
+      each={products}
+      isLoading={isLoading}
+      loading={() => <LoadingSpinner />}
+      empty={() => <EmptyState message="No products found" />}
+      as="div"
+      wrapperProps={{ className: "products-grid" }}
+    >
+      {(product) => <ProductCard key={product.id} product={product} />}
+    </For>
+  );
+}
+```
+
+## Advanced Features
+
+### Index and Array Access
+
+```tsx
+<For each={items}>
+  {(item, index, array) => (
+    <div>
+      Item {index + 1} of {array.length}: {item.name}
+    </div>
+  )}
+</For>
+```
+
+### Conditional Rendering
+
+```tsx
+<For each={items}>
+  {(item) => (item.isVisible ? <VisibleItem item={item} /> : null)}
+</For>
+```
+
+### Nested Iteration
+
+```tsx
+<For each={categories}>
+  {(category) => (
+    <div key={category.id} className="category">
+      <h2>{category.name}</h2>
+      <For each={category.items}>
+        {(item) => <ItemCard key={item.id} item={item} />}
+      </For>
+    </div>
+  )}
+</For>
+```
+
+## Performance Considerations
+
+- Provide a `getKey` function for stable data structures
+- Memoize child components to prevent unnecessary re-renders
+- Loading state prevents rendering before data is ready
+
+## TypeScript Support
+
+Full TypeScript support with generic type inference:
+
+```tsx
+interface User {
+  id: number;
+  name: string;
+}
+
+<For<User> each={users}>{(user) => <UserCard user={user} />}</For>;
+```
+
+## Comparison with Array.map()
+
+### Array.map()
+
+```tsx
+{
+  users.map((user) => <UserCard user={user} />);
+}
+```
+
+### For Component
+
+```tsx
+<For each={users}>{(user) => <UserCard user={user} />}</For>
+```
+
+## Key Advantages
+
+- Flexible rendering
+- Built-in loading and empty states
+- Type-safe
+- Supports custom wrappers
+- Easy key management
+- Consistent rendering across different scenarios

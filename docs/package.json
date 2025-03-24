@@ -1,7 +1,7 @@
 {
-  "name": "thepuskar-custom-hooks",
+  "name": "use-kit",
   "version": "0.0.1",
-  "description": "Collection of different React Custom Hooks",
+  "description": "Collection of different React Custom Hooks and Utility Components",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thepuskar/react-hooks"
+    "url": "git+https://github.com/thepuskar/use-kit"
   },
   "author": "Puskar Adhikari <https://www.puskaradhikari.com.np/>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/thepuskar/react-hooks/issues"
+    "url": "https://github.com/thepuskar/use-kit/issues"
   },
-  "homepage": "https://github.com/thepuskar/react-hooks#readme",
+  "homepage": "https://github.com/thepuskar/use-kit#readme",
   "dependencies": {
     "next": "^13.0.6",
     "nextra": "2.0.1",

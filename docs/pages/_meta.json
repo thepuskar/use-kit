@@ -1,19 +1,6 @@
 {
-  "index": "Introduction",
-  "useIntersectionObserver": "useIntersectionObserver",
-  "useToggle": "useToggle",
-  "useTimeout": "useTimeout",
-  "useGeolocation": "useGeolocation",
-  "useDebounce": "useDebounce",
-  "useThrottle": "useThrottle",
-  "useArray": "useArray",
-  "useFetch": "useFetch",
-  "useOnScreen": "useOnScreen",
-  "useClickOutside": "useClickOutside",
-  "useCopyToClipboard": "useCopyToClipboard",
-  "about": {
-    "title": "About",
-    "type": "page"
+  "index": {
+    "title": "Introduction"
   },
   "contact": {
     "title": "Contact ↗",
