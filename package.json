@@ -1,5 +1,5 @@
 {
-  "name": "@thpuskar/react-hooks",
+  "name": "use-kit",
   "version": "1.0.0",
   "description": "react custom hooks collection",
   "main": "./lib/cjs/index.js",
