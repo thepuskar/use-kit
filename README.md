@@ -14,6 +14,7 @@
     <hr />
 
 </div>
+
 ## What is use-kit?
 
 use-kit is a lightweight, developer-friendly collection of React custom hooks and utility components designed to supercharge your development workflow. Whether you're building a simple UI or a complex React application, use-kit provides ready-to-use, plug-and-play building blocks that are easy to integrate and customize.
@@ -23,6 +24,7 @@ With clean code, consistent patterns, and clear documentation, use-kit aims to r
 <br />
 <br />
 <hr />
+
 ### ✨ Features
 
 - 🚀 **Plug-and-Play**: Copy, paste, and use—no external dependencies or setup required.
