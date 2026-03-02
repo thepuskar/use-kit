@@ -1,36 +1,62 @@
-# Introduction
+# @thepuskar/use-kit
 
-<div align="center" class="docs-logo">
-	<br />
-	<br />
-      <img src="https://usekit.puskaradhikari.com.np/assets/logo.svg" width="96"/>
-    <br />
-    <br />
-    <b>Collection of different React Custom Hooks and Utility Components!</b>
-    <br />
-    <br />
-    <br />
-    <br />
-    <hr />
+Typed React hooks and utility components with explicit **RSC-safe** and **client** entrypoints for Next.js App Router and other React 18+ apps.
 
-</div>
+## Install
 
-## What is use-kit?
+```bash
+npm install @thepuskar/use-kit
+```
 
-use-kit is a lightweight, developer-friendly collection of React custom hooks and utility components designed to supercharge your development workflow. Whether you're building a simple UI or a complex React application, use-kit provides ready-to-use, plug-and-play building blocks that are easy to integrate and customize.
+## Usage
 
-With clean code, consistent patterns, and clear documentation, use-kit aims to reduce boilerplate, enhance reusability, and accelerate development.
+### Component (server-safe)
 
-<br />
-<br />
-<hr />
+```tsx
+import { Match, Switch } from "@thepuskar/use-kit";
 
-### ✨ Features
+export function Status({ user }: { user: { name: string } | null }) {
+  return (
+    <Switch fallback={<p>Please sign in</p>}>
+      <Match when={user}>{(u) => <p>Welcome, {u.name}</p>}</Match>
+    </Switch>
+  );
+}
+```
 
-- 🚀 **Plug-and-Play**: Copy, paste, and use—no external dependencies or setup required.
-- 🧩 **Custom Hooks**: A growing collection of hooks for managing state, effects, responsiveness, and more.
-- 🛠️ **Utility Components**: Handy components
-- 📚 **Fully Documented**: Each hook/component comes with clear usage examples, props, and code snippets.
-- 🧪 **Tested Patterns**: Built on real-world use cases and best practices.
-- ⚙️ **Framework Agnostic (React)**: Compatible with any React-based project (CRA, Vite, Next.js, etc.)
-- 🌱 **Lightweight & Tree-shakable**: Import only what you need, keep your bundle clean.
+### Hook (client-only)
+
+```tsx
+"use client";
+
+import { useToggle } from "@thepuskar/use-kit/client";
+
+export function ToggleButton() {
+  const [on, toggle] = useToggle(false);
+  return <button onClick={() => toggle()}>{on ? "ON" : "OFF"}</button>;
+}
+```
+
+## RSC Guidance
+
+- `@thepuskar/use-kit` and `@thepuskar/use-kit/server` are **server-safe** entrypoints.
+- `@thepuskar/use-kit/client` and `@thepuskar/use-kit/hooks` are **client entrypoints**.
+- In Next.js App Router, import hooks/client-only APIs only from `.../client` (or `.../hooks`) inside files that have `"use client"`.
+
+## Development
+
+```bash
+npm install
+npm run build
+npm run test
+npm run lint
+npm run format:check
+```
+
+## Community
+
+- Contributing: [CONTRIBUTING.md](./CONTRIBUTING.md)
+- Code of Conduct: [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
+- Support: [SUPPORT.md](./SUPPORT.md)
+- Security: [SECURITY.md](./SECURITY.md)
+- License: [LICENSE](./LICENSE)

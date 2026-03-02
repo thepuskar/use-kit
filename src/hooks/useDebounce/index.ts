@@ -1,2 +1,1 @@
-export * from './useDebounce'
-export * from './UseDebounce.demo'
+export * from "./useDebounce";

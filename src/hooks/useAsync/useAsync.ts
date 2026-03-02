@@ -1,6 +1,7 @@
 import { DependencyList, useEffect } from "react";
+
+import { AsyncFnReturn, FunctionReturningPromise } from "../../misc/types";
 import { useAsyncFnc } from "../useAsyncFnc";
-import { FunctionReturningPromise, AsyncFnReturn } from "misc/types";
 
 /**
  * It returns a hook for executing an asynchronous function with
@@ -22,7 +23,7 @@ import { FunctionReturningPromise, AsyncFnReturn } from "misc/types";
 export function useAsync<T extends FunctionReturningPromise>(
   fn: T,
   deps: DependencyList = [],
-  immidate: boolean = false
+  immidate: boolean = false,
 ): AsyncFnReturn<T> {
   const [state, execute] = useAsyncFnc(fn, deps, {
     loading: true,

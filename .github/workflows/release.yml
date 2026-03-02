@@ -1,0 +1,77 @@
+name: Release to npm
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: "Version bump type"
+        required: true
+        default: patch
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: ${{ github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip ci]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          registry-url: https://registry.npmjs.org
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Build package
+        run: npm run build
+
+      - name: Configure git user
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump package version
+        run: |
+          RELEASE_TYPE="patch"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            RELEASE_TYPE="${{ inputs.release_type }}"
+          fi
+          npm version "$RELEASE_TYPE" -m "chore(release): %s [skip ci]"
+
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Push version commit and tags
+        run: git push origin HEAD:main --follow-tags

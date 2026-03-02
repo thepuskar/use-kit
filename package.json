@@ -1,44 +1,111 @@
 {
-  "name": "use-kit",
+  "name": "@thepuskar/use-kit",
   "version": "1.0.0",
-  "description": "react custom hooks collection",
-  "main": "./lib/cjs/index.js",
-  "module": "./lib/esm/index.js",
-  "types": "./lib/esm/index.d.ts",
-  "scripts": {
-    "build": "npm run build:esm && npm run build:cjs",
-    "build:esm": "tsc",
-    "build:cjs": "tsc --module commonjs --outDir lib/cjs",
-    "test": "jest"
-  },
+  "description": "React hooks and utility components with RSC-safe server/client entrypoints.",
   "author": "Puskar Adhikari <puskar.ad@gmail.com>",
-  "license": "ISC",
-  "devDependencies": {
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^14.0.0",
-    "@types/jest": "^29.5.0",
-    "@types/node": "^18.15.11",
-    "@types/react": "^18.0.12",
-    "@types/react-dom": "^18.0.5",
-    "add": "^2.0.6",
-    "jest": "^29.5.0",
-    "jest-environment-jsdom": "^29.7.0",
-    "or": "^0.2.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-test-renderer": "^18.2.0",
-    "ts-jest": "^29.2.5",
-    "tsconfig-paths-jest": "^0.0.1",
-    "typescript": "^4.7.3",
-    "yarn": "^1.22.19"
+  "license": "MIT",
+  "homepage": "https://github.com/thepuskar/use-kit#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thepuskar/use-kit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/thepuskar/use-kit/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "import": "./dist/client.mjs",
+      "require": "./dist/client.js"
+    },
+    "./server": {
+      "types": "./dist/server.d.ts",
+      "import": "./dist/server.mjs",
+      "require": "./dist/server.js"
+    },
+    "./hooks": {
+      "types": "./dist/hooks.d.ts",
+      "import": "./dist/hooks.mjs",
+      "require": "./dist/hooks.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CONTRIBUTING.md",
+    "CODE_OF_CONDUCT.md",
+    "SECURITY.md",
+    "SUPPORT.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "npm run clean && tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint \"{src/{index.ts,client/**/*.ts,server/**/*.ts,shared/**/*.ts,component/**/*.tsx,hooks/index.ts,hooks/useAsync/**/*.ts,hooks/useAsyncFnc/**/*.ts,hooks/useClickOutside/{index.ts,useClickOutside.ts},hooks/useCopyToClipboard/index.ts,hooks/useDebounce/index.ts,hooks/useGeolocation/index.ts,hooks/useIsomorphicEffect/index.ts,hooks/useTimeout/**/*.ts,misc/types.ts,utils/eventListener.ts},tests/**/*.{ts,tsx},vitest.config.ts,tsup.config.ts}\" --max-warnings=0",
+    "lint:fix": "npm run lint -- --fix",
+    "format": "prettier \"{README.md,CONTRIBUTING.md,CODE_OF_CONDUCT.md,SECURITY.md,SUPPORT.md,package.json,tsconfig*.json,tsup.config.ts,vitest.config.ts,vitest.setup.ts,.eslintrc.cjs,.prettierrc.json,commitlint.config.cjs,.github/**/*.{yml,yaml,md},src/{index.ts,client/**/*.ts,server/**/*.ts,shared/**/*.ts,component/**/*.tsx},tests/**/*.{ts,tsx}}\" --write",
+    "format:check": "prettier \"{README.md,CONTRIBUTING.md,CODE_OF_CONDUCT.md,SECURITY.md,SUPPORT.md,package.json,tsconfig*.json,tsup.config.ts,vitest.config.ts,vitest.setup.ts,.eslintrc.cjs,.prettierrc.json,commitlint.config.cjs,.github/**/*.{yml,yaml,md},src/{index.ts,client/**/*.ts,server/**/*.ts,shared/**/*.ts,component/**/*.tsx},tests/**/*.{ts,tsx}}\" --check",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "prepare": "husky",
+    "prepublishOnly": "npm run lint && npm run format:check && npm run typecheck && npm run test && npm run build"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
   },
   "peerDependencies": {
-    "react": "^18.1.0"
+    "react": ">=18",
+    "react-dom": ">=18"
   },
-  "files": [
-    "/lib"
-  ],
-  "dependencies": {
-    "@testing-library/react-hooks": "^8.0.1"
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
+    "@types/react": "^18.3.19",
+    "@types/react-dom": "^18.3.5",
+    "@typescript-eslint/eslint-plugin": "^8.28.0",
+    "@typescript-eslint/parser": "^8.28.0",
+    "@vitest/coverage-v8": "^2.1.8",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "husky": "^9.1.7",
+    "jsdom": "^26.0.0",
+    "lint-staged": "^15.5.0",
+    "prettier": "^3.5.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "rimraf": "^6.0.1",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2",
+    "vitest": "^2.1.8"
   }
 }

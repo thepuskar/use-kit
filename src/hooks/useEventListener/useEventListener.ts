@@ -1,74 +1,75 @@
-import { RefObject } from 'react'
-import { useGetLatest, useIsomorphicEffect } from '../index'
-import { onEvent, offEvent } from '../../utils'
+import { RefObject } from "react";
+
+import { offEvent, onEvent } from "../../utils";
+import { useGetLatest, useIsomorphicEffect } from "../index";
 
 type ElementEventListener<K extends keyof HTMLElementEventMap> = (
   this: HTMLElement,
-  event: HTMLElementEventMap[K]
-) => void
+  event: HTMLElementEventMap[K],
+) => void;
 
 type DocumentEventListener<K extends keyof DocumentEventMap> = (
   this: Document,
-  event: DocumentEventMap[K]
-) => void
+  event: DocumentEventMap[K],
+) => void;
 
 type WindowEventListener<K extends keyof WindowEventMap> = (
   this: Window,
-  event: WindowEventMap[K]
-) => void
+  event: WindowEventMap[K],
+) => void;
 
-type Options = boolean | AddEventListenerOptions
+type Options = boolean | AddEventListenerOptions;
 
 type UseEventListener = {
   <K extends keyof HTMLElementEventMap, T extends HTMLElement = HTMLElement>(
     config: {
-      target: RefObject<T> | T | null
-      eventType: K
-      handler: ElementEventListener<K>
-      options?: Options
+      target: RefObject<T> | T | null;
+      eventType: K;
+      handler: ElementEventListener<K>;
+      options?: Options;
     },
-    shouldAttach?: boolean
-  ): void
+    shouldAttach?: boolean,
+  ): void;
   <K extends keyof DocumentEventMap, T extends Document = Document>(
     config: {
-      target: T | null
-      eventType: K
-      handler: DocumentEventListener<K>
-      options?: Options
+      target: T | null;
+      eventType: K;
+      handler: DocumentEventListener<K>;
+      options?: Options;
     },
-    shouldAttach?: boolean
-  ): void
+    shouldAttach?: boolean,
+  ): void;
   <K extends keyof WindowEventMap, T extends Window = Window>(
     config: {
-      target: T | null
-      eventType: K
-      handler: WindowEventListener<K>
-      options?: Options
+      target: T | null;
+      eventType: K;
+      handler: WindowEventListener<K>;
+      options?: Options;
     },
-    shouldAttach?: boolean
-  ): void
-}
+    shouldAttach?: boolean,
+  ): void;
+};
 
 /**
  * It tries to define a property on an object, and if it fails, it returns false. If it succeeds, it
  * returns true
  */
 const isOptionParamSupported = (): boolean => {
-  let optionSupported = false
+  let optionSupported = false;
 
   try {
-    Object.defineProperty({}, 'passive', {
+    Object.defineProperty({}, "passive", {
       get: () => {
-        optionSupported = true
-        return null
-      }
-    })
-  } catch (error) {
-    return false
+        optionSupported = true;
+        return null;
+      },
+    });
+  } catch (_error) {
+    return false;
   }
 
-  return optionSupported
-}
+  return optionSupported;
+};
 
 /**
  * A React hook that handles binding/unbinding event listeners in a smart way.
@@ -80,41 +81,43 @@ const isOptionParamSupported = (): boolean => {
  */
 export const useEventListener: UseEventListener = (
   config: {
-    target: RefObject<HTMLElement> | HTMLElement | Window | Document | null
-    eventType: string
-    handler: unknown
-    options?: Options
+    target: RefObject<HTMLElement> | HTMLElement | Window | Document | null;
+    eventType: string;
+    handler: unknown;
+    options?: Options;
   },
-  shouldAttach = true
+  shouldAttach = true,
 ): void => {
-  const { target = null, eventType, handler, options } = config
+  const { target = null, eventType, handler, options } = config;
 
-  const cachedOptions = useGetLatest(options)
-  const cachedHandler = useGetLatest(handler)
+  const cachedOptions = useGetLatest(options);
+  const cachedHandler = useGetLatest(handler);
 
   useIsomorphicEffect(() => {
-    const element = target && 'current' in target ? target.current : target
+    const element = target && "current" in target ? target.current : target;
 
-    if (!element) return
+    if (!element) return;
 
-    let unsubscribed = false
+    let unsubscribed = false;
     const listener = (event: Event) => {
-      if (unsubscribed) return
-      ;(cachedHandler.current as (ev: Event) => void)(event)
+      if (unsubscribed) return;
+      (cachedHandler.current as (ev: Event) => void)(event);
+    };
+
+    let thirdParam = cachedOptions.current;
+
+    if (typeof cachedOptions.current !== "boolean") {
+      if (isOptionParamSupported()) thirdParam = cachedOptions.current;
+      else thirdParam = cachedOptions.current?.capture;
     }
 
-    let thirdParam = cachedOptions.current
-
-    if (typeof cachedOptions.current !== 'boolean') {
-      if (isOptionParamSupported()) thirdParam = cachedOptions.current
-      else thirdParam = cachedOptions.current?.capture
+    if (shouldAttach) {
+      onEvent(element, eventType, listener, thirdParam);
     }
-
-    shouldAttach && onEvent(element, eventType, listener, thirdParam)
 
     return () => {
-      unsubscribed = true
-      offEvent(element, eventType, listener, thirdParam)
-    }
-  }, [target, eventType, shouldAttach])
-}
+      unsubscribed = true;
+      offEvent(element, eventType, listener, thirdParam);
+    };
+  }, [target, eventType, shouldAttach]);
+};

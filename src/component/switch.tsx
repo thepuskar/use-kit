@@ -43,7 +43,7 @@ function isMatchElement(node: ReactNode): node is MatchElement {
   return type.$$switchMatch === MATCH_MARKER;
 }
 
-export const Match = ((_: MatchProps<unknown>) => null) as MatchComponent;
+export const Match = ((_props: MatchProps<unknown>) => null) as MatchComponent;
 Match.$$switchMatch = MATCH_MARKER;
 Match.displayName = "Match";
 

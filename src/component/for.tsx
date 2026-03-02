@@ -5,7 +5,7 @@ import React, { ComponentProps, ElementType, ReactNode } from "react";
  * @template T - The type of items in the data array
  * @template E - The element type for the wrapper component
  */
-interface ForProps<T, E extends ElementType = "div"> {
+export interface ForProps<T, E extends ElementType = "div"> {
   /** The array of data to iterate over */
   each: T[];
 
@@ -34,7 +34,7 @@ interface ForProps<T, E extends ElementType = "div"> {
 /**
  * A flexible component that works like Array.map() but with React-specific optimizations
  */
-function For<T, E extends ElementType = "div">({
+export function For<T, E extends ElementType = "div">({
   each,
   children,
   getKey,
@@ -57,9 +57,7 @@ function For<T, E extends ElementType = "div">({
   // Render the items
   const items = each.map((item, index, array) => {
     const key = getKey ? getKey(item, index) : index;
-    return (
-      <React.Fragment key={key}>{children(item, index, array)}</React.Fragment>
-    );
+    return <React.Fragment key={key}>{children(item, index, array)}</React.Fragment>;
   });
 
   // Return with or without wrapper
@@ -70,5 +68,3 @@ function For<T, E extends ElementType = "div">({
 
   return <>{items}</>;
 }
-
-export default For;

@@ -13,6 +13,7 @@
 /build
 /example/node_modules
 /example/build
+/dist
 /lib
 
 
@@ -26,9 +27,7 @@
 
 
 
-.prettierignore
-.prettierrc
-./package-lock.json
+.npm-cache
 yarn.lock
 
 npm-debug.log*
@@ -36,7 +35,3 @@ yarn-debug.log*
 yarn-error.log*
 *.ai
 *.xd
-
-
-
-package-lock.json

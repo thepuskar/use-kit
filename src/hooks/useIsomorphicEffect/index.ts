@@ -1,2 +1,1 @@
-export * from './useIsomorphicEffect'
-export * from './UseIsomorphicEffect.demo'
+export * from "./useIsomorphicEffect";

@@ -5,16 +5,14 @@
  * Parameters<T['addEventListener']> | [string, Function | null, ...any]
  */
 
-export function onEvent<
-  T extends Window | Document | HTMLElement | EventTarget
->(
+export function onEvent<T extends Window | Document | HTMLElement | EventTarget>(
   obj: T | null,
-  ...args: Parameters<T['addEventListener']> | [string, Function | null, ...any]
+  ...args:
+    | Parameters<T["addEventListener"]>
+    | [string, EventListenerOrEventListenerObject | null, ...unknown[]]
 ): void {
   if (obj && obj.addEventListener) {
-    obj.addEventListener(
-      ...(args as Parameters<HTMLElement['addEventListener']>)
-    )
+    obj.addEventListener(...(args as Parameters<HTMLElement["addEventListener"]>));
   }
 }
 
@@ -25,17 +23,13 @@ export function onEvent<
  *     | [string, Function | null, ...any]} args - The arguments to pass to the removeEventListener
  * function.
  */
-export function offEvent<
-  T extends Window | Document | HTMLElement | EventTarget
->(
+export function offEvent<T extends Window | Document | HTMLElement | EventTarget>(
   obj: T | null,
   ...args:
-    | Parameters<T['removeEventListener']>
-    | [string, Function | null, ...any]
+    | Parameters<T["removeEventListener"]>
+    | [string, EventListenerOrEventListenerObject | null, ...unknown[]]
 ): void {
   if (obj && obj.removeEventListener) {
-    obj.removeEventListener(
-      ...(args as Parameters<HTMLElement['removeEventListener']>)
-    )
+    obj.removeEventListener(...(args as Parameters<HTMLElement["removeEventListener"]>));
   }
 }
