@@ -5,19 +5,9 @@ on:
     branches:
       - main
   workflow_dispatch:
-    inputs:
-      release_type:
-        description: "Version bump type"
-        required: true
-        default: patch
-        type: choice
-        options:
-          - patch
-          - minor
-          - major
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: release-${{ github.ref }}
@@ -25,7 +15,6 @@ concurrency:
 
 jobs:
   publish:
-    if: ${{ github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip ci]') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -67,23 +56,23 @@ jobs:
       - name: Build package
         run: npm run build
 
-      - name: Configure git user
+      - name: Check npm version state
+        id: version_check
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Bump package version
-        run: |
-          RELEASE_TYPE="patch"
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            RELEASE_TYPE="${{ inputs.release_type }}"
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          echo "name=$PACKAGE_NAME" >> "$GITHUB_OUTPUT"
+          echo "version=$PACKAGE_VERSION" >> "$GITHUB_OUTPUT"
+          if npm view "$PACKAGE_NAME@$PACKAGE_VERSION" version --json >/dev/null 2>&1; then
+            echo "already_published=true" >> "$GITHUB_OUTPUT"
+            echo "Version $PACKAGE_VERSION of $PACKAGE_NAME is already published. Skipping publish."
+          else
+            echo "already_published=false" >> "$GITHUB_OUTPUT"
+            echo "Version $PACKAGE_VERSION of $PACKAGE_NAME is not published yet. Proceeding."
           fi
-          npm version "$RELEASE_TYPE" -m "chore(release): %s [skip ci]"
 
       - name: Publish to npm
+        if: steps.version_check.outputs.already_published != 'true'
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Push version commit and tags
-        run: git push origin HEAD:main --follow-tags
