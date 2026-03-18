@@ -4,34 +4,32 @@ import { fileURLToPath } from "node:url";
 import nextra from "nextra";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const webpackAlias = {
-  react: path.resolve(__dirname, "node_modules/react"),
-  "react-dom": path.resolve(__dirname, "node_modules/react-dom"),
-  "react/jsx-runtime": path.resolve(__dirname, "node_modules/react/jsx-runtime.js"),
-  "react/jsx-dev-runtime": path.resolve(__dirname, "node_modules/react/jsx-dev-runtime.js"),
-  "@thepuskar/use-kit": path.resolve(__dirname, "../src/index.ts"),
-  "@thepuskar/use-kit/client": path.resolve(__dirname, "../src/client/index.ts"),
-  "@thepuskar/use-kit/hooks": path.resolve(__dirname, "../src/client/hooks.ts"),
-  "@thepuskar/use-kit/server": path.resolve(__dirname, "../src/server/index.ts"),
-  "@use-kit": path.resolve(__dirname, "../src/index.ts"),
-  "@use-kit/client": path.resolve(__dirname, "../src/client/index.ts"),
-  "@use-kit/hooks": path.resolve(__dirname, "../src/client/hooks.ts"),
-  "@use-kit/server": path.resolve(__dirname, "../src/server/index.ts"),
+const projectRoot = path.resolve(__dirname, "..");
+const docsNodeModules = path.resolve(__dirname, "node_modules");
+const sourceRoot = path.resolve(projectRoot, "src");
+const toProjectRelativePath = (targetPath) => {
+  const relativePath = path.relative(projectRoot, targetPath).replace(/\\/g, "/");
+
+  return relativePath.startsWith(".") ? relativePath : `./${relativePath}`;
 };
-const turbopackAlias = {
-  react: "./node_modules/react",
-  "react-dom": "./node_modules/react-dom",
-  "react/jsx-runtime": "./node_modules/react/jsx-runtime.js",
-  "react/jsx-dev-runtime": "./node_modules/react/jsx-dev-runtime.js",
-  "@thepuskar/use-kit": "../src/index.ts",
-  "@thepuskar/use-kit/client": "../src/client/index.ts",
-  "@thepuskar/use-kit/hooks": "../src/client/hooks.ts",
-  "@thepuskar/use-kit/server": "../src/server/index.ts",
-  "@use-kit": "../src/index.ts",
-  "@use-kit/client": "../src/client/index.ts",
-  "@use-kit/hooks": "../src/client/hooks.ts",
-  "@use-kit/server": "../src/server/index.ts",
+const aliasTargets = {
+  react: path.resolve(docsNodeModules, "react"),
+  "react-dom": path.resolve(docsNodeModules, "react-dom"),
+  "react/jsx-runtime": path.resolve(docsNodeModules, "react/jsx-runtime.js"),
+  "react/jsx-dev-runtime": path.resolve(docsNodeModules, "react/jsx-dev-runtime.js"),
+  "@thepuskar/use-kit": path.resolve(sourceRoot, "index.ts"),
+  "@thepuskar/use-kit/client": path.resolve(sourceRoot, "client/index.ts"),
+  "@thepuskar/use-kit/hooks": path.resolve(sourceRoot, "client/hooks.ts"),
+  "@thepuskar/use-kit/server": path.resolve(sourceRoot, "server/index.ts"),
+  "@use-kit": path.resolve(sourceRoot, "index.ts"),
+  "@use-kit/client": path.resolve(sourceRoot, "client/index.ts"),
+  "@use-kit/hooks": path.resolve(sourceRoot, "client/hooks.ts"),
+  "@use-kit/server": path.resolve(sourceRoot, "server/index.ts"),
 };
+const webpackAlias = aliasTargets;
+const turbopackAlias = Object.fromEntries(
+  Object.entries(aliasTargets).map(([key, targetPath]) => [key, toProjectRelativePath(targetPath)]),
+);
 
 const withNextra = nextra({});
 
@@ -41,7 +39,7 @@ export default withNextra({
   },
   reactStrictMode: true,
   turbopack: {
-    root: path.resolve(__dirname, ".."),
+    root: projectRoot,
     resolveAlias: turbopackAlias,
   },
   webpack(config) {
