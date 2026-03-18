@@ -36,6 +36,10 @@ export const metadata: Metadata = {
       url: "https://www.puskaradhikari.com.np/",
     },
   ],
+  icons: {
+    icon: "/assets/logo.svg",
+    shortcut: "/assets/logo.svg",
+  },
   keywords: ["react hooks", "use-kit", "nextra", "next.js", "typescript", "utility components"],
 };
 
@@ -80,14 +84,14 @@ function TocLinks() {
         >
           Browse the repo
         </a>
-        <a
+        {/* <a
           href="https://www.puskaradhikari.com.np/"
           target="_blank"
           rel="noreferrer"
           className="block rounded-xl border border-slate-200 bg-white px-3 py-2 font-medium transition hover:border-slate-300 hover:text-slate-950 dark:border-white/10 dark:bg-slate-950 dark:hover:border-white/20 dark:hover:text-white"
         >
           Visit Puskar&apos;s website
-        </a>
+        </a> */}
       </div>
     </div>
   );
@@ -154,7 +158,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         }}
         backgroundColor={{
           light: "#f8fafc",
-          dark: "#020617",
+          dark: "#0a1020",
         }}
       />
       <body className="use-kit-docs">
@@ -179,7 +183,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
             <Navbar
               logo={<SiteLogo compact />}
               projectLink="https://github.com/thepuskar/use-kit"
-              className="border-b border-slate-200 bg-[rgba(248,250,252,0.92)] backdrop-blur dark:border-white/10 dark:bg-[rgba(2,6,23,0.86)]"
+              className="border-b border-slate-200 bg-[rgba(248,250,252,0.92)] backdrop-blur dark:border-white/10 dark:bg-[rgba(10,16,32,0.88)]"
             >
               <ResourcePills />
             </Navbar>

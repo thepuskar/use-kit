@@ -1,0 +1,82 @@
+import { DemoFrame } from "../../components/demo-frame";
+import { UseClickOutsideDemo } from "../../components/demos/use-click-outside-demo";
+
+# useClickOutside
+
+`useClickOutside` helps you close menus, popovers, drawers, and other dismissable UI when an interaction happens outside the monitored element.
+
+<DemoFrame
+  title="Dismissable panel"
+  description="This demo shows a common dropdown or popover pattern where outside interaction closes the panel."
+>
+  <UseClickOutsideDemo />
+</DemoFrame>
+
+## Import
+
+```tsx
+import { useClickOutside } from "@thepuskar/use-kit/client";
+```
+
+## Signature
+
+```ts
+const ref = useClickOutside<T>(handler, options?);
+```
+
+## Parameters
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `handler` | `(event: Event) => void` | required | Runs when an outside interaction is detected. |
+| `options.ref` | `RefObject<T \| null>` | internal ref | Optional external ref for the primary target. |
+| `options.refs` | `RefObject<Element \| null>[]` | `[]` | Additional refs that should also count as inside. |
+| `options.ignore` | `(Element \| RefObject<Element \| null>)[]` | `[]` | Elements or refs that should be ignored even if they are outside the target. |
+| `options.events` | `("pointerdown" \| "mousedown" \| "mouseup" \| "touchstart" \| "touchend" \| "focusin" \| "focusout")[]` | `["pointerdown"]` | Events to observe. |
+| `options.capture` | `boolean` | `true` | Whether listeners are attached in the capture phase. |
+| `options.passive` | `boolean` | `false` | Whether listeners are passive when supported. |
+| `options.disabled` | `boolean` | `false` | Disables outside detection without unmounting. |
+| `options.document` | `Document \| null` | global `document` | Custom document target for portals or iframes. |
+
+## Returns
+
+- `ref`: attach this ref to the element you want to monitor.
+
+## Usage
+
+```tsx
+"use client";
+
+import { useState } from "react";
+import { useClickOutside } from "@thepuskar/use-kit/client";
+
+export function Dropdown() {
+  const [open, setOpen] = useState(false);
+  const ref = useClickOutside<HTMLDivElement>(() => setOpen(false), {
+    events: ["pointerdown", "focusin"],
+    disabled: !open,
+  });
+
+  return (
+    <div>
+      <button type="button" onClick={() => setOpen((value) => !value)}>
+        Toggle
+      </button>
+
+      {open ? (
+        <div ref={ref}>
+          <p>Dropdown content</p>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+```
+
+## Notes
+
+- This hook is client-only.
+- `pointerdown` is the default because it covers mouse, touch, and pen in one event.
+- Use `refs` when the trigger and the content should both count as inside.
+- Use `ignore` for special elements like nested overlays or portal anchors.
+- The legacy `(handler, events, capture)` signature still works.

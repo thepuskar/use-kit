@@ -1,0 +1,22 @@
+{
+  "index": {
+    "title": "Introduction",
+    "theme": {
+      "sidebar": false,
+      "toc": false,
+      "pagination": false
+    }
+  },
+  "hooks": {
+    "title": "Hooks"
+  },
+  "components": {
+    "title": "Components"
+  },
+  "contact": {
+    "title": "Contact",
+    "type": "page",
+    "href": "https://www.puskaradhikari.com.np/#contact",
+    "newWindow": true
+  }
+}

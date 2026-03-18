@@ -12,6 +12,7 @@ export * from "./useGetScrollPosition";
 export * from "./useIntersectionObserver";
 export * from "./useIsomorphicEffect";
 export * from "./useMounted";
+export * from "./useMutation";
 export * from "./useOnScreen";
 export * from "./useThrottle";
 export * from "./useTimeout";

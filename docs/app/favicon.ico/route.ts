@@ -4,11 +4,13 @@ export const dynamic = "force-static";
 
 const iconMarkup = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
-  <rect width="120" height="120" rx="24" fill="#0F172A"/>
-  <path d="M38 26C38 37 28 42 28 53C28 64 38 69 49 69C60 69 71 64 71 53" stroke="#F8FAFC" stroke-width="8" stroke-linecap="round"/>
-  <circle cx="74" cy="53" r="6" fill="#FDBA74"/>
-  <path d="M31 78L44 91" stroke="#FDBA74" stroke-width="8" stroke-linecap="round"/>
-  <path d="M49 95L56 88C59 85 64 87 67 90L69 92C72 95 74 97 71 100L64 107" stroke="#F8FAFC" stroke-width="8" stroke-linecap="round"/>
+  <rect width="120" height="120" rx="24" fill="#1E1E1E"/>
+  <g transform="translate(20 20)">
+    <path d="M40 10C40 20 30 25 30 35C30 45 40 50 50 50C60 50 70 45 70 35" stroke="#61DAFB" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="70" cy="35" r="5" fill="#61DAFB"/>
+    <path d="M26 60L38 72" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+    <path d="M42 76L48 70C50 68 54 70 56 72L58 74C60 76 62 78 60 80L54 86" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+  </g>
 </svg>
 `.trim();
 

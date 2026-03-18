@@ -1,29 +1,41 @@
-import { useEffect, useMemo, useState, RefObject } from "react";
+import { RefObject } from "react";
+
+import {
+  useIntersectionObserver,
+  UseIntersectionObserverOptions,
+} from "../useIntersectionObserver";
+
+export interface UseOnScreenOptions<T extends Element = HTMLElement> extends Omit<
+  UseIntersectionObserverOptions<T>,
+  "ref" | "onChange" | "initialIsIntersecting"
+> {
+  /**
+   * Friendly alias for freezing after the first visible intersection.
+   */
+  once?: boolean;
+
+  /**
+   * Initial boolean value before the observer reports its first entry.
+   */
+  initialIsVisible?: boolean;
+}
 
 /**
- * The `useOnScreen` function is a custom React hook that detects whether an element is currently
- * visible on the screen.
- * @param ref - A RefObject that references the HTML element that you want to track if it is on the
- * screen or not.
- * @returns the value of the `isIntersecting` state variable.
+ * Observe a target element and return only a boolean visibility state.
+ *
+ * Use this when you already have a ref and only care about whether the
+ * element is currently on screen.
  */
-export function useOnScreen(ref: RefObject<HTMLElement | null>) {
-  const [isIntersecting, setIntersecting] = useState(false);
+export function useOnScreen<T extends Element = HTMLElement>(
+  ref: RefObject<T | null>,
+  options: UseOnScreenOptions<T> = {},
+): boolean {
+  const { once = false, freezeOnceVisible, initialIsVisible = false, ...observerOptions } = options;
 
-  const observer = useMemo(
-    () =>
-      new IntersectionObserver(([entry]) =>
-        setIntersecting(entry.isIntersecting)
-      ),
-    [ref]
-  );
-
-  useEffect(() => {
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-    return () => observer.disconnect();
-  }, []);
-
-  return isIntersecting;
+  return useIntersectionObserver<T>({
+    ref,
+    ...observerOptions,
+    freezeOnceVisible: freezeOnceVisible ?? once,
+    initialIsIntersecting: initialIsVisible,
+  }).isIntersecting;
 }

@@ -1,0 +1,74 @@
+import { DemoFrame } from "../../components/demo-frame";
+import { UseOnScreenDemo } from "../../components/demos/use-on-screen-demo";
+
+# useOnScreen
+
+`useOnScreen` is the boolean-only visibility hook in `use-kit`. It is built on `useIntersectionObserver` but keeps the API focused when you already have a ref and only need a yes-or-no answer.
+
+<DemoFrame
+  title="Boolean visibility"
+  description="This demo tracks a single element inside a scroll container and only exposes whether it is visible."
+>
+  <UseOnScreenDemo />
+</DemoFrame>
+
+## Import
+
+```tsx
+import { useOnScreen } from "@thepuskar/use-kit/client";
+```
+
+## Signature
+
+```ts
+const isVisible = useOnScreen(ref, options?);
+```
+
+## Parameters
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `ref` | `RefObject<T \| null>` | required | Ref for the element you want to observe. |
+| `options.root` | `Element \| Document \| RefObject<Element \| null> \| null` | `null` | Custom observer root. |
+| `options.rootMargin` | `string` | `"0px"` | Root margin passed to the observer. |
+| `options.threshold` | `number \| number[]` | `0` | Visibility threshold or thresholds. |
+| `options.once` | `boolean` | `false` | Friendly alias for freezing after the first visible intersection. |
+| `options.freezeOnceVisible` | `boolean` | `false` | Stops observing after the first visible intersection. |
+| `options.triggerOnce` | `boolean` | `false` | Legacy compatibility alias for one-time observation. |
+| `options.disabled` | `boolean` | `false` | Prevents observation without unmounting. |
+| `options.initialIsVisible` | `boolean` | `false` | Initial visibility before the first observer update. |
+| `options.fallbackInView` | `boolean` | `undefined` | Fallback boolean when `IntersectionObserver` is unavailable. |
+
+## Returns
+
+- `isVisible`: `true` when the element is intersecting the viewport, otherwise `false`.
+
+## Usage
+
+```tsx
+"use client";
+
+import { useRef } from "react";
+import { useOnScreen } from "@thepuskar/use-kit/client";
+
+export function OnScreenSection() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const isVisible = useOnScreen(ref, {
+    threshold: 0.25,
+    once: true,
+  });
+
+  return (
+    <div>
+      <div style={{ height: "100vh" }}>Scroll down</div>
+      <div ref={ref}>{isVisible ? "Visible" : "Not visible yet"}</div>
+    </div>
+  );
+}
+```
+
+## Notes
+
+- Use this when you only need a boolean visibility flag and already have a target ref.
+- Prefer `once` for the simplest reveal-once behavior.
+- Use `useIntersectionObserver` when you need entry details, callback refs, or observer callbacks.

@@ -1,119 +1,182 @@
-export const useArray = () => {
-  /**
-   * It takes an array and an element or an array of elements, and pushes the element(s) onto the array
-   * @param {T[]} array - T[] - The array to push the elements to.
-   * @param {T | T[]} elements - T | T[]
-   * @returns Appended array.
-   */
-  function push<T>(array: T[], elements: T | T[]): T[] {
-    if (Array.isArray(elements)) {
-      array.push(...elements);
-      return array;
+import { Dispatch, SetStateAction, useCallback, useRef, useState } from "react";
+
+export type ArrayInitialValue<T> = T[] | (() => T[]);
+export type ArrayItemUpdater<T> = T | ((currentValue: T) => T);
+
+export interface UseArrayReturn<T> {
+  value: T[];
+  length: number;
+  isEmpty: boolean;
+  setValue: Dispatch<SetStateAction<T[]>>;
+  push: (...items: T[]) => void;
+  filter: (predicate: (item: T, index: number, array: T[]) => boolean) => void;
+  removeAt: (index: number) => void;
+  removeValue: (item: T) => void;
+  update: (index: number, nextValue: ArrayItemUpdater<T>) => void;
+  move: (fromIndex: number, toIndex: number) => void;
+  clear: () => void;
+  reset: () => void;
+  shuffle: () => void;
+}
+
+function cloneArray<T>(array: T[]): T[] {
+  return array.slice();
+}
+
+function resolveInitialValue<T>(initialValue: ArrayInitialValue<T>): T[] {
+  if (typeof initialValue === "function") {
+    return cloneArray((initialValue as () => T[])());
+  }
+
+  return cloneArray(initialValue);
+}
+
+function normalizeIndex(length: number, index: number): number {
+  if (length === 0) {
+    return -1;
+  }
+
+  const normalizedIndex = index < 0 ? length + index : index;
+
+  if (normalizedIndex < 0 || normalizedIndex >= length) {
+    return -1;
+  }
+
+  return normalizedIndex;
+}
+
+function clampIndex(length: number, index: number): number {
+  if (length === 0) {
+    return -1;
+  }
+
+  const normalizedIndex = index < 0 ? length + index : index;
+  return Math.min(Math.max(normalizedIndex, 0), length - 1);
+}
+
+/**
+ * Manage array state with immutable helpers for common collection updates.
+ */
+export function useArray<T>(initialValue: ArrayInitialValue<T> = [] as T[]): UseArrayReturn<T> {
+  const [value, setValue] = useState<T[]>(() => resolveInitialValue(initialValue));
+  const initialValueRef = useRef<T[]>(cloneArray(value));
+
+  const push = useCallback((...items: T[]) => {
+    if (items.length === 0) {
+      return;
     }
-    array.push(elements);
-    return array;
-  }
 
-  /**
-   * "filter takes an array and a callback function, and returns a new array containing only the elements
-   * of the original array for which the callback function returns true."
-   *
-   * The callback function is called for each element of the array. If the callback function returns
-   * true, the element is included in the new array. If the callback function returns false, the element
-   * is not included in the new array
-   * @param {T[]} array - T[] - The array to filter
-   * @param callback - (element: T, index: number, array: T[]) => boolean
-   * @returns An array of numbers.
-   */
-  function filter<T>(
-    array: T[],
-    callback: (element: T, index: number, array: T[]) => boolean
-  ): T[] {
-    return array.filter(callback);
-  }
+    setValue((currentValue) => [...currentValue, ...items]);
+  }, []);
 
-  /**
-   * It moves an element from one index to another in an array.
-   * @param {T[]} array - The array to move an element from and to.
-   * @param {number} fromIndex - The index of the item you want to move.
-   * @param {number} toIndex - The index of the element before which to insert the element.
-   * @returns the array with the element moved to the new index.
-   */
-  function move<T>(array: T[], fromIndex: number, toIndex: number): T[] {
-    const element = array.splice(fromIndex, 1)[0];
-    array.splice(toIndex, 0, element);
-    return array;
-  }
+  const filter = useCallback((predicate: (item: T, index: number, array: T[]) => boolean) => {
+    setValue((currentValue) => currentValue.filter(predicate));
+  }, []);
 
-  /**
-   *
-   * It removes an element from an array, and returns a new array
-   * @param {(number | string | { id: any })[]} array - (number | string | { id: any })[]
-   * @param {any} id - any - the id of the item to remove
-   * @param [prop] - keyof { id: any }
-   * @returns (number | string | { id: any })[]
-   *
-   * * Example:
-   * ```
-   * let array = [1, 2, 3, "a", "b", {id: 1, name: "John"}, {id: 2, name: "Jane"}];
-   * let updatedArray = remove(array, 3);
-   * console.log(updatedArray); // [1, 2, "a", "b", {id: 1, name: "John"}, {id: 2, name: "Jane"}]
-   * updatedArray = remove(array, "b");
-   * console.log(updatedArray); // [1, 2, 3, "a", {id: 1, name: "John"}, {id: 2, name: "Jane"}]
-   * updatedArray = remove(array, 1, "id");
-   * console.log(updatedArray); // [2, 3, "a", "b", {id: 2, name: "Jane"}]
-   * ```
-   */
-  function remove<T extends { id: any }>(
-    array: T[],
-    id: any,
-    prop?: keyof { id: any }
-  ): T[] {
-    if (!prop) {
-      const index = array.indexOf(id);
-      if (index === -1) return array;
-      return [...array.slice(0, index), ...array.slice(index + 1)];
-    } else {
-      const index = array.findIndex(
-        (x) => typeof x === "object" && x[prop] === id
-      );
-      if (index === -1) return array;
-      return [...array.slice(0, index), ...array.slice(index + 1)];
-    }
-  }
+  const removeAt = useCallback((index: number) => {
+    setValue((currentValue) => {
+      const normalizedIndex = normalizeIndex(currentValue.length, index);
 
-  /**
-   * The function takes an array of type T and removes all elements from the array
-   * @param {T[]} array - The array to clear.
-   */
-  function clear<T>(array: T[]) {
-    if (array?.length > 0) {
-      return array.splice(0, array.length);
-    }
-    return array;
-  }
+      if (normalizedIndex === -1) {
+        return currentValue;
+      }
 
-  /**
-   * Takes an array of any type T as input and returns a shuffled array of the same type.
-   * @param {T[]} array - The array to shuffle.
-   * @returns Returns a shuffled array.
-   */
-  function shuffle<T>(array: T[]): T[] {
-    let currentIndex = array.length,
-      randomIndex;
-
-    while (currentIndex != 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-
-      [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex],
-        array[currentIndex],
+      return [
+        ...currentValue.slice(0, normalizedIndex),
+        ...currentValue.slice(normalizedIndex + 1),
       ];
-    }
+    });
+  }, []);
 
-    return array;
-  }
+  const removeValue = useCallback((item: T) => {
+    setValue((currentValue) => currentValue.filter((currentItem) => !Object.is(currentItem, item)));
+  }, []);
 
-  return { push, filter, move, remove, clear, shuffle };
-};
+  const update = useCallback((index: number, nextValue: ArrayItemUpdater<T>) => {
+    setValue((currentValue) => {
+      const normalizedIndex = normalizeIndex(currentValue.length, index);
+
+      if (normalizedIndex === -1) {
+        return currentValue;
+      }
+
+      const resolvedValue =
+        typeof nextValue === "function"
+          ? (nextValue as (currentItem: T) => T)(currentValue[normalizedIndex])
+          : nextValue;
+
+      if (Object.is(currentValue[normalizedIndex], resolvedValue)) {
+        return currentValue;
+      }
+
+      const nextArray = cloneArray(currentValue);
+      nextArray[normalizedIndex] = resolvedValue;
+      return nextArray;
+    });
+  }, []);
+
+  const move = useCallback((fromIndex: number, toIndex: number) => {
+    setValue((currentValue) => {
+      if (currentValue.length <= 1) {
+        return currentValue;
+      }
+
+      const normalizedFromIndex = normalizeIndex(currentValue.length, fromIndex);
+      const normalizedToIndex = clampIndex(currentValue.length, toIndex);
+
+      if (
+        normalizedFromIndex === -1 ||
+        normalizedToIndex === -1 ||
+        normalizedFromIndex === normalizedToIndex
+      ) {
+        return currentValue;
+      }
+
+      const nextArray = cloneArray(currentValue);
+      const [movedItem] = nextArray.splice(normalizedFromIndex, 1);
+      nextArray.splice(normalizedToIndex, 0, movedItem);
+      return nextArray;
+    });
+  }, []);
+
+  const clear = useCallback(() => {
+    setValue((currentValue) => (currentValue.length === 0 ? currentValue : []));
+  }, []);
+
+  const reset = useCallback(() => {
+    setValue(cloneArray(initialValueRef.current));
+  }, []);
+
+  const shuffle = useCallback(() => {
+    setValue((currentValue) => {
+      if (currentValue.length <= 1) {
+        return currentValue;
+      }
+
+      const nextArray = cloneArray(currentValue);
+
+      for (let index = nextArray.length - 1; index > 0; index -= 1) {
+        const randomIndex = Math.floor(Math.random() * (index + 1));
+        [nextArray[index], nextArray[randomIndex]] = [nextArray[randomIndex], nextArray[index]];
+      }
+
+      return nextArray;
+    });
+  }, []);
+
+  return {
+    value,
+    length: value.length,
+    isEmpty: value.length === 0,
+    setValue,
+    push,
+    filter,
+    removeAt,
+    removeValue,
+    update,
+    move,
+    clear,
+    reset,
+    shuffle,
+  };
+}

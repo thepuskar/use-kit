@@ -1,0 +1,95 @@
+import { DemoFrame } from "../../components/demo-frame";
+import { UseTimeoutDemo } from "../../components/demos/use-timeout-demo";
+
+# useTimeout
+
+`useTimeout` schedules a callback and gives you small controls to clear or restart that timer.
+
+<DemoFrame
+  title="Auto-dismiss timer"
+  description="This demo shows a timer-driven banner flow with start, reset, clear, and pending state."
+>
+  <UseTimeoutDemo />
+</DemoFrame>
+
+## Import
+
+```tsx
+import { useTimeout } from "@thepuskar/use-kit/client";
+```
+
+## Signature
+
+```ts
+const { start, reset, clear, isPending } = useTimeout(callback, delay, options?);
+```
+
+## Parameters
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `callback` | `() => void` | required | Function that runs when the timeout completes. |
+| `delay` | `number \| null \| undefined` | required | Delay in milliseconds. Use `null` or `undefined` to disable scheduling. |
+| `options.autoStart` | `boolean` | `true` | Starts the timeout automatically when enabled. |
+
+## Returns
+
+| Key | Description |
+| --- | --- |
+| `start` | Starts the timeout manually. |
+| `reset` | Clears and starts the timeout again. |
+| `clear` | Clears the current timeout. |
+| `isPending` | Whether a timeout is currently active. |
+
+## Usage
+
+```tsx
+"use client";
+
+import { useState } from "react";
+import { useTimeout } from "@thepuskar/use-kit/client";
+
+export function TimeoutBanner() {
+  const [visible, setVisible] = useState(true);
+  const { start, clear, reset, isPending } = useTimeout(
+    () => setVisible(false),
+    5000,
+    { autoStart: false },
+  );
+
+  return (
+    <div>
+      <p>{visible ? "Banner visible" : "Banner hidden"}</p>
+      <p>Pending: {String(isPending)}</p>
+      <button
+        type="button"
+        onClick={() => {
+          setVisible(true);
+          start();
+        }}
+      >
+        Start Timeout
+      </button>
+      <button type="button" onClick={clear}>
+        Clear Timeout
+      </button>
+      <button
+        type="button"
+        onClick={() => {
+          setVisible(true);
+          reset();
+        }}
+      >
+        Reset Timeout
+      </button>
+    </div>
+  );
+}
+```
+
+## Notes
+
+- `autoStart` defaults to `true`.
+- `delay` can be `null` to disable scheduling.
+- `start`, `clear`, and `reset` are designed for small UI timer flows.
+- Use this for dismissible UI or simple delayed effects.

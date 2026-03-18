@@ -1,0 +1,161 @@
+import { DemoFrame } from "../../components/demo-frame";
+import { UseMutationDemo } from "../../components/demos/use-mutation-demo";
+
+# useMutation
+
+`useMutation` runs an async action on demand and tracks mutation state, result data, errors, variables, and lifecycle callbacks.
+
+<DemoFrame
+  title="On-demand mutation"
+  description="This demo shows a form-style mutation with submit, reset, and abort controls."
+>
+  <UseMutationDemo />
+</DemoFrame>
+
+## Import
+
+```tsx
+import { useMutation } from "@thepuskar/use-kit/client";
+```
+
+## Signature
+
+```ts
+const mutation = useMutation<TData, TError, TVariables>(mutationFn, options?);
+```
+
+## Parameters
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `mutationFn` | `(variables, context) => Promise<TData>` | required | Async mutation function. `context.signal` can be used for cancellation. |
+| `options.initialData` | `TData \| null` | `null` | Initial mutation data before any successful call. |
+| `options.onMutate` | `(variables) => TContext \| Promise<TContext>` | `undefined` | Runs before the mutation and can return lifecycle context. |
+| `options.onSuccess` | `(data, variables, context) => void \| Promise<void>` | `undefined` | Runs after a successful mutation. |
+| `options.onError` | `(error, variables, context) => void \| Promise<void>` | `undefined` | Runs after a failed mutation. |
+| `options.onSettled` | `(data, error, variables, context) => void \| Promise<void>` | `undefined` | Runs after success or error. |
+
+## Returns
+
+| Key | Description |
+| --- | --- |
+| `data` | Last successful mutation data or `initialData`. |
+| `error` | Last mutation error. |
+| `status` | `"idle" \| "loading" \| "success" \| "error"`. |
+| `variables` | Variables from the latest mutation attempt. |
+| `submittedAt` | Timestamp for the latest mutation attempt. |
+| `loading` | Alias for `isPending`. |
+| `isPending` | Whether a mutation is currently running. |
+| `isIdle` | Whether no active or completed mutation state is pending. |
+| `isSuccess` | Whether the last mutation succeeded. |
+| `isError` | Whether the last mutation failed. |
+| `mutate` | Fire-and-forget mutation trigger. |
+| `mutateAsync` | Promise-returning mutation trigger. |
+| `reset` | Restores the initial mutation snapshot. |
+| `abort` | Aborts the active mutation. |
+
+## Usage
+
+```tsx
+"use client";
+
+import { useMutation } from "@thepuskar/use-kit/client";
+
+type SaveTodoResult = {
+  id: number;
+  title: string;
+};
+
+export function SaveTodoButton() {
+  const mutation = useMutation<SaveTodoResult, Error, string>(
+    async (title, { signal }) => {
+      const response = await fetch("/api/todos", {
+        method: "POST",
+        body: JSON.stringify({ title }),
+        headers: {
+          "content-type": "application/json",
+        },
+        signal,
+      });
+
+      if (!response.ok) {
+        throw new Error("Unable to save todo.");
+      }
+
+      return (await response.json()) as SaveTodoResult;
+    },
+  );
+
+  return (
+    <button type="button" onClick={() => mutation.mutate("Ship docs")}>
+      {mutation.isPending ? "Saving..." : "Save Todo"}
+    </button>
+  );
+}
+```
+
+## API Example
+
+```tsx
+"use client";
+
+import { useMutation } from "@thepuskar/use-kit/client";
+
+type CreatePostInput = {
+  title: string;
+  body: string;
+};
+
+type CreatePostResponse = {
+  id: number;
+  title: string;
+  body: string;
+};
+
+export function CreatePostForm() {
+  const createPost = useMutation<CreatePostResponse, Error, CreatePostInput>(
+    async (payload, { signal }) => {
+      const response = await fetch("/api/posts", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(payload),
+        signal,
+      });
+
+      if (!response.ok) {
+        throw new Error("Unable to create post.");
+      }
+
+      return (await response.json()) as CreatePostResponse;
+    },
+  );
+
+  return (
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        createPost.mutate({
+          title: "Ship useMutation docs",
+          body: "Document API mutation flows clearly.",
+        });
+      }}
+    >
+      <button type="submit" disabled={createPost.isPending}>
+        {createPost.isPending ? "Creating..." : "Create Post"}
+      </button>
+      {createPost.isError ? <p>{createPost.error?.message}</p> : null}
+      {createPost.isSuccess ? <p>Created post #{createPost.data?.id}</p> : null}
+    </form>
+  );
+}
+```
+
+## Notes
+
+- `mutate` swallows promise rejections by design. Use `mutateAsync` when you need the promise.
+- Pass `context.signal` into `fetch` so `abort()` can cancel the request cleanly.
+- Starting a new mutation aborts the previous one and ignores stale results.
+- `reset` restores the original mount-time `initialData`, not later prop changes.
+- For advanced retries, optimistic cache updates across queries, invalidation, and server-state coordination, use TanStack Query.

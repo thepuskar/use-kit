@@ -1,0 +1,93 @@
+import { DemoFrame } from "../../components/demo-frame";
+import { UseGeolocationDemo } from "../../components/demos/use-geolocation-demo";
+
+# useGeolocation
+
+`useGeolocation` reads the browser Geolocation API and keeps the latest coordinates in React state.
+
+<DemoFrame
+  title="Permission-driven location lookup"
+  description="This demo requests location only when you click the button, which is safer for docs and closer to real product usage."
+>
+  <UseGeolocationDemo />
+</DemoFrame>
+
+## Import
+
+```tsx
+import { useGeolocation } from "@thepuskar/use-kit/client";
+```
+
+## Signature
+
+```ts
+const geolocation = useGeolocation(options?, callback?, isEnabled?);
+```
+
+## Parameters
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `options` | `{ enableHighAccuracy?: boolean; maximumAge?: number; timeout?: number; watch?: boolean; requestOnMount?: boolean }` | `{}` | Browser geolocation options plus hook behavior flags. |
+| `callback` | `(coordinates) => void` | `undefined` | Runs whenever coordinates update successfully. |
+| `isEnabled` | `boolean` | `true` | Enables or disables geolocation watching. |
+
+## Returns
+
+| Key | Description |
+| --- | --- |
+| `accuracy`, `altitude`, `altitudeAccuracy`, `heading`, `latitude`, `longitude`, `speed`, `timestamp` | Latest location fields. |
+| `error` | Last `GeolocationPositionError`, if one exists. |
+| `loading` | Whether a geolocation request is in progress. |
+| `permissionState` | Permission state from the Permissions API when available. |
+| `isSupported` | Whether geolocation exists in the current environment. |
+| `isEnabled` | Whether the hook is currently enabled. |
+| `isWatching` | Whether a watch subscription is active. |
+| `getCurrentPosition` | Runs a manual one-time location lookup. |
+| `cancel` | Clears the active watch subscription. |
+
+## Usage
+
+```tsx
+"use client";
+
+import { useGeolocation } from "@thepuskar/use-kit/client";
+
+export function LocationReadout() {
+  const {
+    latitude,
+    longitude,
+    loading,
+    error,
+    getCurrentPosition,
+  } = useGeolocation(
+    {
+      enableHighAccuracy: true,
+      watch: false,
+      requestOnMount: false,
+      maximumAge: 15000,
+      timeout: 12000,
+    },
+    (nextCoordinates) => {
+      console.log("updated:", nextCoordinates.latitude, nextCoordinates.longitude);
+    },
+  );
+
+  return (
+    <div>
+      <button type="button" onClick={getCurrentPosition}>
+        Get location
+      </button>
+      {loading ? <p>Locating...</p> : null}
+      {error ? <p>Unable to read location.</p> : null}
+      {latitude !== null && longitude !== null ? <p>{latitude}, {longitude}</p> : null}
+    </div>
+  );
+}
+```
+
+## Notes
+
+- This hook is client-only and depends on browser permission.
+- `watch` defaults to `true` and `requestOnMount` defaults to `true` to preserve the original behavior.
+- `getCurrentPosition` is useful when you want permission to be user-triggered instead of automatic.

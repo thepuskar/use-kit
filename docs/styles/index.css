@@ -31,15 +31,8 @@ body {
 
 .dark body {
   background:
-    linear-gradient(to bottom, rgba(2, 6, 23, 0.98), rgba(15, 23, 42, 0.98)),
-    repeating-linear-gradient(
-      to right,
-      rgba(51, 65, 85, 0.24) 0,
-      rgba(51, 65, 85, 0.24) 1px,
-      transparent 1px,
-      transparent 32px
-    ),
-    #020617;
+    radial-gradient(circle at top center, rgba(35, 48, 78, 0.28), transparent 42%),
+    linear-gradient(180deg, #0a1020 0%, #10192d 58%, #121b30 100%);
 }
 
 .use-kit-docs {

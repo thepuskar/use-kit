@@ -1,0 +1,71 @@
+import { DemoFrame } from "../../components/demo-frame";
+import { SwitchDemo } from "../../components/demos/switch-demo";
+
+# Switch / Match
+
+`Switch` renders the first truthy `Match` and falls back when nothing matches.
+
+It is a small branching utility component and is safe to use from server-rendered code.
+
+<DemoFrame
+  title="State-driven branching"
+  description="Click the controls to switch between guest, loading, error, member, and admin states."
+>
+  <SwitchDemo />
+</DemoFrame>
+
+## Import
+
+```tsx
+import { Match, Switch } from "@thepuskar/use-kit";
+```
+
+## Props
+
+### `Switch`
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `children` | `ReactNode` | required | One or more `Match` elements. |
+| `fallback` | `ReactNode` | `undefined` | Rendered when no match succeeds. |
+
+### `Match`
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `when` | `T \| (() => T)` | Value or getter used for matching. |
+| `children` | `ReactNode \| ((value: Truthy<T>) => ReactNode)` | UI or render function for the matched branch. |
+
+## Usage
+
+```tsx
+import { Match, Switch } from "@thepuskar/use-kit";
+
+function StatusView({
+  isLoading,
+  error,
+  data,
+}: {
+  isLoading: boolean;
+  error: string | null;
+  data: { title: string } | null;
+}) {
+  return (
+    <Switch fallback={<div>No result</div>}>
+      <Match when={isLoading}>
+        <div>Loading...</div>
+      </Match>
+
+      <Match when={error}>{(message) => <div>Error: {message}</div>}</Match>
+
+      <Match when={data}>{(value) => <div>{value.title}</div>}</Match>
+    </Switch>
+  );
+}
+```
+
+## Notes
+
+- `Switch` only accepts direct `Match` children.
+- Matching is evaluated from top to bottom.
+- `children` can be a render function when you want the matched truthy value.

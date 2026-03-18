@@ -1,0 +1,72 @@
+import { DemoFrame } from "../../components/demo-frame";
+import { UseThrottleDemo } from "../../components/demos/use-throttle-demo";
+
+# useThrottle
+
+`useThrottle` returns a value that updates at most once per throttle window, which is useful for scroll state, mouse position, and rapidly changing inputs.
+
+<DemoFrame
+  title="Steady updates"
+  description="This demo shows the difference between the raw input and the throttled value during continuous typing."
+>
+  <UseThrottleDemo />
+</DemoFrame>
+
+## Import
+
+```tsx
+import { useThrottle } from "@thepuskar/use-kit/client";
+```
+
+## Signature
+
+```ts
+const throttledValue = useThrottle<T>(value, delay?, options?);
+```
+
+## Parameters
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `T` | required | Value to throttle. |
+| `delay` | `number \| null \| undefined` | `5000` | Minimum interval between updates. Use `null` or `undefined` to disable throttling. |
+| `options.leading` | `boolean` | `true` | Emits the first change immediately at the start of a throttle window. |
+| `options.trailing` | `boolean` | `true` | Emits the latest value at the end of the active throttle window. |
+| `options.equalityFn` | `(previousValue, nextValue) => boolean` | `Object.is` | Custom equality function for noisy object or array values. |
+
+## Returns
+
+- `throttledValue`: the latest value allowed through the throttle window.
+
+## Usage
+
+```tsx
+"use client";
+
+import { useState } from "react";
+import { useThrottle } from "@thepuskar/use-kit/client";
+
+export function InputThrottleExample() {
+  const [value, setValue] = useState("");
+  const throttledValue = useThrottle(value, 400, {
+    leading: true,
+    trailing: true,
+  });
+
+  return (
+    <div>
+      <input value={value} onChange={(event) => setValue(event.target.value)} />
+      <p>Raw: {value}</p>
+      <p>Throttled: {throttledValue}</p>
+    </div>
+  );
+}
+```
+
+## Notes
+
+- `useThrottle` is value-based, not callback-based.
+- It keeps a steady update cadence and uses the latest value for trailing emissions.
+- Changing `delay`, `leading`, or `trailing` re-evaluates any active throttle window.
+- Use throttling when you want regular updates during rapid changes.
+- Use `useDebounce` when you want to wait until changes settle.

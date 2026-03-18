@@ -1,0 +1,90 @@
+import { DemoFrame } from "../../components/demo-frame";
+import { UseArrayDemo } from "../../components/demos/use-array-demo";
+
+# useArray
+
+`useArray` manages array state and exposes immutable helpers for common collection updates like push, move, update, remove, clear, reset, and shuffle.
+
+<DemoFrame
+  title="Stateful list actions"
+  description="This demo shows a real array-state flow where the hook owns the list and updates it directly."
+>
+  <UseArrayDemo />
+</DemoFrame>
+
+## Import
+
+```tsx
+import { useArray } from "@thepuskar/use-kit/client";
+```
+
+## Signature
+
+```ts
+const array = useArray<T>(initialValue?);
+```
+
+## Parameters
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `initialValue` | `T[] \| () => T[]` | `[]` | Initial array value. Supports lazy initialization. |
+
+## Returns
+
+| Key | Description |
+| --- | --- |
+| `value` | The current array state. |
+| `length` | Current array length. |
+| `isEmpty` | Whether the array is empty. |
+| `setValue` | Direct `useState` setter for custom updates. |
+| `push` | Appends one or more items. |
+| `filter` | Keeps only the items that match a predicate. |
+| `removeAt` | Removes a single item by index. Supports negative indices. |
+| `removeValue` | Removes all items that are `Object.is`-equal to the supplied value. |
+| `update` | Replaces one item by index. Supports negative indices. |
+| `move` | Moves one item to a different index. Supports negative indices. |
+| `clear` | Removes all items. |
+| `reset` | Restores the original mount-time array snapshot. |
+| `shuffle` | Randomizes the array order immutably. |
+
+## Usage
+
+```tsx
+"use client";
+
+import { useArray } from "@thepuskar/use-kit/client";
+
+export function TodoTags() {
+  const { value, push, removeValue, move, reset } = useArray([
+    "react",
+    "typescript",
+    "docs",
+  ]);
+
+  return (
+    <div>
+      <p>{value.join(", ")}</p>
+      <button type="button" onClick={() => push("hooks")}>
+        Add hooks
+      </button>
+      <button type="button" onClick={() => removeValue("docs")}>
+        Remove docs
+      </button>
+      <button type="button" onClick={() => move(0, -1)}>
+        Move first to end
+      </button>
+      <button type="button" onClick={reset}>
+        Reset
+      </button>
+    </div>
+  );
+}
+```
+
+## Notes
+
+- `useArray` now owns the array state instead of mutating a passed-in array.
+- All helper actions update state immutably.
+- `reset` always restores the original mount-time value, not later prop changes.
+- Use `setValue` when you need custom logic such as object updates by `id`.

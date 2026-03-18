@@ -1,0 +1,76 @@
+import { DemoFrame } from "../../components/demo-frame";
+import { UseToggleDemo } from "../../components/demos/use-toggle-demo";
+
+# useToggle
+
+`useToggle` is a boolean state hook for UI flags such as dialogs, feature switches, visibility, and opt-in settings.
+
+<DemoFrame
+  title="Feature toggle panel"
+  description="This shows real UI usage: one boolean state drives status UI and multiple controls."
+>
+  <UseToggleDemo />
+</DemoFrame>
+
+## Import
+
+```tsx
+import { useToggle } from "@thepuskar/use-kit/client";
+```
+
+## Signature
+
+```ts
+const [value, toggle, setValue, actions] = useToggle(initialValue?);
+```
+
+## Parameters
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `initialValue` | `boolean \| (() => boolean)` | `false` | Initial toggle state, with lazy initialization support. |
+
+## Returns
+
+| Item | Description |
+| --- | --- |
+| `value` | Current boolean state. |
+| `toggle` | Flips the value, or forces it when called with `true` or `false`. |
+| `setValue` | React state setter for direct control. |
+| `actions` | Helper object with `setTrue`, `setFalse`, and `reset`. |
+
+## Usage
+
+```tsx
+"use client";
+
+import { useToggle } from "@thepuskar/use-kit/client";
+
+export function FeatureFlagControls() {
+  const [enabled, toggle, , { setTrue, setFalse, reset }] = useToggle(false);
+
+  return (
+    <div>
+      <p>Enabled: {String(enabled)}</p>
+      <button type="button" onClick={() => toggle()}>
+        Toggle
+      </button>
+      <button type="button" onClick={setTrue}>
+        Enable
+      </button>
+      <button type="button" onClick={setFalse}>
+        Disable
+      </button>
+      <button type="button" onClick={reset}>
+        Reset
+      </button>
+    </div>
+  );
+}
+```
+
+## Notes
+
+- Works without an argument and defaults to `false`.
+- Keeps the tuple API simple while adding reusable helper actions.
+- Helper callbacks are stable across rerenders.
