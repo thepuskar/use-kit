@@ -1,21 +1,23 @@
-import React from "react";
+import { useState } from "react";
+
 import { useClickOutside } from "./useClickOutside";
 
 export const UseClickOutsideDemo = () => {
-  const handleInsideClick = () => {
-    console.log("Clicked inside!!!");
-  };
-  const handleOutsideClick = () => {
-    console.log("Clicked outside");
-  };
-  const ref = useClickOutside<HTMLDivElement>(() => {
-    handleOutsideClick();
-  }, ["mousedown", "touchstart"]);
+  const [open, setOpen] = useState(true);
+  const ref = useClickOutside<HTMLDivElement>(
+    () => {
+      setOpen(false);
+    },
+    {
+      events: ["pointerdown"],
+      disabled: !open,
+    },
+  );
+
   return (
     <div>
-      <div ref={ref}>
-        <button onClick={handleInsideClick}>Click Inside</button>
-      </div>
+      <button onClick={() => setOpen((value) => !value)}>{open ? "Close" : "Open"}</button>
+      {open ? <div ref={ref}>Click outside this element to close it.</div> : null}
     </div>
   );
 };

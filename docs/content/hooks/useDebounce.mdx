@@ -1,0 +1,72 @@
+import { DemoFrame } from "../../components/demo-frame";
+import { UseDebounceDemo } from "../../components/demos/use-debounce-demo";
+
+# useDebounce
+
+`useDebounce` returns a delayed version of a value, which is useful for search inputs, filters, and expensive derived work.
+
+<DemoFrame
+  title="Delayed search value"
+  description="This demo shows the gap between the raw input and the debounced value as you type."
+>
+  <UseDebounceDemo />
+</DemoFrame>
+
+## Import
+
+```tsx
+import { useDebounce } from "@thepuskar/use-kit/client";
+```
+
+## Signature
+
+```ts
+const debouncedValue = useDebounce<T>(value, delay?, options?);
+```
+
+## Parameters
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `T` | required | Value to debounce. |
+| `delay` | `number \| null \| undefined` | `500` | Delay before the returned value updates. Use `null` or `undefined` to disable debouncing. |
+| `options.leading` | `boolean` | `false` | Emits the first change immediately within a debounce window. |
+| `options.trailing` | `boolean` | `true` | Emits the settled value after the debounce delay. |
+| `options.equalityFn` | `(previousValue, nextValue) => boolean` | `Object.is` | Custom equality function for noisy or object-based values. |
+
+## Returns
+
+- `debouncedValue`: the last value after the debounce delay completes.
+
+## Usage
+
+```tsx
+"use client";
+
+import { useState } from "react";
+import { useDebounce } from "@thepuskar/use-kit/client";
+
+export function SearchExample() {
+  const [query, setQuery] = useState("");
+  const debouncedQuery = useDebounce(query, 400, {
+    leading: false,
+    trailing: true,
+  });
+
+  return (
+    <div>
+      <input value={query} onChange={(event) => setQuery(event.target.value)} />
+      <p>Raw: {query}</p>
+      <p>Debounced: {debouncedQuery}</p>
+    </div>
+  );
+}
+```
+
+## Notes
+
+- `useDebounce` is value-based, not callback-based.
+- Changing `value`, `delay`, or debounce edge options re-evaluates the active debounce window.
+- `leading` and `trailing` can be combined for different UX needs.
+- `equalityFn` helps when the incoming value is recreated often but should be treated as unchanged.
+- Use it when you want to delay reactions, not when you need rate-limited leading updates.

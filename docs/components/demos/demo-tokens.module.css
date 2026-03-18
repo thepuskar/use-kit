@@ -1,0 +1,147 @@
+.root {
+  display: grid;
+  gap: 1rem;
+}
+
+.row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.between {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.muted {
+  margin: 0;
+  color: var(--uk-demo-muted);
+  line-height: 1.6;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--uk-demo-muted);
+}
+
+.title {
+  margin: 0.25rem 0 0;
+  font-size: 1.3rem;
+  color: var(--uk-demo-text);
+}
+
+.button {
+  border: 1px solid var(--uk-demo-border-strong);
+  border-radius: 999px;
+  padding: 0.6rem 0.9rem;
+  background: var(--uk-demo-button-bg);
+  color: var(--uk-demo-button-text);
+  cursor: pointer;
+  font-weight: 600;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+  border-color: var(--uk-demo-accent);
+}
+
+.buttonActive {
+  background: var(--uk-demo-button-active-bg);
+  color: var(--uk-demo-button-active-text);
+  border-color: var(--uk-demo-button-active-bg);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  padding: 0.4rem 0.75rem;
+  font-weight: 700;
+}
+
+.pillNeutral {
+  background: var(--uk-demo-pill-neutral-bg);
+  color: var(--uk-demo-pill-neutral-text);
+}
+
+.pillSuccess {
+  background: var(--uk-demo-pill-success-bg);
+  color: var(--uk-demo-pill-success-text);
+}
+
+.surface {
+  min-height: 110px;
+  border-radius: 16px;
+  border: 1px solid var(--uk-demo-border);
+  background: var(--uk-demo-surface);
+  color: var(--uk-demo-text);
+  padding: 1rem;
+}
+
+.card {
+  border-radius: 14px;
+  border: 1px solid var(--uk-demo-border);
+  background: var(--uk-demo-surface);
+  color: var(--uk-demo-text);
+  padding: 0.9rem 1rem;
+}
+
+.meta {
+  margin: 0.3rem 0 0;
+  color: var(--uk-demo-muted);
+}
+
+.danger {
+  color: var(--uk-demo-danger-text);
+}
+
+.scrollRoot {
+  height: 220px;
+  overflow-y: auto;
+  border-radius: 16px;
+  border: 1px solid var(--uk-demo-border);
+  background: var(--uk-demo-scroll-bg);
+  padding: 1rem;
+}
+
+.spacer {
+  height: 180px;
+  display: grid;
+  place-items: center;
+  color: var(--uk-demo-muted);
+}
+
+.scrollObserved {
+  min-height: 120px;
+  border-radius: 16px;
+  padding: 1rem;
+  display: grid;
+  gap: 0.5rem;
+  align-content: center;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.scrollObservedOff {
+  background: var(--uk-demo-danger-bg);
+  border: 1px solid var(--uk-demo-danger-border);
+  color: var(--uk-demo-danger-text);
+}
+
+.scrollObservedOn {
+  background: var(--uk-demo-success-bg);
+  border: 1px solid var(--uk-demo-success-border);
+  color: var(--uk-demo-success-text);
+}

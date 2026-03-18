@@ -19,11 +19,13 @@ type WindowEventListener<K extends keyof WindowEventMap> = (
 ) => void;
 
 type Options = boolean | AddEventListenerOptions;
+type ListenerTarget = HTMLElement | Window | Document;
+type MaybeTargetRef<T extends ListenerTarget = HTMLElement> = RefObject<T | null> | T | null;
 
 type UseEventListener = {
   <K extends keyof HTMLElementEventMap, T extends HTMLElement = HTMLElement>(
     config: {
-      target: RefObject<T> | T | null;
+      target: RefObject<T | null> | T | null;
       eventType: K;
       handler: ElementEventListener<K>;
       options?: Options;
@@ -49,6 +51,18 @@ type UseEventListener = {
     shouldAttach?: boolean,
   ): void;
 };
+
+function isRefTarget(value: MaybeTargetRef): value is RefObject<HTMLElement | null> {
+  return typeof value === "object" && value !== null && "current" in value;
+}
+
+function resolveTarget(target: MaybeTargetRef): ListenerTarget | null {
+  if (isRefTarget(target)) {
+    return target.current;
+  }
+
+  return target;
+}
 
 /**
  * It tries to define a property on an object, and if it fails, it returns false. If it succeeds, it
@@ -81,7 +95,7 @@ const isOptionParamSupported = (): boolean => {
  */
 export const useEventListener: UseEventListener = (
   config: {
-    target: RefObject<HTMLElement> | HTMLElement | Window | Document | null;
+    target: MaybeTargetRef;
     eventType: string;
     handler: unknown;
     options?: Options;
@@ -94,7 +108,7 @@ export const useEventListener: UseEventListener = (
   const cachedHandler = useGetLatest(handler);
 
   useIsomorphicEffect(() => {
-    const element = target && "current" in target ? target.current : target;
+    const element = resolveTarget(target);
 
     if (!element) return;
 

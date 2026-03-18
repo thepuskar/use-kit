@@ -1,86 +1,262 @@
-import { RefObject, useState } from 'react'
-import { useIsomorphicEffect } from '../index'
+import { RefCallback, RefObject, useCallback, useRef, useState } from "react";
 
-const DEFAULT_ROOT_MARGIN = '0px'
-const DEFAULT_THRESHOLD = [0]
+import { useIsomorphicEffect } from "../useIsomorphicEffect";
 
-interface IIntersectionObserverProperties {
+const DEFAULT_ROOT_MARGIN = "0px";
+const DEFAULT_THRESHOLD = 0;
+
+type ObserverRoot = NonNullable<IntersectionObserverInit["root"]>;
+type MaybeRef<T> = T | RefObject<T | null> | null;
+
+export interface UseIntersectionObserverOptions<T extends Element = Element> extends Omit<
+  IntersectionObserverInit,
+  "root"
+> {
   /**
-   * Ref object from `useRef`.
+   * Optional external ref. If omitted, use the returned `ref` callback.
    */
-  ref?: RefObject<Element> | null
+  ref?: RefObject<T | null> | null;
 
   /**
-   * Configuration options for the intersection observer
-   * instance.
+   * Root element or a ref pointing to the root element.
    */
-  options?: IntersectionObserverOptions
+  root?: MaybeRef<ObserverRoot>;
+
+  /**
+   * Stop observing after the first visible intersection.
+   * `freezeOnceVisible` is the preferred name; `triggerOnce` is kept for compatibility.
+   */
+  freezeOnceVisible?: boolean;
+  triggerOnce?: boolean;
+
+  /**
+   * Disable observation without unmounting the hook.
+   */
+  disabled?: boolean;
+
+  /**
+   * Initial value used before the observer reports its first entry.
+   */
+  initialIsIntersecting?: boolean;
+
+  /**
+   * Fallback value when IntersectionObserver is not available.
+   */
+  fallbackInView?: boolean;
+
+  /**
+   * Optional callback invoked on every observer update.
+   */
+  onChange?: (entry: IntersectionObserverEntry, observer: IntersectionObserver) => void;
 }
 
-interface IntersectionObserverOptions {
+export interface UseIntersectionObserverResult<T extends Element = Element> {
   /**
-   * If `true`, check for intersection only once. Will
-   * disconnect the IntersectionObserver instance after
-   * intersection.
+   * Callback ref for the target node. Ignore this when passing an external `ref`.
    */
-  triggerOnce?: boolean
+  ref: RefCallback<T>;
 
   /**
-   * Number from 0 to 1 representing the percentage
-   * of the element that needs to be visible to be
-   * considered as visible. Can also be an array of
-   * thresholds.
+   * The latest observer entry for the target, if one exists.
    */
-  threshold?: number | number[]
+  entry: IntersectionObserverEntry | null;
 
   /**
-   * Element that is used as the viewport for checking visibility
-   * of the provided `ref` or `element`.
+   * Whether the target is currently intersecting.
    */
-  root?: Element | null | undefined
+  isIntersecting: boolean;
 
   /**
-   * Margin around the root. Can have values similar to
-   * the CSS margin property.
+   * Whether the target has intersected at least once during this observation cycle.
    */
-  rootMargin?: string
+  hasIntersected: boolean;
+
+  /**
+   * Latest intersection ratio. Returns `0` until an entry is available.
+   */
+  intersectionRatio: number;
+
+  /**
+   * Latest bounding client rect from the observer entry.
+   */
+  boundingClientRect: DOMRectReadOnly | null;
+
+  /**
+   * Latest intersection rect from the observer entry.
+   */
+  intersectionRect: DOMRectReadOnly | null;
+
+  /**
+   * Latest root bounds from the observer entry.
+   */
+  rootBounds: DOMRectReadOnly | null;
+
+  /**
+   * Timestamp from the latest observer entry.
+   */
+  time: number;
+
+  /**
+   * The current target being observed.
+   */
+  target: T | null;
+
+  /**
+   * Whether `IntersectionObserver` is available in the current environment.
+   */
+  isSupported: boolean;
+
+  /**
+   * Manually disconnect the active observer.
+   */
+  disconnect: () => void;
+}
+
+function isRefObject<T>(value: MaybeRef<T>): value is RefObject<T | null> {
+  return typeof value === "object" && value !== null && "current" in value;
+}
+
+function resolveMaybeRef<T>(value: MaybeRef<T> | undefined): T | null {
+  if (value === undefined || value === null) {
+    return null;
+  }
+
+  if (isRefObject(value)) {
+    return value.current;
+  }
+
+  return value;
+}
+
+function serializeThreshold(threshold: number | number[]): string {
+  return Array.isArray(threshold) ? threshold.join(",") : String(threshold);
 }
 
 /**
- * It returns an IntersectionObserverEntry object if the element is in the viewport, otherwise it
- * returns undefined.
- * @param {IIntersectionObserverProperties}  - IIntersectionObserverProperties
- * @returns The entry is being returned.
+ * Observe an element with the Intersection Observer API.
+ *
+ * Supports both an external `ref` and an internally managed callback ref, exposes
+ * useful derived state, and handles observer cleanup safely.
  */
-export function useIntersectionObserver({
-  ref,
-  options = {
-    threshold: DEFAULT_THRESHOLD,
-    root: null,
-    rootMargin: DEFAULT_ROOT_MARGIN,
-    triggerOnce: false
-  }
-}: IIntersectionObserverProperties): IntersectionObserverEntry | undefined {
-  const { threshold, root, rootMargin, triggerOnce } = options
+export function useIntersectionObserver<T extends Element = Element>({
+  ref: externalRef,
+  root = null,
+  rootMargin = DEFAULT_ROOT_MARGIN,
+  threshold = DEFAULT_THRESHOLD,
+  freezeOnceVisible = false,
+  triggerOnce = false,
+  disabled = false,
+  initialIsIntersecting = false,
+  fallbackInView,
+  onChange,
+}: UseIntersectionObserverOptions<T> = {}): UseIntersectionObserverResult<T> {
+  const initialInView = fallbackInView ?? initialIsIntersecting;
+  const isSupported =
+    typeof window !== "undefined" && typeof window.IntersectionObserver !== "undefined";
 
-  const [entry, setEntry] = useState<IntersectionObserverEntry>()
-  const frozen = entry?.isIntersecting && triggerOnce
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const onChangeRef = useRef(onChange);
+  const previousNodeRef = useRef<T | null>(null);
 
-  const updateEntry = ([entry]: IntersectionObserverEntry[]): void => {
-    setEntry(entry)
-  }
+  const [target, setTarget] = useState<T | null>(externalRef?.current ?? null);
+  const [entry, setEntry] = useState<IntersectionObserverEntry | null>(null);
+  const [isIntersecting, setIsIntersecting] = useState(initialInView);
+  const [hasIntersected, setHasIntersected] = useState(initialInView);
+
+  const freeze = freezeOnceVisible || triggerOnce;
+  const rootNode = resolveMaybeRef(root);
+  const thresholdKey = serializeThreshold(threshold);
+
+  const disconnect = useCallback(() => {
+    observerRef.current?.disconnect();
+    observerRef.current = null;
+  }, []);
+
+  const ref = useCallback<RefCallback<T>>((node) => {
+    setTarget(node);
+  }, []);
 
   useIsomorphicEffect(() => {
-    const node = ref?.current
-    const hasIOSupport = !!window.IntersectionObserver
+    onChangeRef.current = onChange;
+  }, [onChange]);
 
-    if (!hasIOSupport || frozen || !node) return
+  useIsomorphicEffect(() => {
+    if (externalRef?.current !== undefined && externalRef.current !== target) {
+      setTarget(externalRef.current);
+    }
+  }, [externalRef, target]);
 
-    const observerParams = { threshold, root, rootMargin }
-    const observer = new IntersectionObserver(updateEntry, observerParams)
-    observer.observe(node)
+  useIsomorphicEffect(() => {
+    const currentNode = externalRef?.current ?? target;
 
-    return () => observer.disconnect()
-  }, [ref?.current, JSON.stringify(threshold), root, rootMargin, frozen])
-  return entry
+    if (previousNodeRef.current !== currentNode) {
+      previousNodeRef.current = currentNode;
+      setEntry(null);
+      setIsIntersecting(initialInView);
+      setHasIntersected(initialInView);
+    }
+  }, [externalRef, initialInView, target]);
+
+  useIsomorphicEffect(() => {
+    const node = externalRef?.current ?? target;
+
+    if (!isSupported || disabled || !node || (freeze && hasIntersected)) {
+      disconnect();
+      return;
+    }
+
+    const observer = new window.IntersectionObserver(
+      ([nextEntry]) => {
+        setEntry(nextEntry);
+        setIsIntersecting(nextEntry.isIntersecting);
+
+        if (nextEntry.isIntersecting) {
+          setHasIntersected(true);
+        }
+
+        onChangeRef.current?.(nextEntry, observer);
+
+        if (freeze && nextEntry.isIntersecting) {
+          observer.disconnect();
+          observerRef.current = null;
+        }
+      },
+      {
+        root: rootNode,
+        rootMargin,
+        threshold,
+      },
+    );
+
+    observerRef.current = observer;
+    observer.observe(node);
+
+    return disconnect;
+  }, [
+    disconnect,
+    disabled,
+    externalRef,
+    freeze,
+    hasIntersected,
+    isSupported,
+    rootMargin,
+    rootNode,
+    target,
+    thresholdKey,
+  ]);
+
+  return {
+    ref,
+    entry,
+    isIntersecting,
+    hasIntersected,
+    intersectionRatio: entry?.intersectionRatio ?? 0,
+    boundingClientRect: entry?.boundingClientRect ?? null,
+    intersectionRect: entry?.intersectionRect ?? null,
+    rootBounds: entry?.rootBounds ?? null,
+    time: entry?.time ?? 0,
+    target,
+    isSupported,
+    disconnect,
+  };
 }

@@ -1,0 +1,101 @@
+import { DemoFrame } from "../../components/demo-frame";
+import { UseFetchDemo } from "../../components/demos/use-fetch-demo";
+
+# useFetch
+
+`useFetch` is a lightweight data-fetching primitive with request parsing, abort handling, optional caching, and manual refetch support.
+
+<DemoFrame
+  title="Manual fetch flow"
+  description="This demo shows a request you trigger on demand with refetch and abort controls."
+>
+  <UseFetchDemo />
+</DemoFrame>
+
+## Import
+
+```tsx
+import { useFetch } from "@thepuskar/use-kit/client";
+```
+
+## Signature
+
+```ts
+const result = useFetch<T>(input, init?, options?);
+```
+
+## Parameters
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `input` | `RequestInfo \| URL \| null \| undefined` | required | Request target. Use `null` or `undefined` to disable requests entirely. |
+| `init` | `RequestInit` | `undefined` | Fetch options such as method, headers, and body. |
+| `options.enabled` | `boolean` | `true` | Runs the request automatically when enabled. |
+| `options.initialData` | `T \| null` | `null` | Initial data before the first successful response. |
+| `options.cacheTime` | `number` | `0` | Cache lifetime in milliseconds. `0` disables caching. |
+| `options.cacheKey` | `string \| null` | derived for `GET`/`HEAD` | Custom cache key. Set `null` to disable caching for that request. |
+| `options.keepPreviousData` | `boolean` | `true` | Keeps the last successful data visible while a new request is running. |
+| `options.parse` | `(response: Response) => Promise<T>` | smart parser | Custom response parser. Defaults to JSON for JSON responses, text for text responses, and `Blob` otherwise. |
+
+## Returns
+
+| Key | Type | Description |
+| --- | --- | --- |
+| `data` | `T \| null` | Parsed response data. |
+| `error` | `Error \| UseFetchError \| null` | Last request error, including HTTP metadata for failed responses. |
+| `response` | `Response \| null` | Last successful network response object. |
+| `status` | `"idle" \| "loading" \| "success" \| "error"` | Current request status. |
+| `statusCode` | `number \| null` | Last HTTP status code seen by the hook. |
+| `loading` | `boolean` | Alias for `isFetching`. |
+| `isFetching` | `boolean` | Whether a request is currently in flight. |
+| `isIdle` | `boolean` | Whether no request has run yet. |
+| `isSuccess` | `boolean` | Whether the last request completed successfully. |
+| `isError` | `boolean` | Whether the last request ended in error. |
+| `refetch` | `(options?: { ignoreCache?: boolean }) => Promise<T \| null>` | Runs the request again. By default it bypasses cache. |
+| `abort` | `() => void` | Aborts the active request. |
+
+## Usage
+
+```tsx
+"use client";
+
+import { useFetch } from "@thepuskar/use-kit/client";
+
+type Post = {
+  id: number;
+  title: string;
+};
+
+export function PostsList() {
+  const { data, loading, error, refetch } = useFetch<Post[]>(
+    "https://jsonplaceholder.typicode.com/posts",
+    undefined,
+    {
+      cacheTime: 30_000,
+    },
+  );
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error.message}</p>;
+
+  return (
+    <div>
+      <button type="button" onClick={refetch}>
+        Refetch
+      </button>
+      <ul>
+        {(data as Post[]).slice(0, 5).map((post) => (
+          <li key={post.id}>{post.title}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
+## Notes
+
+- `useFetch` is intentionally small and stays close to the native `fetch` model.
+- `refetch()` bypasses cache by default, which is usually what you want for manual refresh buttons.
+- Use `parse` when the response is not JSON or when you want custom decoding.
+- For advanced caching, retries, background refetching, mutations, pagination, or invalidation, use TanStack Query.

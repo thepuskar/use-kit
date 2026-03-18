@@ -1,19 +1,50 @@
-import { useState, useCallback, Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useCallback, useRef, useState } from "react";
 
-/**
- * `useToggle` is a custom hook that returns a boolean value, a function to toggle the boolean value,
- * and a function to set the boolean value
- * @param {boolean} initialValue - boolean - The initial value of the toggle.
- * @returns An array of 3 elements.
- */
-export const useToggle = (
-  initialValue: boolean
-): [boolean, () => void, Dispatch<SetStateAction<boolean>>] => {
-  const [value, setValue] = useState<boolean>(initialValue)
+export type ToggleValue = boolean | (() => boolean);
+export type ToggleHandler = (nextValue?: boolean) => void;
 
-  const toggle = useCallback((value?: boolean) => {
-    setValue((prevState) => value ?? !prevState)
-  }, [])
+export interface UseToggleActions {
+  setTrue: () => void;
+  setFalse: () => void;
+  reset: () => void;
+}
 
-  return [value, toggle, setValue]
+export type UseToggleReturn = readonly [
+  value: boolean,
+  toggle: ToggleHandler,
+  setValue: Dispatch<SetStateAction<boolean>>,
+  actions: UseToggleActions,
+];
+
+export function useToggle(initialValue: ToggleValue = false): UseToggleReturn {
+  const [value, setValue] = useState<boolean>(initialValue);
+  const initialValueRef = useRef(value);
+
+  const toggle = useCallback<ToggleHandler>((nextValue) => {
+    setValue((currentValue) => (typeof nextValue === "boolean" ? nextValue : !currentValue));
+  }, []);
+
+  const setTrue = useCallback(() => {
+    setValue(true);
+  }, []);
+
+  const setFalse = useCallback(() => {
+    setValue(false);
+  }, []);
+
+  const reset = useCallback(() => {
+    setValue(initialValueRef.current);
+  }, []);
+
+  const actionsRef = useRef<UseToggleActions>();
+
+  if (!actionsRef.current) {
+    actionsRef.current = {
+      setTrue,
+      setFalse,
+      reset,
+    };
+  }
+
+  return [value, toggle, setValue, actionsRef.current];
 }

@@ -1,9 +1,12 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
+
 import { useOnScreen } from "./useOnScreen";
 
 export const UseOnScreenDemo = () => {
   const elementRef = useRef<HTMLDivElement | null>(null);
-  const isElementOnScreen = useOnScreen(elementRef);
+  const isElementOnScreen = useOnScreen(elementRef, {
+    threshold: 0.5,
+  });
 
   return (
     <div>

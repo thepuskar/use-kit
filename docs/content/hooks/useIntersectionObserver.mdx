@@ -1,0 +1,82 @@
+import { DemoFrame } from "../../components/demo-frame";
+import { UseIntersectionObserverDemo } from "../../components/demos/use-intersection-observer-demo";
+
+# useIntersectionObserver
+
+`useIntersectionObserver` is the lower-level visibility hook in `use-kit`.
+
+It supports both an external ref and the callback ref returned by the hook.
+
+<DemoFrame
+  title="Scrollable visibility tracker"
+  description="This demo uses the real hook against a scroll container so you can see the observer state update live."
+>
+  <UseIntersectionObserverDemo />
+</DemoFrame>
+
+## Import
+
+```tsx
+import { useIntersectionObserver } from "@thepuskar/use-kit/client";
+```
+
+## Signature
+
+```ts
+const result = useIntersectionObserver<T>(options?);
+```
+
+## Parameters
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `ref` | `React.RefObject<T \| null> \| null` | `undefined` | Optional external ref for the target element. |
+| `root` | `Element \| Document \| React.RefObject<Element \| null> \| null` | `null` | Custom observer root. |
+| `rootMargin` | `string` | `"0px"` | Root margin passed to the observer. |
+| `threshold` | `number \| number[]` | `0` | Visibility threshold or thresholds. |
+| `freezeOnceVisible` | `boolean` | `false` | Stops observing after the first visible intersection. |
+| `triggerOnce` | `boolean` | `false` | Legacy compatibility alias for `freezeOnceVisible`. |
+| `disabled` | `boolean` | `false` | Prevents observation without unmounting the hook. |
+| `initialIsIntersecting` | `boolean` | `false` | Initial visibility state before the first observer update. |
+| `fallbackInView` | `boolean` | `undefined` | Fallback visibility state when `IntersectionObserver` is unavailable. |
+| `onChange` | `(entry, observer) => void` | `undefined` | Runs on each observer update. |
+
+## Returns
+
+| Key | Description |
+| --- | --- |
+| `ref` | Callback ref for the target element. |
+| `entry` | Latest `IntersectionObserverEntry` or `null`. |
+| `isIntersecting` | Whether the target is currently visible. |
+| `hasIntersected` | Whether the target has ever intersected in the current lifecycle. |
+| `intersectionRatio` | Latest ratio, defaults to `0`. |
+| `boundingClientRect` | Latest bounding rect or `null`. |
+| `intersectionRect` | Latest intersection rect or `null`. |
+| `rootBounds` | Latest root bounds or `null`. |
+| `time` | Timestamp from the latest entry. |
+| `target` | Current observed node or `null`. |
+| `isSupported` | Whether `IntersectionObserver` exists in the current environment. |
+| `disconnect` | Manually disconnects the active observer. |
+
+## Usage
+
+```tsx
+"use client";
+
+import { useIntersectionObserver } from "@thepuskar/use-kit/client";
+
+export function LazyImage({ src }: { src: string }) {
+  const { ref, isIntersecting } = useIntersectionObserver<HTMLDivElement>({
+    threshold: 0.25,
+    freezeOnceVisible: true,
+  });
+
+  return <div ref={ref}>{isIntersecting ? <img src={src} alt="" /> : null}</div>;
+}
+```
+
+## Notes
+
+- `freezeOnceVisible` is the preferred option name.
+- Use `ref` when the target node is created inside the same component.
+- For a simpler boolean-only API, use `useOnScreen`.

@@ -1,0 +1,65 @@
+import { DemoFrame } from "../../components/demo-frame";
+import { ForDemo } from "../../components/demos/for-demo";
+
+# For
+
+`For` is a small rendering utility component for list output, loading states, empty states, and wrapper composition.
+
+<DemoFrame
+  title="List rendering with loading and empty states"
+  description="This demo uses the actual `For` component and lets you toggle loading and empty states without leaving the page."
+>
+  <ForDemo />
+</DemoFrame>
+
+## Import
+
+```tsx
+import { For } from "@thepuskar/use-kit";
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `each` | `T[]` | required | Array to render. |
+| `children` | `(item: T, index: number, array: T[]) => ReactNode` | required | Render function for each item. |
+| `getKey` | `(item: T, index: number) => string \| number` | `undefined` | Stable key extractor. |
+| `empty` | `() => ReactNode` | `undefined` | Render function used when the array is empty. |
+| `loading` | `() => ReactNode` | `undefined` | Render function used when loading. |
+| `isLoading` | `boolean` | `false` | Enables the loading branch. |
+| `as` | `ElementType` | `undefined` | Wrapper element or component. |
+| `wrapperProps` | `Omit<ComponentProps<E>, "children">` | `{}` | Props passed to the wrapper. |
+
+## Usage
+
+```tsx
+import { For } from "@thepuskar/use-kit";
+
+function ProductList({
+  products,
+  isLoading,
+}: {
+  products: { id: string; name: string }[];
+  isLoading: boolean;
+}) {
+  return (
+    <For
+      each={products}
+      isLoading={isLoading}
+      getKey={(product) => product.id}
+      loading={() => <p>Loading products...</p>}
+      empty={() => <p>No products found.</p>}
+      as="ul"
+    >
+      {(product) => <li>{product.name}</li>}
+    </For>
+  );
+}
+```
+
+## Notes
+
+- Provide `getKey` when the list has stable item identifiers.
+- Use `as` when you need a wrapper element like `ul`, `ol`, or `section`.
+- This component is available from the server-safe entrypoint.
