@@ -1,6 +1,6 @@
 "use client";
 
-import { Match, Switch } from "@use-kit/client";
+import { Match, Switch } from "@thepuskar/use-kit";
 import { useMemo, useState } from "react";
 
 import styles from "./demo-tokens.module.css";

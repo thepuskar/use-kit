@@ -1,6 +1,6 @@
 "use client";
 
-import { useArray } from "@use-kit/client";
+import { useArray } from "@thepuskar/use-kit/client";
 
 import styles from "./demo-tokens.module.css";
 

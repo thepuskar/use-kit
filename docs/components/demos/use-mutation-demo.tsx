@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation } from "@use-kit/client";
+import { useMutation } from "@thepuskar/use-kit/client";
 import { useState } from "react";
 
 import styles from "./demo-tokens.module.css";

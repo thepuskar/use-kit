@@ -1,6 +1,6 @@
 "use client";
 
-import { useToggle } from "@use-kit/client";
+import { useToggle } from "@thepuskar/use-kit/client";
 
 import styles from "./demo-tokens.module.css";
 

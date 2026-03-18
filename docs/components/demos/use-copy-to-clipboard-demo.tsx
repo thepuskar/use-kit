@@ -1,6 +1,6 @@
 "use client";
 
-import { useCopyToClipboard } from "@use-kit/client";
+import { useCopyToClipboard } from "@thepuskar/use-kit/client";
 import { useState } from "react";
 
 import styles from "./demo-tokens.module.css";

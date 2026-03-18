@@ -1,6 +1,6 @@
 "use client";
 
-import { useIntersectionObserver } from "@use-kit/client";
+import { useIntersectionObserver } from "@thepuskar/use-kit/client";
 import { useRef } from "react";
 
 import styles from "./demo-tokens.module.css";

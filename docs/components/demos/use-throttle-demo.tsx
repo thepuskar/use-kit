@@ -1,6 +1,6 @@
 "use client";
 
-import { useThrottle } from "@use-kit/client";
+import { useThrottle } from "@thepuskar/use-kit/client";
 import { useState } from "react";
 
 import styles from "./demo-tokens.module.css";
