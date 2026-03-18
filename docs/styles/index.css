@@ -1,11 +1,76 @@
-.use-kit-logo {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 1.5rem;
-  font-weight: 700;
+@import "tailwindcss";
+@import "nextra-theme-docs/style.css";
+
+@variant dark (&:where(.dark *));
+
+:root {
+  color-scheme: light;
 }
-.use-kit-logo svg {
-  width: 32px;
-  height: 32px;
+
+.dark {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.92), rgba(248, 250, 252, 0.98)),
+    repeating-linear-gradient(
+      to right,
+      rgba(148, 163, 184, 0.08) 0,
+      rgba(148, 163, 184, 0.08) 1px,
+      transparent 1px,
+      transparent 32px
+    ),
+    #f8fafc;
+}
+
+.dark body {
+  background:
+    linear-gradient(to bottom, rgba(2, 6, 23, 0.98), rgba(15, 23, 42, 0.98)),
+    repeating-linear-gradient(
+      to right,
+      rgba(51, 65, 85, 0.24) 0,
+      rgba(51, 65, 85, 0.24) 1px,
+      transparent 1px,
+      transparent 32px
+    ),
+    #020617;
+}
+
+.use-kit-docs {
+  color: #0f172a;
+}
+
+.use-kit-footer-link {
+  border: 1px solid rgba(226, 232, 240, 1);
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.6rem 0.9rem;
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease,
+    color 150ms ease,
+    transform 150ms ease;
+}
+
+.use-kit-footer-link:hover {
+  border-color: rgba(148, 163, 184, 1);
+  color: #0f172a;
+  background: rgba(248, 250, 252, 1);
+}
+
+.dark .use-kit-footer-link {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(15, 23, 42, 0.88);
+}
+
+.dark .use-kit-footer-link:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  background: rgba(15, 23, 42, 1);
 }
