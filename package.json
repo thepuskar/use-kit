@@ -87,6 +87,7 @@
     "@commitlint/config-conventional": "^19.8.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
+    "@types/node": "^25.5.0",
     "@types/react": "^18.3.19",
     "@types/react-dom": "^18.3.5",
     "@typescript-eslint/eslint-plugin": "^8.28.0",

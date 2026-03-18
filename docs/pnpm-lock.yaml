@@ -7,6 +7,9 @@ settings:
 importers:
   .:
     dependencies:
+      "@thepuskar/use-kit":
+        specifier: 1.0.4
+        version: 1.0.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       next:
         specifier: ^16.1.6
         version: 16.1.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -35,6 +38,9 @@ importers:
       "@types/react-dom":
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.14)
+      cross-env:
+        specifier: ^10.1.0
+        version: 10.1.0
       tailwindcss:
         specifier: ^4.2.1
         version: 4.2.1
@@ -96,6 +102,12 @@ packages:
     resolution:
       {
         integrity: sha512-QN75eB0IH2ywSpRpNddCRfQIhmJYBCJ1x5Lb3IscKAL8bMnVAKnRg8dCoXbHzVLLH7P38N2Z3mtulB7W0J0FKw==,
+      }
+
+  "@epic-web/invariant@1.0.0":
+    resolution:
+      {
+        integrity: sha512-lrTPqgvfFQtR/eY/qkIzp98OGdNJu0m5ji3q/nJI8v3SXkRKEnWiOxMmbvcSoAIzv/cGiuvRy57k4suKQSAdwA==,
       }
 
   "@floating-ui/core@1.7.5":
@@ -931,6 +943,16 @@ packages:
         integrity: sha512-ma6DvR03gdbvwqfKx1omqhg9May/VYGdMHvTzB4VuxkyS7KzfZ/lzrj43hmcsggpMje0x7SADA/pcMph0ejRnA==,
       }
 
+  "@thepuskar/use-kit@1.0.4":
+    resolution:
+      {
+        integrity: sha512-bYqRTjFd8y+RAUDRf7B48zCHfAQqL1t1cL5rYPTHzivmZ8H9Kmgo4uKaPxlSKdHOpXMnmZxvMW4fkm4qBKa+3g==,
+      }
+    engines: { node: ">=20" }
+    peerDependencies:
+      react: ">=18"
+      react-dom: ">=18"
+
   "@ts-morph/common@0.28.1":
     resolution:
       {
@@ -1473,6 +1495,14 @@ packages:
       {
         integrity: sha512-AzlgcsCbUMymkADOJtQm3wO9S3ltPfYOFD5033keQn9NJzIbtnZj+UdBJe7DYml/8TdbtHJW3j58SOnKhWY/5g==,
       }
+
+  cross-env@10.1.0:
+    resolution:
+      {
+        integrity: sha512-GsYosgnACZTADcmEyJctkJIoqAhHjttw7RsFrVoJNXbsWWqaq6Ym+7kZjq6mS45O0jij6vtiReppKQEtqWy6Dw==,
+      }
+    engines: { node: ">=20" }
+    hasBin: true
 
   cross-spawn@7.0.6:
     resolution:
@@ -3777,6 +3807,8 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
+  "@epic-web/invariant@1.0.0": {}
+
   "@floating-ui/core@1.7.5":
     dependencies:
       "@floating-ui/utils": 0.2.11
@@ -4258,6 +4290,11 @@ snapshots:
       npm-to-yarn: 3.0.1
       unist-util-visit: 5.1.0
 
+  "@thepuskar/use-kit@1.0.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)":
+    dependencies:
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
+
   "@ts-morph/common@0.28.1":
     dependencies:
       minimatch: 10.2.4
@@ -4540,6 +4577,11 @@ snapshots:
   cose-base@2.2.0:
     dependencies:
       layout-base: 2.0.1
+
+  cross-env@10.1.0:
+    dependencies:
+      "@epic-web/invariant": 1.0.0
+      cross-spawn: 7.0.6
 
   cross-spawn@7.0.6:
     dependencies:

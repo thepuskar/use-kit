@@ -11,17 +11,6 @@
     "esModuleInterop": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "baseUrl": ".",
-    "paths": {
-      "@thepuskar/use-kit": ["../src/index.ts"],
-      "@thepuskar/use-kit/client": ["../src/client/index.ts"],
-      "@thepuskar/use-kit/hooks": ["../src/client/hooks.ts"],
-      "@thepuskar/use-kit/server": ["../src/server/index.ts"],
-      "@use-kit": ["../src/index.ts"],
-      "@use-kit/client": ["../src/client/index.ts"],
-      "@use-kit/hooks": ["../src/client/hooks.ts"],
-      "@use-kit/server": ["../src/server/index.ts"]
-    },
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
