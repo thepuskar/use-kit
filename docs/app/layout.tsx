@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Head } from "nextra/components";
-import { Footer, Layout, Navbar } from "nextra-theme-docs";
+import { Footer, Layout, Navbar, ThemeSwitch } from "nextra-theme-docs";
 import { getPageMap } from "nextra/page-map";
 
 import { SiteLogo } from "../components/site-logo";
@@ -57,6 +57,7 @@ function ResourcePills() {
           {link.label}
         </a>
       ))}
+      <ThemeSwitch className="use-kit-theme-toggle" lite />
     </div>
   );
 }
