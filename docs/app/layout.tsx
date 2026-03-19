@@ -4,6 +4,7 @@ import { Head } from "nextra/components";
 import { Footer, Layout, Navbar, ThemeSwitch } from "nextra-theme-docs";
 import { getPageMap } from "nextra/page-map";
 
+import { DocsSearch } from "../components/docs-search";
 import { SiteLogo } from "../components/site-logo";
 import "../styles/index.css";
 
@@ -211,6 +212,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <Layout
           pageMap={pageMap}
           docsRepositoryBase="https://github.com/thepuskar/use-kit/tree/main/docs"
+          search={<DocsSearch />}
           editLink={<span>Edit this page on GitHub</span>}
           feedback={{
             content: "Report a docs issue",
