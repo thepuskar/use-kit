@@ -21,6 +21,7 @@
   "homepage": "https://github.com/thepuskar/use-kit#readme",
   "dependencies": {
     "@thepuskar/use-kit": "1.0.4",
+    "lucide-react": "^0.577.0",
     "next": "^16.1.6",
     "nextra": "4.6.1",
     "nextra-theme-docs": "4.6.1",
