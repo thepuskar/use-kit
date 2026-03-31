@@ -1,6 +1,6 @@
 {
   "name": "@thepuskar/use-kit",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "React hooks and utility components with RSC-safe server/client entrypoints.",
   "author": "Puskar Adhikari <puskar.ad@gmail.com>",
   "license": "MIT",
