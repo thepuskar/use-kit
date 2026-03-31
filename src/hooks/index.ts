@@ -11,6 +11,7 @@ export * from "./useGetLatest";
 export * from "./useGetScrollPosition";
 export * from "./useIntersectionObserver";
 export * from "./useIsomorphicEffect";
+export * from "./useLocalStorage";
 export * from "./useMounted";
 export * from "./useMutation";
 export * from "./useOnScreen";
