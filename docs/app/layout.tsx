@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import type { ReactNode, SVGProps } from "react";
-import { Head } from "nextra/components";
 import { Footer, Layout, Navbar, ThemeSwitch } from "nextra-theme-docs";
 import { getPageMap } from "nextra/page-map";
 
@@ -82,6 +81,28 @@ export const metadata: Metadata = {
   },
   keywords: ["react hooks", "use-kit", "nextra", "next.js", "typescript", "utility components"],
 };
+
+const themeHeadStyle = `
+:root {
+  --nextra-primary-hue: 215deg;
+  --nextra-primary-saturation: 18%;
+  --nextra-primary-lightness: 38%;
+  --nextra-bg: 248,250,252;
+  --nextra-content-width: 90rem;
+}
+.dark {
+  --nextra-primary-hue: 215deg;
+  --nextra-primary-saturation: 18%;
+  --nextra-primary-lightness: 86%;
+  --nextra-bg: 10,16,32;
+}
+::selection {
+  background: hsla(var(--nextra-primary-hue),var(--nextra-primary-saturation),var(--nextra-primary-lightness),.3);
+}
+html {
+  background: rgb(var(--nextra-bg));
+}
+`.trim();
 
 function ResourcePills() {
   return (
@@ -194,20 +215,11 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
 
   return (
     <html lang="en" dir="ltr" suppressHydrationWarning>
-      <Head
-        color={{
-          hue: 215,
-          saturation: 18,
-          lightness: {
-            light: 38,
-            dark: 86,
-          },
-        }}
-        backgroundColor={{
-          light: "#f8fafc",
-          dark: "#0a1020",
-        }}
-      />
+      <head suppressHydrationWarning>
+        <style>{themeHeadStyle}</style>
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="rgb(248,250,252)" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="rgb(10,16,32)" />
+      </head>
       <body className="use-kit-docs">
         <Layout
           pageMap={pageMap}
