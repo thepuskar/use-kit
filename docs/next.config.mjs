@@ -6,7 +6,7 @@ import nextra from "nextra";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
 const docsNodeModules = path.resolve(__dirname, "node_modules");
-const useSourceAliases = process.env.USE_KIT_SOURCE === "1";
+const useSourceAliases = process.env.USE_KIT_SOURCE !== "0";
 const webpackAlias = useSourceAliases
   ? {
       react: path.resolve(docsNodeModules, "react"),

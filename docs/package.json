@@ -4,9 +4,9 @@
   "description": "Documentation site for @thepuskar/use-kit",
   "scripts": {
     "dev": "node ./scripts/generate-search-index.mjs && next dev",
-    "dev:source": "node ./scripts/generate-search-index.mjs && cross-env USE_KIT_SOURCE=1 next dev",
+    "dev:published": "node ./scripts/generate-search-index.mjs && cross-env USE_KIT_SOURCE=0 next dev",
     "build": "node ./scripts/generate-search-index.mjs && next build",
-    "build:source": "node ./scripts/generate-search-index.mjs && cross-env USE_KIT_SOURCE=1 next build",
+    "build:published": "node ./scripts/generate-search-index.mjs && cross-env USE_KIT_SOURCE=0 next build",
     "start": "next start"
   },
   "repository": {
