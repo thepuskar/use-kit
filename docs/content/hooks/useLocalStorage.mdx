@@ -1,0 +1,114 @@
+import { DemoFrame } from "../../components/demo-frame";
+import { UseLocalStorageDemo } from "../../components/demos/use-local-storage-demo";
+
+# useLocalStorage
+
+`useLocalStorage` persists React state in `localStorage` with safe JSON serialization, functional updates, and explicit reset and remove helpers.
+
+<DemoFrame
+  title="Persistent draft editor"
+  description="This demo shows the common pattern: state stays in sync with localStorage, so reloading the page keeps the draft."
+>
+  <UseLocalStorageDemo />
+</DemoFrame>
+
+## Import
+
+```tsx
+import { useLocalStorage } from "@thepuskar/use-kit/client";
+```
+
+## Signature
+
+```ts
+const { value, setValue, remove, reset, isSupported } = useLocalStorage<T>(key, initialValue);
+```
+
+## Parameters
+
+| Name           | Type           | Description                                                                                       |
+| -------------- | -------------- | ------------------------------------------------------------------------------------------------- |
+| `key`          | `string`       | `localStorage` key used to read, write, remove, and reset the stored value.                       |
+| `initialValue` | `T \| () => T` | Fallback value used when storage is empty, invalid, or unavailable. Supports lazy initialization. |
+
+## Returns
+
+| Key           | Type                          | Description                                                                             |
+| ------------- | ----------------------------- | --------------------------------------------------------------------------------------- |
+| `value`       | `T`                           | Current React state value.                                                              |
+| `setValue`    | `Dispatch<SetStateAction<T>>` | Updates state and writes the next value to `localStorage`. Supports functional updates. |
+| `remove`      | `() => void`                  | Removes the storage key and resets state back to the fallback value.                    |
+| `reset`       | `() => void`                  | Restores the fallback value and writes it back to `localStorage`.                       |
+| `isSupported` | `boolean`                     | Whether `localStorage` is available in the current environment.                         |
+
+## Usage
+
+```tsx
+"use client";
+
+import { useLocalStorage } from "@thepuskar/use-kit/client";
+
+export function DraftMessage() {
+  const { value: draft, setValue, remove } = useLocalStorage("draft-message", "");
+
+  return (
+    <div>
+      <textarea value={draft} onChange={(event) => setValue(event.target.value)} />
+      <button type="button" onClick={remove}>
+        Clear draft
+      </button>
+    </div>
+  );
+}
+```
+
+```tsx
+"use client";
+
+import { useLocalStorage } from "@thepuskar/use-kit/client";
+
+interface UserPreferences {
+  compactMode: boolean;
+  itemsPerPage: number;
+  tags: string[];
+}
+
+export function PreferencesPanel() {
+  const {
+    value: preferences,
+    setValue,
+    reset,
+  } = useLocalStorage<UserPreferences>("user-preferences", {
+    compactMode: false,
+    itemsPerPage: 20,
+    tags: ["react", "typescript"],
+  });
+
+  return (
+    <div>
+      <p>{preferences.itemsPerPage} items</p>
+      <button
+        type="button"
+        onClick={() =>
+          setValue((currentValue) => ({
+            ...currentValue,
+            compactMode: !currentValue.compactMode,
+          }))
+        }
+      >
+        Toggle compact mode
+      </button>
+      <button type="button" onClick={reset}>
+        Reset preferences
+      </button>
+    </div>
+  );
+}
+```
+
+## Notes
+
+- The hook reads existing stored JSON first and falls back to `initialValue` when the key is missing, malformed, or unavailable.
+- `remove()` clears the key from `localStorage`, while `reset()` writes the fallback value back into storage.
+- Explicit `undefined` values are preserved by the hook's serializer, but values still need to be JSON-serializable to persist correctly.
+- In non-browser environments, the hook falls back to React state and reports `isSupported` as `false`.

@@ -11,6 +11,7 @@
   "useDebounce": "useDebounce",
   "useThrottle": "useThrottle",
   "useArray": "useArray",
+  "useLocalStorage": "useLocalStorage",
   "useFetch": "useFetch",
   "useMutation": "useMutation",
   "useOnScreen": "useOnScreen",
