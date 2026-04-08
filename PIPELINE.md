@@ -16,8 +16,8 @@ typed reusable React hooks, small utility components, and clear client/server bo
 
 ## Phase 2: High-Value Hook Additions
 
-- [ ] `useLocalStorage`
-- [ ] `useSessionStorage`
+- [x] `useLocalStorage`
+- [x] `useSessionStorage`
 - [ ] `usePrevious`
 - [ ] `useControllableState`
 - [ ] `useDisclosure`

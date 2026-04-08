@@ -1,1 +1,1 @@
-export * from './useGetLatest'
+export * from "./useGetLatest";

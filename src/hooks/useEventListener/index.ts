@@ -1,1 +1,1 @@
-export * from './useEventListener'
+export * from "./useEventListener";

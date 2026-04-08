@@ -1,1 +1,1 @@
-export * from './useWindowScroll'
+export * from "./useWindowScroll";

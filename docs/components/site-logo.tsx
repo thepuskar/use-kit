@@ -4,8 +4,8 @@ type SiteLogoProps = {
 
 export function SiteLogo({ compact = false }: SiteLogoProps) {
   return (
-    <span className="flex items-center gap-3 text-slate-950 dark:text-white">
-      <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-300 bg-white shadow-sm dark:border-white/10 dark:bg-slate-950">
+    <span className="flex items-center gap-3 text-[var(--uk-text-primary)]">
+      <span className="flex h-11 w-11 items-center justify-center rounded-lg border border-[var(--uk-border-subtle)] bg-[rgba(255,255,255,0.75)] shadow-[var(--uk-shadow-soft)] dark:bg-[rgba(255,255,255,0.05)]">
         <svg
           width="28"
           height="28"
@@ -33,9 +33,7 @@ export function SiteLogo({ compact = false }: SiteLogoProps) {
       </span>
 
       <span className="flex flex-col">
-        <span className="text-[0.65rem] font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">
-          {compact ? "Docs" : "React Utility Library"}
-        </span>
+        <span className="use-kit-muted-label">{compact ? "Docs" : "React utility library"}</span>
         <span className="text-base font-semibold tracking-[-0.02em] sm:text-lg">
           @thepuskar/use-kit
         </span>

@@ -1,55 +1,55 @@
 import { DemoFrame } from "../../components/demo-frame";
-import { UseLocalStorageDemo } from "../../components/demos/use-local-storage-demo";
+import { UseSessionStorageDemo } from "../../components/demos/use-session-storage-demo";
 
-# useLocalStorage
+# useSessionStorage
 
-`useLocalStorage` persists React state in `localStorage` with safe JSON serialization, functional updates, and explicit reset and remove helpers.
+`useSessionStorage` persists React state in `sessionStorage` with safe JSON serialization, functional updates, and explicit reset and remove helpers. Values last for the browser tab session and clear when the tab closes.
 
 <DemoFrame
-  title="Persistent draft editor"
-  description="This demo shows the common pattern: state stays in sync with localStorage, so reloading the page keeps the draft."
+  title="Session draft editor"
+  description="This demo shows the common pattern: state stays in sync with sessionStorage for the lifetime of the tab."
 >
-  <UseLocalStorageDemo />
+  <UseSessionStorageDemo />
 </DemoFrame>
 
 ## Import
 
 ```tsx
-import { useLocalStorage } from "@thepuskar/use-kit/client";
+import { useSessionStorage } from "@thepuskar/use-kit/client";
 ```
 
 ## Signature
 
 ```ts
-const { value, setValue, remove, reset, isSupported } = useLocalStorage<T>(key, initialValue);
+const { value, setValue, remove, reset, isSupported } = useSessionStorage<T>(key, initialValue);
 ```
 
 ## Parameters
 
 | Name           | Type           | Description                                                                                       |
 | -------------- | -------------- | ------------------------------------------------------------------------------------------------- |
-| `key`          | `string`       | `localStorage` key used to read, write, remove, and reset the stored value.                       |
+| `key`          | `string`       | `sessionStorage` key used to read, write, remove, and reset the stored value.                     |
 | `initialValue` | `T \| () => T` | Fallback value used when storage is empty, invalid, or unavailable. Supports lazy initialization. |
 
 ## Returns
 
-| Key           | Type                          | Description                                                                             |
-| ------------- | ----------------------------- | --------------------------------------------------------------------------------------- |
-| `value`       | `T`                           | Current React state value.                                                              |
-| `setValue`    | `Dispatch<SetStateAction<T>>` | Updates state and writes the next value to `localStorage`. Supports functional updates. |
-| `remove`      | `() => void`                  | Removes the storage key and resets state back to the fallback value.                    |
-| `reset`       | `() => void`                  | Restores the fallback value and writes it back to `localStorage`.                       |
-| `isSupported` | `boolean`                     | Whether `localStorage` is available in the current environment.                         |
+| Key           | Type                          | Description                                                                               |
+| ------------- | ----------------------------- | ----------------------------------------------------------------------------------------- |
+| `value`       | `T`                           | Current React state value.                                                                |
+| `setValue`    | `Dispatch<SetStateAction<T>>` | Updates state and writes the next value to `sessionStorage`. Supports functional updates. |
+| `remove`      | `() => void`                  | Removes the storage key and resets state back to the fallback value.                      |
+| `reset`       | `() => void`                  | Restores the fallback value and writes it back to `sessionStorage`.                       |
+| `isSupported` | `boolean`                     | Whether `sessionStorage` is available in the current environment.                         |
 
 ## Usage
 
 ```tsx
 "use client";
 
-import { useLocalStorage } from "@thepuskar/use-kit/client";
+import { useSessionStorage } from "@thepuskar/use-kit/client";
 
 export function DraftMessage() {
-  const { value: draft, setValue, remove } = useLocalStorage("draft-message", "");
+  const { value: draft, setValue, remove } = useSessionStorage("draft-message", "");
 
   return (
     <div>
@@ -65,7 +65,7 @@ export function DraftMessage() {
 ```tsx
 "use client";
 
-import { useLocalStorage } from "@thepuskar/use-kit/client";
+import { useSessionStorage } from "@thepuskar/use-kit/client";
 
 interface UserPreferences {
   compactMode: boolean;
@@ -78,7 +78,7 @@ export function PreferencesPanel() {
     value: preferences,
     setValue,
     reset,
-  } = useLocalStorage<UserPreferences>("user-preferences", {
+  } = useSessionStorage<UserPreferences>("user-preferences", {
     compactMode: false,
     itemsPerPage: 20,
     tags: ["react", "typescript"],
@@ -111,6 +111,7 @@ export function PreferencesPanel() {
 - The hook reads existing stored JSON first and falls back to `initialValue` when the key is missing, malformed, or unavailable.
 - `remove()` and `reset()` always resolve the fallback from the **latest** `initialValue` you pass for the same `key` (handy when defaults come from props). Changing `initialValue` does not overwrite an existing stored value until you call `setValue`, `reset`, or `remove`.
 - `setValue` avoids writing to storage when the resolved value is unchanged (`Object.is`), which reduces work for no-op functional updates.
-- `remove()` clears the key from `localStorage`, while `reset()` writes the fallback value back into storage.
+- `remove()` clears the key from `sessionStorage`, while `reset()` writes the fallback value back into storage.
 - Explicit `undefined` values are preserved by the hook's serializer, but values still need to be JSON-serializable to persist correctly.
 - In non-browser environments, the hook falls back to React state and reports `isSupported` as `false`.
+- Unlike `localStorage`, `sessionStorage` is scoped to the current tab and does not persist after the tab is closed.

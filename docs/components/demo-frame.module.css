@@ -1,25 +1,24 @@
 .demoFrame {
-  --uk-demo-text: #0f172a;
-  --uk-demo-muted: #475569;
-  --uk-demo-border: rgba(148, 163, 184, 0.3);
-  --uk-demo-border-strong: #cbd5e1;
+  --uk-demo-text: #37352f;
+  --uk-demo-muted: #6f6e69;
+  --uk-demo-border: rgba(55, 53, 47, 0.12);
+  --uk-demo-border-strong: #d4d2cd;
   --uk-demo-bg:
-    radial-gradient(circle at top right, rgba(14, 165, 233, 0.14), transparent 30%),
-    linear-gradient(180deg, rgba(248, 250, 252, 0.96), rgba(255, 255, 255, 1));
-  --uk-demo-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
-  --uk-demo-canvas-bg: rgba(255, 255, 255, 0.92);
-  --uk-demo-accent: #0f766e;
-  --uk-demo-surface: #f8fafc;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(247, 246, 243, 0.98) 100%);
+  --uk-demo-shadow: 0 1px 2px rgba(15, 15, 15, 0.04), 0 8px 24px rgba(15, 15, 15, 0.06);
+  --uk-demo-canvas-bg: rgba(255, 255, 255, 0.88);
+  --uk-demo-accent: hsl(212deg 42% 38%);
+  --uk-demo-surface: rgba(247, 246, 243, 0.95);
   --uk-demo-button-bg: #ffffff;
-  --uk-demo-button-text: #0f172a;
-  --uk-demo-button-active-bg: #0f172a;
-  --uk-demo-button-active-text: #ffffff;
-  --uk-demo-pill-neutral-bg: #e2e8f0;
-  --uk-demo-pill-neutral-text: #334155;
+  --uk-demo-button-text: #37352f;
+  --uk-demo-button-active-bg: #37352f;
+  --uk-demo-button-active-text: #f7f6f3;
+  --uk-demo-pill-neutral-bg: #ebe9e4;
+  --uk-demo-pill-neutral-text: #4a4844;
   --uk-demo-pill-success-bg: #dcfce7;
   --uk-demo-pill-success-text: #166534;
   --uk-demo-scroll-bg:
-    linear-gradient(180deg, rgba(248, 250, 252, 1) 0%, rgba(226, 232, 240, 0.8) 100%);
+    linear-gradient(180deg, rgba(247, 246, 243, 1) 0%, rgba(235, 233, 228, 0.9) 100%);
   --uk-demo-success-bg: #dcfce7;
   --uk-demo-success-border: #86efac;
   --uk-demo-success-text: #166534;
@@ -27,8 +26,8 @@
   --uk-demo-danger-border: #fecaca;
   --uk-demo-danger-text: #991b1b;
   margin: 1.5rem 0;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  border-radius: 18px;
+  border: 1px solid var(--uk-demo-border);
+  border-radius: 0.75rem;
   overflow: hidden;
   background: var(--uk-demo-bg);
   box-shadow: var(--uk-demo-shadow);
@@ -41,16 +40,15 @@
 .eyebrow {
   margin: 0 0 0.25rem;
   font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   color: var(--uk-demo-accent);
 }
 
 .title {
   margin: 0;
   font-size: 1.125rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--uk-demo-text);
 }
 
@@ -65,34 +63,32 @@
 }
 
 .canvas {
-  border-radius: 14px;
+  border-radius: 0.5rem;
   border: 1px solid var(--uk-demo-border);
   background: var(--uk-demo-canvas-bg);
   padding: 1rem;
 }
 
 :global(.dark) .demoFrame {
-  --uk-demo-text: #e5eef9;
-  --uk-demo-muted: #94a3b8;
-  --uk-demo-border: rgba(148, 163, 184, 0.25);
-  --uk-demo-border-strong: rgba(148, 163, 184, 0.32);
-  --uk-demo-bg:
-    radial-gradient(circle at top right, rgba(45, 212, 191, 0.12), transparent 28%),
-    linear-gradient(180deg, rgba(13, 18, 28, 0.98), rgba(10, 15, 23, 1));
-  --uk-demo-shadow: 0 18px 44px rgba(2, 6, 23, 0.45);
-  --uk-demo-canvas-bg: rgba(15, 23, 42, 0.7);
-  --uk-demo-accent: #5eead4;
-  --uk-demo-surface: rgba(15, 23, 42, 0.78);
-  --uk-demo-button-bg: rgba(15, 23, 42, 0.92);
-  --uk-demo-button-text: #e2e8f0;
-  --uk-demo-button-active-bg: #14b8a6;
-  --uk-demo-button-active-text: #042f2e;
-  --uk-demo-pill-neutral-bg: rgba(51, 65, 85, 0.85);
-  --uk-demo-pill-neutral-text: #e2e8f0;
-  --uk-demo-pill-success-bg: rgba(20, 83, 45, 0.9);
+  --uk-demo-text: #e6e6e4;
+  --uk-demo-muted: #9d9b99;
+  --uk-demo-border: rgba(255, 255, 255, 0.1);
+  --uk-demo-border-strong: rgba(255, 255, 255, 0.16);
+  --uk-demo-bg: linear-gradient(180deg, rgba(42, 42, 44, 0.98) 0%, rgba(28, 28, 30, 1) 100%);
+  --uk-demo-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+  --uk-demo-canvas-bg: rgba(255, 255, 255, 0.04);
+  --uk-demo-accent: hsl(212deg 55% 72%);
+  --uk-demo-surface: rgba(255, 255, 255, 0.06);
+  --uk-demo-button-bg: rgba(255, 255, 255, 0.08);
+  --uk-demo-button-text: #e6e6e4;
+  --uk-demo-button-active-bg: hsl(212deg 45% 55%);
+  --uk-demo-button-active-text: #0f1419;
+  --uk-demo-pill-neutral-bg: rgba(255, 255, 255, 0.12);
+  --uk-demo-pill-neutral-text: #e6e6e4;
+  --uk-demo-pill-success-bg: rgba(20, 83, 45, 0.88);
   --uk-demo-pill-success-text: #bbf7d0;
   --uk-demo-scroll-bg:
-    linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.88) 100%);
+    linear-gradient(180deg, rgba(40, 40, 42, 0.95) 0%, rgba(28, 28, 30, 0.92) 100%);
   --uk-demo-success-bg: rgba(20, 83, 45, 0.88);
   --uk-demo-success-border: rgba(74, 222, 128, 0.45);
   --uk-demo-success-text: #bbf7d0;

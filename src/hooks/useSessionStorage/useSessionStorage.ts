@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 
-export type LocalStorageInitialValue<T> = T | (() => T);
+export type SessionStorageInitialValue<T> = T | (() => T);
 
-export interface UseLocalStorageReturn<T> {
+export interface UseSessionStorageReturn<T> {
   value: T;
   setValue: Dispatch<SetStateAction<T>>;
   remove: () => void;
@@ -11,12 +11,12 @@ export interface UseLocalStorageReturn<T> {
 }
 
 interface StoredValueEnvelope {
-  __useKitLocalStorage: true;
+  __useKitSessionStorage: true;
   kind?: "undefined";
   value?: unknown;
 }
 
-function resolveInitialValue<T>(initialValue: LocalStorageInitialValue<T>): T {
+function resolveInitialValue<T>(initialValue: SessionStorageInitialValue<T>): T {
   return typeof initialValue === "function" ? (initialValue as () => T)() : initialValue;
 }
 
@@ -24,7 +24,7 @@ function isStoredValueEnvelope(value: unknown): value is StoredValueEnvelope {
   return (
     typeof value === "object" &&
     value !== null &&
-    (value as Record<string, unknown>).__useKitLocalStorage === true
+    (value as Record<string, unknown>).__useKitSessionStorage === true
   );
 }
 
@@ -34,7 +34,7 @@ function getStorage(): Storage | null {
   }
 
   try {
-    return window.localStorage ?? null;
+    return window.sessionStorage ?? null;
   } catch {
     return null;
   }
@@ -43,20 +43,20 @@ function getStorage(): Storage | null {
 function serializeStoredValue(value: unknown): string {
   if (value === undefined) {
     return JSON.stringify({
-      __useKitLocalStorage: true,
+      __useKitSessionStorage: true,
       kind: "undefined",
     } satisfies StoredValueEnvelope);
   }
 
   return JSON.stringify({
-    __useKitLocalStorage: true,
+    __useKitSessionStorage: true,
     value,
   } satisfies StoredValueEnvelope);
 }
 
 function deserializeStoredValue<T>(
   storedValue: string,
-  initialValue: LocalStorageInitialValue<T>,
+  initialValue: SessionStorageInitialValue<T>,
 ): T {
   try {
     const parsedValue = JSON.parse(storedValue) as unknown;
@@ -79,7 +79,7 @@ function deserializeStoredValue<T>(
   return resolveInitialValue(initialValue);
 }
 
-function readStoredValue<T>(key: string, initialValue: LocalStorageInitialValue<T>): T {
+function readStoredValue<T>(key: string, initialValue: SessionStorageInitialValue<T>): T {
   const storage = getStorage();
 
   if (storage === null) {
@@ -125,13 +125,13 @@ function removeStoredValue(key: string): void {
 }
 
 /**
- * Persist state in localStorage with JSON-safe serialization and reset helpers.
+ * Persist state in sessionStorage with JSON-safe serialization and reset helpers.
  * `remove`/`reset` use the latest `initialValue` for a given `key`; `setValue` skips storage when the value is unchanged (`Object.is`).
  */
-export function useLocalStorage<T>(
+export function useSessionStorage<T>(
   key: string,
-  initialValue: LocalStorageInitialValue<T>,
-): UseLocalStorageReturn<T> {
+  initialValue: SessionStorageInitialValue<T>,
+): UseSessionStorageReturn<T> {
   const previousKeyRef = useRef(key);
   const initialValueRef = useRef(initialValue);
   initialValueRef.current = initialValue;
