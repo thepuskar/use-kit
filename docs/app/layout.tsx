@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
 import type { ReactNode, SVGProps } from "react";
-import { Footer, Layout, Navbar, ThemeSwitch } from "nextra-theme-docs";
+import { Inter } from "next/font/google";
+import Link from "next/link";
+import { Layout, Navbar, ThemeSwitch } from "nextra-theme-docs";
 import { getPageMap } from "nextra/page-map";
 
 import { DocsSearch } from "../components/docs-search";
 import { SiteLogo } from "../components/site-logo";
 import "../styles/index.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+});
 
 function NpmIcon(props: SVGProps<SVGSVGElement>) {
   return (
@@ -82,31 +89,9 @@ export const metadata: Metadata = {
   keywords: ["react hooks", "use-kit", "nextra", "next.js", "typescript", "utility components"],
 };
 
-const themeHeadStyle = `
-:root {
-  --nextra-primary-hue: 215deg;
-  --nextra-primary-saturation: 18%;
-  --nextra-primary-lightness: 38%;
-  --nextra-bg: 248,250,252;
-  --nextra-content-width: 90rem;
-}
-.dark {
-  --nextra-primary-hue: 215deg;
-  --nextra-primary-saturation: 18%;
-  --nextra-primary-lightness: 86%;
-  --nextra-bg: 10,16,32;
-}
-::selection {
-  background: hsla(var(--nextra-primary-hue),var(--nextra-primary-saturation),var(--nextra-primary-lightness),.3);
-}
-html {
-  background: rgb(var(--nextra-bg));
-}
-`.trim();
-
 function ResourcePills() {
   return (
-    <div className="hidden items-center gap-2 xl:flex">
+    <div className="hidden items-center gap-1 xl:flex">
       {externalLinks.map((link) => {
         const Icon = link.icon;
 
@@ -116,11 +101,10 @@ function ResourcePills() {
             href={link.href}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-950 dark:border-white/10 dark:bg-slate-950 dark:text-slate-200 dark:hover:border-white/20 dark:hover:bg-slate-900 dark:hover:text-white"
+            className="use-kit-nav-icon-link"
             title={link.label}
           >
             <Icon className="size-5 shrink-0" />
-            {/* <span>{link.label}</span> */}
           </a>
         );
       })}
@@ -131,16 +115,14 @@ function ResourcePills() {
 
 function TocLinks() {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700 dark:border-white/10 dark:bg-slate-900 dark:text-slate-300">
-      <p className="text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
-        Quick Links
-      </p>
-      <div className="mt-3 space-y-2">
+    <div className="use-kit-surface-muted p-4 text-sm">
+      <p className="use-kit-muted-label">Quick links</p>
+      <div className="mt-3 space-y-1">
         <a
           href="https://www.npmjs.com/package/@thepuskar/use-kit"
           target="_blank"
           rel="noreferrer"
-          className="block rounded-xl border border-slate-200 bg-white px-3 py-2 font-medium transition hover:border-slate-300 hover:text-slate-950 dark:border-white/10 dark:bg-slate-950 dark:hover:border-white/20 dark:hover:text-white"
+          className="use-kit-row-link"
         >
           View on npm
         </a>
@@ -148,7 +130,7 @@ function TocLinks() {
           href="https://github.com/thepuskar/use-kit"
           target="_blank"
           rel="noreferrer"
-          className="block rounded-xl border border-slate-200 bg-white px-3 py-2 font-medium transition hover:border-slate-300 hover:text-slate-950 dark:border-white/10 dark:bg-slate-950 dark:hover:border-white/20 dark:hover:text-white"
+          className="use-kit-row-link"
         >
           Browse the repo
         </a>
@@ -165,48 +147,134 @@ function TocLinks() {
   );
 }
 
-function SiteFooter() {
+function GitHubIcon(props: SVGProps<SVGSVGElement>) {
   return (
-    <Footer className="w-full py-12 text-slate-700 dark:text-slate-300">
-      <div className="flex w-full flex-col gap-6 md:flex-row md:items-end md:justify-between">
-        <div className="space-y-3">
-          <SiteLogo />
-        </div>
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M12 1C5.925 1 1 5.925 1 12c0 4.86 3.152 8.983 7.523 10.435.55.1.748-.238.748-.53 0-.262-.01-1.13-.015-2.05-3.048.664-3.692-1.472-3.692-1.472-.498-1.268-1.218-1.605-1.218-1.605-.996-.682.075-.668.075-.668 1.103.078 1.683 1.133 1.683 1.133.98 1.682 2.573 1.196 3.202.914.1-.71.384-1.196.698-1.47-2.433-.278-4.992-1.22-4.992-5.431 0-1.2.428-2.18 1.128-2.95-.113-.28-.49-1.398.106-2.915 0 0 .92-.295 3.01 1.125.872-.243 1.81-.365 2.742-.37.93.005 1.868.127 2.742.37 2.088-1.42 3.008-1.125 3.008-1.125.598 1.517.222 2.635.11 2.915.702.77 1.126 1.75 1.126 2.95 0 4.223-2.563 5.15-5.006 5.42.395.34.747 1.01.747 2.035 0 1.47-.014 2.654-.014 3.015 0 .295.197.637.752.53C19.85 20.98 23 16.859 23 12c0-6.075-4.925-11-11-11z" />
+    </svg>
+  );
+}
 
-        <div className="flex flex-wrap gap-3 text-sm font-medium">
-          <a href="/hooks/useToggle/" className="use-kit-footer-link">
-            Hooks
-          </a>
-          <a href="/components/switch/" className="use-kit-footer-link">
-            Components
-          </a>
-          <a
-            href="https://www.npmjs.com/package/@thepuskar/use-kit"
-            target="_blank"
-            rel="noreferrer"
-            className="use-kit-footer-link"
-          >
-            npm
-          </a>
-          <a
-            href="https://github.com/thepuskar/use-kit"
-            target="_blank"
-            rel="noreferrer"
-            className="use-kit-footer-link"
-          >
-            GitHub
-          </a>
-          <a
-            href="https://www.puskaradhikari.com.np/"
-            target="_blank"
-            rel="noreferrer"
-            className="use-kit-footer-link"
-          >
-            Website
-          </a>
+function FooterColumn({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <div className="use-kit-footer-col">
+      <p className="use-kit-footer-col-title">{title}</p>
+      <ul className="use-kit-footer-col-list">{children}</ul>
+    </div>
+  );
+}
+
+function SiteFooter() {
+  const year = new Date().getFullYear();
+
+  /**
+   * Nextra’s `<Footer>` wraps children in `display:flex` + `justify-center`, so a single grid child
+   * shrinks to content width and the multi-column layout collapses. Use a plain `<footer>` instead.
+   */
+  return (
+    <div className="use-kit-footer-outer">
+      <footer className="use-kit-footer-mega">
+        <div className="use-kit-footer-mega-inner">
+          <div className="use-kit-footer-brand-block">
+            <div className="use-kit-footer-brand-mark">
+              <SiteLogo compact />
+            </div>
+            <div className="use-kit-footer-social" aria-label="Repository links">
+              <a
+                href="https://github.com/thepuskar/use-kit"
+                target="_blank"
+                rel="noreferrer"
+                className="use-kit-footer-social-link"
+                title="GitHub"
+              >
+                <GitHubIcon className="size-5" />
+              </a>
+              <a
+                href="https://www.npmjs.com/package/@thepuskar/use-kit"
+                target="_blank"
+                rel="noreferrer"
+                className="use-kit-footer-social-link"
+                title="npm"
+              >
+                <NpmIcon className="size-5" />
+              </a>
+            </div>
+            <p className="use-kit-footer-brand-meta">
+              <a
+                href="https://github.com/thepuskar/use-kit/blob/main/LICENSE"
+                target="_blank"
+                rel="noreferrer"
+                className="use-kit-footer-brand-meta-link"
+              >
+                Terms & privacy
+              </a>
+            </p>
+            <p className="use-kit-footer-copyright">© {year} Puskar Adhikari</p>
+          </div>
+
+          <FooterColumn title="Documentation">
+            <li>
+              <Link href="/" className="use-kit-footer-col-link">
+                Introduction
+              </Link>
+            </li>
+            <li>
+              <Link href="/hooks/useToggle/" className="use-kit-footer-col-link">
+                useToggle
+              </Link>
+            </li>
+            <li>
+              <Link href="/hooks/useLocalStorage/" className="use-kit-footer-col-link">
+                useLocalStorage
+              </Link>
+            </li>
+            <li>
+              <Link href="/components/for/" className="use-kit-footer-col-link">
+                For
+              </Link>
+            </li>
+            <li>
+              <Link href="/components/switch/" className="use-kit-footer-col-link">
+                Switch / Match
+              </Link>
+            </li>
+          </FooterColumn>
+
+          <FooterColumn title="Repository">
+            <li>
+              <a
+                href="https://www.npmjs.com/package/@thepuskar/use-kit"
+                target="_blank"
+                rel="noreferrer"
+                className="use-kit-footer-col-link"
+              >
+                npm
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://github.com/thepuskar/use-kit"
+                target="_blank"
+                rel="noreferrer"
+                className="use-kit-footer-col-link"
+              >
+                GitHub
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://github.com/thepuskar/use-kit/issues"
+                target="_blank"
+                rel="noreferrer"
+                className="use-kit-footer-col-link"
+              >
+                Issues
+              </a>
+            </li>
+          </FooterColumn>
         </div>
-      </div>
-    </Footer>
+      </footer>
+    </div>
   );
 }
 
@@ -216,11 +284,10 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   return (
     <html lang="en" dir="ltr" suppressHydrationWarning>
       <head suppressHydrationWarning>
-        <style>{themeHeadStyle}</style>
-        <meta name="theme-color" media="(prefers-color-scheme: light)" content="rgb(248,250,252)" />
-        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="rgb(10,16,32)" />
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f6f3" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#202022" />
       </head>
-      <body className="use-kit-docs">
+      <body className={`use-kit-docs ${inter.className}`}>
         <Layout
           pageMap={pageMap}
           docsRepositoryBase="https://github.com/thepuskar/use-kit/tree/main/docs"
@@ -236,14 +303,14 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
             toggleButton: true,
           }}
           toc={{
-            title: <span className="dark:text-slate-200">On this page</span>,
+            title: <span className="text-[var(--uk-text-primary)]">On this page</span>,
             extraContent: <TocLinks />,
           }}
           navbar={
             <Navbar
               logo={<SiteLogo compact />}
               projectLink="https://github.com/thepuskar/use-kit"
-              className="border-b border-slate-200 bg-[rgba(248,250,252,0.92)] backdrop-blur dark:border-white/10 dark:bg-[rgba(10,16,32,0.88)]"
+              className="use-kit-navbar"
             >
               <ResourcePills />
             </Navbar>

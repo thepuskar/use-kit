@@ -1,3 +1,7 @@
+# Publishes to npm when `package.json` version is not already on the registry.
+# Runs on every push to `main` (including when a PR is merged). Bump the version
+# on `main` before merging a release, or merge then push a version bump — publish
+# is skipped if that version already exists on npm.
 name: Release to npm
 
 on:
@@ -46,6 +50,9 @@ jobs:
 
       - name: Lint
         run: npm run lint
+
+      - name: Format check
+        run: npm run format:check
 
       - name: Type check
         run: npm run typecheck

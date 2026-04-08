@@ -1,10 +1,10 @@
 import { act, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useLocalStorage } from "../src/client/hooks";
+import { useSessionStorage } from "../src/client/hooks";
 
-const STORAGE_KEY = "use-local-storage-test";
-const originalLocalStorageDescriptor = Object.getOwnPropertyDescriptor(window, "localStorage");
+const STORAGE_KEY = "use-session-storage-test";
+const originalSessionStorageDescriptor = Object.getOwnPropertyDescriptor(window, "sessionStorage");
 
 interface PersistedSettings {
   items: string[];
@@ -13,25 +13,25 @@ interface PersistedSettings {
   note: string | null;
 }
 
-describe("useLocalStorage", () => {
+describe("useSessionStorage", () => {
   beforeEach(() => {
-    window.localStorage.clear();
+    window.sessionStorage.clear();
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
 
-    if (originalLocalStorageDescriptor) {
-      Object.defineProperty(window, "localStorage", originalLocalStorageDescriptor);
+    if (originalSessionStorageDescriptor) {
+      Object.defineProperty(window, "sessionStorage", originalSessionStorageDescriptor);
     }
 
-    window.localStorage.clear();
+    window.sessionStorage.clear();
   });
 
-  it("initializes with the default value when localStorage is empty", () => {
+  it("initializes with the default value when sessionStorage is empty", () => {
     const initializer = vi.fn(() => "draft");
     const { result, rerender } = renderHook(() =>
-      useLocalStorage<string>(STORAGE_KEY, initializer),
+      useSessionStorage<string>(STORAGE_KEY, initializer),
     );
 
     rerender();
@@ -41,10 +41,10 @@ describe("useLocalStorage", () => {
     expect(result.current.isSupported).toBe(true);
   });
 
-  it("initializes with a stored plain JSON value when localStorage already has data", () => {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify("persisted"));
+  it("initializes with a stored plain JSON value when sessionStorage already has data", () => {
+    window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify("persisted"));
 
-    const { result } = renderHook(() => useLocalStorage(STORAGE_KEY, "fallback"));
+    const { result } = renderHook(() => useSessionStorage(STORAGE_KEY, "fallback"));
 
     expect(result.current.value).toBe("persisted");
   });
@@ -58,7 +58,7 @@ describe("useLocalStorage", () => {
     };
 
     const { result, unmount } = renderHook(() =>
-      useLocalStorage<PersistedSettings>(STORAGE_KEY, {
+      useSessionStorage<PersistedSettings>(STORAGE_KEY, {
         items: [],
         count: 0,
         enabled: false,
@@ -75,7 +75,7 @@ describe("useLocalStorage", () => {
     unmount();
 
     const { result: nextResult } = renderHook(() =>
-      useLocalStorage<PersistedSettings>(STORAGE_KEY, {
+      useSessionStorage<PersistedSettings>(STORAGE_KEY, {
         items: [],
         count: 0,
         enabled: false,
@@ -87,7 +87,7 @@ describe("useLocalStorage", () => {
   });
 
   it("supports functional updates", () => {
-    const { result, unmount } = renderHook(() => useLocalStorage(STORAGE_KEY, 1));
+    const { result, unmount } = renderHook(() => useSessionStorage(STORAGE_KEY, 1));
 
     act(() => {
       result.current.setValue((currentValue) => currentValue + 2);
@@ -97,13 +97,13 @@ describe("useLocalStorage", () => {
 
     unmount();
 
-    const { result: nextResult } = renderHook(() => useLocalStorage(STORAGE_KEY, 0));
+    const { result: nextResult } = renderHook(() => useSessionStorage(STORAGE_KEY, 0));
 
     expect(nextResult.current.value).toBe(3);
   });
 
   it("removes and resets values distinctly", () => {
-    const { result, unmount } = renderHook(() => useLocalStorage(STORAGE_KEY, "draft"));
+    const { result, unmount } = renderHook(() => useSessionStorage(STORAGE_KEY, "draft"));
 
     act(() => {
       result.current.setValue("saved");
@@ -114,7 +114,7 @@ describe("useLocalStorage", () => {
     });
 
     expect(result.current.value).toBe("draft");
-    expect(window.localStorage.getItem(STORAGE_KEY)).toBeNull();
+    expect(window.sessionStorage.getItem(STORAGE_KEY)).toBeNull();
 
     act(() => {
       result.current.setValue("edited");
@@ -128,15 +128,15 @@ describe("useLocalStorage", () => {
 
     unmount();
 
-    const { result: nextResult } = renderHook(() => useLocalStorage(STORAGE_KEY, "fallback"));
+    const { result: nextResult } = renderHook(() => useSessionStorage(STORAGE_KEY, "fallback"));
 
     expect(nextResult.current.value).toBe("draft");
   });
 
-  it("handles invalid JSON in localStorage without crashing", () => {
-    window.localStorage.setItem(STORAGE_KEY, "{not-valid-json");
+  it("handles invalid JSON in sessionStorage without crashing", () => {
+    window.sessionStorage.setItem(STORAGE_KEY, "{not-valid-json");
 
-    const { result } = renderHook(() => useLocalStorage(STORAGE_KEY, "fallback"));
+    const { result } = renderHook(() => useSessionStorage(STORAGE_KEY, "fallback"));
 
     expect(result.current.value).toBe("fallback");
 
@@ -149,7 +149,7 @@ describe("useLocalStorage", () => {
 
   it("persists explicit undefined values", () => {
     const { result, unmount } = renderHook(() =>
-      useLocalStorage<string | undefined>(STORAGE_KEY, "fallback"),
+      useSessionStorage<string | undefined>(STORAGE_KEY, "fallback"),
     );
 
     act(() => {
@@ -161,19 +161,19 @@ describe("useLocalStorage", () => {
     unmount();
 
     const { result: nextResult } = renderHook(() =>
-      useLocalStorage<string | undefined>(STORAGE_KEY, "next-fallback"),
+      useSessionStorage<string | undefined>(STORAGE_KEY, "next-fallback"),
     );
 
     expect(nextResult.current.value).toBeUndefined();
   });
 
-  it("stays usable when localStorage is unavailable", () => {
-    Object.defineProperty(window, "localStorage", {
+  it("stays usable when sessionStorage is unavailable", () => {
+    Object.defineProperty(window, "sessionStorage", {
       configurable: true,
       get: () => undefined,
     });
 
-    const { result } = renderHook(() => useLocalStorage(STORAGE_KEY, "fallback"));
+    const { result } = renderHook(() => useSessionStorage(STORAGE_KEY, "fallback"));
 
     expect(result.current.value).toBe("fallback");
     expect(result.current.isSupported).toBe(false);
@@ -200,7 +200,7 @@ describe("useLocalStorage", () => {
 
   it("uses the latest initialValue for remove and reset when the key is unchanged", () => {
     const { result, rerender } = renderHook(
-      ({ init }: { init: string }) => useLocalStorage(STORAGE_KEY, init),
+      ({ init }: { init: string }) => useSessionStorage(STORAGE_KEY, init),
       { initialProps: { init: "first" } },
     );
 
@@ -215,7 +215,7 @@ describe("useLocalStorage", () => {
     });
 
     expect(result.current.value).toBe("second");
-    expect(window.localStorage.getItem(STORAGE_KEY)).toBeNull();
+    expect(window.sessionStorage.getItem(STORAGE_KEY)).toBeNull();
 
     act(() => {
       result.current.setValue("edited");
@@ -228,12 +228,12 @@ describe("useLocalStorage", () => {
     });
 
     expect(result.current.value).toBe("third");
-    expect(window.localStorage.getItem(STORAGE_KEY)).not.toBeNull();
+    expect(window.sessionStorage.getItem(STORAGE_KEY)).not.toBeNull();
   });
 
   it("skips storage writes when a functional update resolves to the same value", () => {
-    const setItem = vi.spyOn(Object.getPrototypeOf(window.localStorage), "setItem");
-    const { result } = renderHook(() => useLocalStorage(STORAGE_KEY, 1));
+    const setItem = vi.spyOn(Object.getPrototypeOf(window.sessionStorage), "setItem");
+    const { result } = renderHook(() => useSessionStorage(STORAGE_KEY, 1));
 
     setItem.mockClear();
 

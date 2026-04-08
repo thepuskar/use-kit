@@ -15,6 +15,7 @@ export * from "./useLocalStorage";
 export * from "./useMounted";
 export * from "./useMutation";
 export * from "./useOnScreen";
+export * from "./useSessionStorage";
 export * from "./useThrottle";
 export * from "./useTimeout";
 export * from "./useToggle";

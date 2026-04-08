@@ -12,6 +12,7 @@
   "useThrottle": "useThrottle",
   "useArray": "useArray",
   "useLocalStorage": "useLocalStorage",
+  "useSessionStorage": "useSessionStorage",
   "useFetch": "useFetch",
   "useMutation": "useMutation",
   "useOnScreen": "useOnScreen",
