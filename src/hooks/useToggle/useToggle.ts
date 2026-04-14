@@ -36,7 +36,7 @@ export function useToggle(initialValue: ToggleValue = false): UseToggleReturn {
     setValue(initialValueRef.current);
   }, []);
 
-  const actionsRef = useRef<UseToggleActions>();
+  const actionsRef = useRef<UseToggleActions | undefined>(undefined);
 
   if (!actionsRef.current) {
     actionsRef.current = {
