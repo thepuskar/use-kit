@@ -1,9 +1,9 @@
 import React, { ReactElement, ReactNode } from "react";
 
+import { type MaybeAccessor, resolveMaybeAccessor } from "../utils/resolveMaybeAccessor";
+
 type Falsy = false | 0 | 0n | "" | null | undefined;
 type Truthy<T> = Exclude<T, Falsy>;
-type Accessor<T> = () => T;
-type MaybeAccessor<T> = T | Accessor<T>;
 
 export interface MatchProps<TWhen = unknown> {
   when: MaybeAccessor<TWhen>;
@@ -25,14 +25,6 @@ type MatchComponent = {
 };
 
 const MATCH_MARKER = Symbol.for("use-kit.switch.match");
-
-function resolveWhen<T>(when: MaybeAccessor<T>): T {
-  if (typeof when === "function") {
-    return (when as Accessor<T>)();
-  }
-
-  return when;
-}
 
 function isMatchElement(node: ReactNode): node is MatchElement {
   if (!React.isValidElement(node)) {
@@ -56,7 +48,7 @@ export function Switch({ children, fallback }: SwitchProps): ReactElement | null
     }
 
     const { when, children: matchChildren } = child.props;
-    const value = resolveWhen(when);
+    const value = resolveMaybeAccessor(when);
 
     if (value) {
       if (typeof matchChildren === "function") {
