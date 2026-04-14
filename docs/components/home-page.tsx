@@ -19,6 +19,7 @@ const HOOK_PAGES = [
 
 const COMPONENT_PAGES = [
   { href: "/components/for/" as const, label: "For" },
+  { href: "/components/show/" as const, label: "Show" },
   { href: "/components/switch/" as const, label: "Switch / Match" },
 ] as const;
 

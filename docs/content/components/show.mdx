@@ -1,0 +1,48 @@
+import { DemoFrame } from "../../components/demo-frame";
+import { ShowDemo } from "../../components/demos/show-demo";
+
+# Show
+
+`Show` renders its children when `when` is truthy, otherwise an optional `fallback` (or nothing).
+
+Use it for a single optional branch. For multiple ordered branches, use [`Switch` / `Match`](/components/switch/).
+
+<DemoFrame
+  title="Optional user panel"
+  description="Toggle between no user and a signed-in user to see the fallback versus narrowed children."
+>
+  <ShowDemo />
+</DemoFrame>
+
+## Import
+
+```tsx
+import { Show } from "@thepuskar/use-kit";
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `when` | `T \| (() => T)` | required | Value or getter; if truthy after resolution, `children` render. |
+| `children` | `ReactNode \| ((value: Truthy<T>) => ReactNode)` | required | Static content or a function that receives the truthy `when` value. |
+| `fallback` | `ReactNode` | `undefined` | Rendered when `when` is falsy. If omitted, renders nothing. |
+
+## Usage
+
+```tsx
+import { Show } from "@thepuskar/use-kit";
+
+function Greeting({ user }: { user: { name: string } | null }) {
+  return (
+    <Show when={user} fallback={<p>Please sign in</p>}>
+      {(u) => <p>Welcome, {u.name}</p>}
+    </Show>
+  );
+}
+```
+
+## Notes
+
+- Truthiness matches `Match`: values like `0`, `""`, `false`, `null`, and `undefined` are not shown.
+- For several mutually exclusive branches, prefer `Switch` and `Match`.

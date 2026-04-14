@@ -8,8 +8,8 @@ importers:
   .:
     dependencies:
       "@thepuskar/use-kit":
-        specifier: 1.0.4
-        version: 1.0.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        specifier: ^1.2.0
+        version: 1.2.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       lucide-react:
         specifier: ^0.577.0
         version: 0.577.0(react@19.2.4)
@@ -946,10 +946,10 @@ packages:
         integrity: sha512-ma6DvR03gdbvwqfKx1omqhg9May/VYGdMHvTzB4VuxkyS7KzfZ/lzrj43hmcsggpMje0x7SADA/pcMph0ejRnA==,
       }
 
-  "@thepuskar/use-kit@1.0.4":
+  "@thepuskar/use-kit@1.2.0":
     resolution:
       {
-        integrity: sha512-bYqRTjFd8y+RAUDRf7B48zCHfAQqL1t1cL5rYPTHzivmZ8H9Kmgo4uKaPxlSKdHOpXMnmZxvMW4fkm4qBKa+3g==,
+        integrity: sha512-nhxxefO9Ws38CiEYGYBgNOOHq3w1t7bWczgZ28uppi+Py5u1Ts+tdZg9PDmkQ+gQ248G9Ut5OPRyOdcCmLBCcw==,
       }
     engines: { node: ">=20" }
     peerDependencies:
@@ -4301,7 +4301,7 @@ snapshots:
       npm-to-yarn: 3.0.1
       unist-util-visit: 5.1.0
 
-  "@thepuskar/use-kit@1.0.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)":
+  "@thepuskar/use-kit@1.2.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)":
     dependencies:
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)

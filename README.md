@@ -13,7 +13,15 @@ npm install @thepuskar/use-kit
 ### Component (server-safe)
 
 ```tsx
-import { Match, Switch } from "@thepuskar/use-kit";
+import { Match, Show, Switch } from "@thepuskar/use-kit";
+
+export function Greeting({ user }: { user: { name: string } | null }) {
+  return (
+    <Show when={user} fallback={<p>Please sign in</p>}>
+      {(u) => <p>Welcome, {u.name}</p>}
+    </Show>
+  );
+}
 
 export function Status({ user }: { user: { name: string } | null }) {
   return (
