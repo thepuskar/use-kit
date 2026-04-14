@@ -224,16 +224,6 @@ function SiteFooter() {
               </Link>
             </li>
             <li>
-              <Link href="/hooks/useLocalStorage/" className="use-kit-footer-col-link">
-                useLocalStorage
-              </Link>
-            </li>
-            <li>
-              <Link href="/components/for/" className="use-kit-footer-col-link">
-                For
-              </Link>
-            </li>
-            <li>
               <Link href="/components/switch/" className="use-kit-footer-col-link">
                 Switch / Match
               </Link>
@@ -241,26 +231,6 @@ function SiteFooter() {
           </FooterColumn>
 
           <FooterColumn title="Repository">
-            <li>
-              <a
-                href="https://www.npmjs.com/package/@thepuskar/use-kit"
-                target="_blank"
-                rel="noreferrer"
-                className="use-kit-footer-col-link"
-              >
-                npm
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://github.com/thepuskar/use-kit"
-                target="_blank"
-                rel="noreferrer"
-                className="use-kit-footer-col-link"
-              >
-                GitHub
-              </a>
-            </li>
             <li>
               <a
                 href="https://github.com/thepuskar/use-kit/issues"
