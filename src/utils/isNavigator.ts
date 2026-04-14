@@ -1,1 +1,1 @@
-export const isNavigator = typeof navigator !== 'undefined'
+export const isNavigator = typeof navigator !== "undefined";

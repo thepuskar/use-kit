@@ -1,3 +1,3 @@
-export * from './eventListener'
-export * from './isBrowser'
-export * from './isNavigator'
+export * from "./eventListener";
+export * from "./isBrowser";
+export * from "./isNavigator";
