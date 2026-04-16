@@ -12,6 +12,10 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "paths": {
+      "react-rsc-kit": ["../src/index.ts"],
+      "react-rsc-kit/client": ["../src/client/index.ts"],
+      "react-rsc-kit/hooks": ["../src/client/hooks.ts"],
+      "react-rsc-kit/server": ["../src/server/index.ts"],
       "react": ["./node_modules/react"],
       "react/*": ["./node_modules/react/*"],
       "react-dom": ["./node_modules/react-dom"],
