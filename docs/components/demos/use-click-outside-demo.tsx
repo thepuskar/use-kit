@@ -1,6 +1,6 @@
 "use client";
 
-import { useClickOutside } from "@thepuskar/use-kit/client";
+import { useClickOutside } from "react-rsc-kit/client";
 import { useState } from "react";
 
 import styles from "./demo-tokens.module.css";

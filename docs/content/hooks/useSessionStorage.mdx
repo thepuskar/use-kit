@@ -15,7 +15,7 @@ import { UseSessionStorageDemo } from "../../components/demos/use-session-storag
 ## Import
 
 ```tsx
-import { useSessionStorage } from "@thepuskar/use-kit/client";
+import { useSessionStorage } from "react-rsc-kit/client";
 ```
 
 ## Signature
@@ -46,7 +46,7 @@ const { value, setValue, remove, reset, isSupported } = useSessionStorage<T>(key
 ```tsx
 "use client";
 
-import { useSessionStorage } from "@thepuskar/use-kit/client";
+import { useSessionStorage } from "react-rsc-kit/client";
 
 export function DraftMessage() {
   const { value: draft, setValue, remove } = useSessionStorage("draft-message", "");
@@ -65,7 +65,7 @@ export function DraftMessage() {
 ```tsx
 "use client";
 
-import { useSessionStorage } from "@thepuskar/use-kit/client";
+import { useSessionStorage } from "react-rsc-kit/client";
 
 interface UserPreferences {
   compactMode: boolean;

@@ -4,22 +4,22 @@
  */
 
 /* Comfortable reading in main doc column */
-.use-kit-docs main p,
-.use-kit-docs article p {
+.react-rsc-kit-docs main p,
+.react-rsc-kit-docs article p {
   line-height: 1.65;
 }
 
-.use-kit-docs main li,
-.use-kit-docs article li {
+.react-rsc-kit-docs main li,
+.react-rsc-kit-docs article li {
   line-height: 1.6;
 }
 
 /* Softer focus rings (Notion-adjacent) */
-.use-kit-docs :is(a, button, input, [tabindex]):focus-visible {
+.react-rsc-kit-docs :is(a, button, input, [tabindex]):focus-visible {
   outline: 2px solid hsl(var(--nextra-primary-hue) var(--nextra-primary-saturation) 50% / 0.45);
   outline-offset: 2px;
 }
 
-.dark .use-kit-docs :is(a, button, input, [tabindex]):focus-visible {
+.dark .react-rsc-kit-docs :is(a, button, input, [tabindex]):focus-visible {
   outline-color: hsl(var(--nextra-primary-hue) var(--nextra-primary-saturation) 70% / 0.5);
 }

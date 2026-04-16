@@ -1,6 +1,6 @@
 "use client";
 
-import { useToggle } from "@thepuskar/use-kit/client";
+import { useToggle } from "react-rsc-kit/client";
 
 import styles from "./demo-tokens.module.css";
 

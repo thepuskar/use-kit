@@ -15,7 +15,7 @@ import { UseTimeoutDemo } from "../../components/demos/use-timeout-demo";
 ## Import
 
 ```tsx
-import { useTimeout } from "@thepuskar/use-kit/client";
+import { useTimeout } from "react-rsc-kit/client";
 ```
 
 ## Signature
@@ -26,19 +26,19 @@ const { start, reset, clear, isPending } = useTimeout(callback, delay, options?)
 
 ## Parameters
 
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| `callback` | `() => void` | required | Function that runs when the timeout completes. |
-| `delay` | `number \| null \| undefined` | required | Delay in milliseconds. Use `null` or `undefined` to disable scheduling. |
-| `options.autoStart` | `boolean` | `true` | Starts the timeout automatically when enabled. |
+| Name                | Type                          | Default  | Description                                                             |
+| ------------------- | ----------------------------- | -------- | ----------------------------------------------------------------------- |
+| `callback`          | `() => void`                  | required | Function that runs when the timeout completes.                          |
+| `delay`             | `number \| null \| undefined` | required | Delay in milliseconds. Use `null` or `undefined` to disable scheduling. |
+| `options.autoStart` | `boolean`                     | `true`   | Starts the timeout automatically when enabled.                          |
 
 ## Returns
 
-| Key | Description |
-| --- | --- |
-| `start` | Starts the timeout manually. |
-| `reset` | Clears and starts the timeout again. |
-| `clear` | Clears the current timeout. |
+| Key         | Description                            |
+| ----------- | -------------------------------------- |
+| `start`     | Starts the timeout manually.           |
+| `reset`     | Clears and starts the timeout again.   |
+| `clear`     | Clears the current timeout.            |
 | `isPending` | Whether a timeout is currently active. |
 
 ## Usage
@@ -47,15 +47,13 @@ const { start, reset, clear, isPending } = useTimeout(callback, delay, options?)
 "use client";
 
 import { useState } from "react";
-import { useTimeout } from "@thepuskar/use-kit/client";
+import { useTimeout } from "react-rsc-kit/client";
 
 export function TimeoutBanner() {
   const [visible, setVisible] = useState(true);
-  const { start, clear, reset, isPending } = useTimeout(
-    () => setVisible(false),
-    5000,
-    { autoStart: false },
-  );
+  const { start, clear, reset, isPending } = useTimeout(() => setVisible(false), 5000, {
+    autoStart: false,
+  });
 
   return (
     <div>

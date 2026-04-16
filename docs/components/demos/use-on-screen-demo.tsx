@@ -1,6 +1,6 @@
 "use client";
 
-import { useOnScreen } from "@thepuskar/use-kit/client";
+import { useOnScreen } from "react-rsc-kit/client";
 import { useRef } from "react";
 
 import styles from "./demo-tokens.module.css";

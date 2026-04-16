@@ -7,9 +7,6 @@ settings:
 importers:
   .:
     dependencies:
-      "@thepuskar/use-kit":
-        specifier: ^1.2.0
-        version: 1.2.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       lucide-react:
         specifier: ^0.577.0
         version: 0.577.0(react@19.2.4)
@@ -28,6 +25,9 @@ importers:
       react-dom:
         specifier: ^19.2.4
         version: 19.2.4(react@19.2.4)
+      react-rsc-kit:
+        specifier: file:..
+        version: file:..(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
     devDependencies:
       "@tailwindcss/postcss":
         specifier: ^4.2.1
@@ -946,16 +946,6 @@ packages:
         integrity: sha512-ma6DvR03gdbvwqfKx1omqhg9May/VYGdMHvTzB4VuxkyS7KzfZ/lzrj43hmcsggpMje0x7SADA/pcMph0ejRnA==,
       }
 
-  "@thepuskar/use-kit@1.2.0":
-    resolution:
-      {
-        integrity: sha512-nhxxefO9Ws38CiEYGYBgNOOHq3w1t7bWczgZ28uppi+Py5u1Ts+tdZg9PDmkQ+gQ248G9Ut5OPRyOdcCmLBCcw==,
-      }
-    engines: { node: ">=20" }
-    peerDependencies:
-      react: ">=18"
-      react-dom: ">=18"
-
   "@ts-morph/common@0.28.1":
     resolution:
       {
@@ -1272,6 +1262,7 @@ packages:
         integrity: sha512-p96FSY54r+WJ50FIOsCOjyj/wavs8921hG5+kVMmZgKcvIKxMXHTrjNJvRgWa/zuX3B6t2lijLNFaOyuxUH+2A==,
       }
     engines: { node: ">=14.6" }
+    deprecated: this version has critical issues, please update to the latest version
 
   acorn-jsx@5.3.2:
     resolution:
@@ -3116,6 +3107,13 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
+  react-rsc-kit@file:..:
+    resolution: { directory: .., type: directory }
+    engines: { node: ">=20" }
+    peerDependencies:
+      react: ">=18"
+      react-dom: ">=18"
+
   react@19.2.4:
     resolution:
       {
@@ -4300,11 +4298,6 @@ snapshots:
     dependencies:
       npm-to-yarn: 3.0.1
       unist-util-visit: 5.1.0
-
-  "@thepuskar/use-kit@1.2.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)":
-    dependencies:
-      react: 19.2.4
-      react-dom: 19.2.4(react@19.2.4)
 
   "@ts-morph/common@0.28.1":
     dependencies:
@@ -5944,6 +5937,11 @@ snapshots:
       scheduler: 0.27.0
 
   react-medium-image-zoom@5.4.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+    dependencies:
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
+
+  react-rsc-kit@file:..(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
     dependencies:
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)

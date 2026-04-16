@@ -52,17 +52,17 @@ function IssuesIcon(props: SVGProps<SVGSVGElement>) {
 
 const externalLinks = [
   {
-    href: "https://www.npmjs.com/package/@thepuskar/use-kit",
+    href: "https://www.npmjs.com/package/react-rsc-kit",
     label: "npm",
     icon: NpmIcon,
   },
   {
-    href: "https://www.puskaradhikari.com.np/",
-    label: "website",
+    href: "https://github.com/thepuskar/react-rsc-kit",
+    label: "repo",
     icon: WebsiteIcon,
   },
   {
-    href: "https://github.com/thepuskar/use-kit/issues",
+    href: "https://github.com/thepuskar/react-rsc-kit/issues",
     label: "issues",
     icon: IssuesIcon,
   },
@@ -70,23 +70,24 @@ const externalLinks = [
 
 export const metadata: Metadata = {
   title: {
-    default: "@thepuskar/use-kit",
-    template: "%s | @thepuskar/use-kit",
+    default: "react-rsc-kit",
+    template: "%s | react-rsc-kit",
   },
   description:
     "Reusable React hooks and utility components with clear server and client entrypoints, live demos, and practical examples.",
-  applicationName: "@thepuskar/use-kit",
-  authors: [
-    {
-      name: "Puskar Adhikari",
-      url: "https://www.puskaradhikari.com.np/",
-    },
-  ],
+  applicationName: "react-rsc-kit",
   icons: {
     icon: "/assets/logo.svg",
     shortcut: "/assets/logo.svg",
   },
-  keywords: ["react hooks", "use-kit", "nextra", "next.js", "typescript", "utility components"],
+  keywords: [
+    "react hooks",
+    "react-rsc-kit",
+    "nextra",
+    "next.js",
+    "typescript",
+    "utility components",
+  ],
 };
 
 function ResourcePills() {
@@ -101,47 +102,39 @@ function ResourcePills() {
             href={link.href}
             target="_blank"
             rel="noreferrer"
-            className="use-kit-nav-icon-link"
+            className="react-rsc-kit-nav-icon-link"
             title={link.label}
           >
             <Icon className="size-5 shrink-0" />
           </a>
         );
       })}
-      <ThemeSwitch className="use-kit-theme-toggle" lite />
+      <ThemeSwitch className="react-rsc-kit-theme-toggle" lite />
     </div>
   );
 }
 
 function TocLinks() {
   return (
-    <div className="use-kit-surface-muted p-4 text-sm">
-      <p className="use-kit-muted-label">Quick links</p>
+    <div className="react-rsc-kit-surface-muted p-4 text-sm">
+      <p className="react-rsc-kit-muted-label">Quick links</p>
       <div className="mt-3 space-y-1">
         <a
-          href="https://www.npmjs.com/package/@thepuskar/use-kit"
+          href="https://www.npmjs.com/package/react-rsc-kit"
           target="_blank"
           rel="noreferrer"
-          className="use-kit-row-link"
+          className="react-rsc-kit-row-link"
         >
           View on npm
         </a>
         <a
-          href="https://github.com/thepuskar/use-kit"
+          href="https://github.com/thepuskar/react-rsc-kit"
           target="_blank"
           rel="noreferrer"
-          className="use-kit-row-link"
+          className="react-rsc-kit-row-link"
         >
           Browse the repo
         </a>
-        {/* <a
-          href="https://www.puskaradhikari.com.np/"
-          target="_blank"
-          rel="noreferrer"
-          className="block rounded-xl border border-slate-200 bg-white px-3 py-2 font-medium transition hover:border-slate-300 hover:text-slate-950 dark:border-white/10 dark:bg-slate-950 dark:hover:border-white/20 dark:hover:text-white"
-        >
-          Visit Puskar&apos;s website
-        </a> */}
       </div>
     </div>
   );
@@ -157,9 +150,9 @@ function GitHubIcon(props: SVGProps<SVGSVGElement>) {
 
 function FooterColumn({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div className="use-kit-footer-col">
-      <p className="use-kit-footer-col-title">{title}</p>
-      <ul className="use-kit-footer-col-list">{children}</ul>
+    <div className="react-rsc-kit-footer-col">
+      <p className="react-rsc-kit-footer-col-title">{title}</p>
+      <ul className="react-rsc-kit-footer-col-list">{children}</ul>
     </div>
   );
 }
@@ -172,59 +165,61 @@ function SiteFooter() {
    * shrinks to content width and the multi-column layout collapses. Use a plain `<footer>` instead.
    */
   return (
-    <div className="use-kit-footer-outer">
-      <footer className="use-kit-footer-mega">
-        <div className="use-kit-footer-mega-inner">
-          <div className="use-kit-footer-brand-block">
-            <div className="use-kit-footer-brand-mark">
+    <div className="react-rsc-kit-footer-outer">
+      <footer className="react-rsc-kit-footer-mega">
+        <div className="react-rsc-kit-footer-mega-inner">
+          <div className="react-rsc-kit-footer-brand-block">
+            <div className="react-rsc-kit-footer-brand-mark">
               <SiteLogo compact />
             </div>
-            <div className="use-kit-footer-social" aria-label="Repository links">
+            <div className="react-rsc-kit-footer-social" aria-label="Repository links">
               <a
-                href="https://github.com/thepuskar/use-kit"
+                href="https://github.com/thepuskar/react-rsc-kit"
                 target="_blank"
                 rel="noreferrer"
-                className="use-kit-footer-social-link"
+                className="react-rsc-kit-footer-social-link"
                 title="GitHub"
               >
                 <GitHubIcon className="size-5" />
               </a>
               <a
-                href="https://www.npmjs.com/package/@thepuskar/use-kit"
+                href="https://www.npmjs.com/package/react-rsc-kit"
                 target="_blank"
                 rel="noreferrer"
-                className="use-kit-footer-social-link"
+                className="react-rsc-kit-footer-social-link"
                 title="npm"
               >
                 <NpmIcon className="size-5" />
               </a>
             </div>
-            <p className="use-kit-footer-brand-meta">
+            <p className="react-rsc-kit-footer-brand-meta">
               <a
-                href="https://github.com/thepuskar/use-kit/blob/main/LICENSE"
+                href="https://github.com/thepuskar/react-rsc-kit/blob/main/LICENSE"
                 target="_blank"
                 rel="noreferrer"
-                className="use-kit-footer-brand-meta-link"
+                className="react-rsc-kit-footer-brand-meta-link"
               >
                 Terms & privacy
               </a>
             </p>
-            <p className="use-kit-footer-copyright">© {year} Puskar Adhikari</p>
+            <p className="react-rsc-kit-footer-copyright">
+              &copy; {year} react-rsc-kit contributors
+            </p>
           </div>
 
           <FooterColumn title="Documentation">
             <li>
-              <Link href="/" className="use-kit-footer-col-link">
+              <Link href="/" className="react-rsc-kit-footer-col-link">
                 Introduction
               </Link>
             </li>
             <li>
-              <Link href="/hooks/useToggle/" className="use-kit-footer-col-link">
+              <Link href="/hooks/useToggle/" className="react-rsc-kit-footer-col-link">
                 useToggle
               </Link>
             </li>
             <li>
-              <Link href="/components/switch/" className="use-kit-footer-col-link">
+              <Link href="/components/switch/" className="react-rsc-kit-footer-col-link">
                 Switch / Match
               </Link>
             </li>
@@ -233,10 +228,10 @@ function SiteFooter() {
           <FooterColumn title="Repository">
             <li>
               <a
-                href="https://github.com/thepuskar/use-kit/issues"
+                href="https://github.com/thepuskar/react-rsc-kit/issues"
                 target="_blank"
                 rel="noreferrer"
-                className="use-kit-footer-col-link"
+                className="react-rsc-kit-footer-col-link"
               >
                 Issues
               </a>
@@ -257,10 +252,10 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f6f3" />
         <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#202022" />
       </head>
-      <body className={`use-kit-docs ${inter.className}`}>
+      <body className={`react-rsc-kit-docs ${inter.className}`}>
         <Layout
           pageMap={pageMap}
-          docsRepositoryBase="https://github.com/thepuskar/use-kit/tree/main/docs"
+          docsRepositoryBase="https://github.com/thepuskar/react-rsc-kit/tree/main/docs"
           search={<DocsSearch />}
           editLink={<span>Edit this page on GitHub</span>}
           feedback={{
@@ -279,8 +274,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           navbar={
             <Navbar
               logo={<SiteLogo compact />}
-              projectLink="https://github.com/thepuskar/use-kit"
-              className="use-kit-navbar"
+              projectLink="https://github.com/thepuskar/react-rsc-kit"
+              className="react-rsc-kit-navbar"
             >
               <ResourcePills />
             </Navbar>

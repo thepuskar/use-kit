@@ -15,7 +15,7 @@ import { UseCopyToClipboardDemo } from "../../components/demos/use-copy-to-clipb
 ## Import
 
 ```tsx
-import { useCopyToClipboard } from "@thepuskar/use-kit/client";
+import { useCopyToClipboard } from "react-rsc-kit/client";
 ```
 
 ## Signature
@@ -27,31 +27,31 @@ const { copied, copiedText, error, status, isSupported, copy, reset } =
 
 ## Parameters
 
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| `resetTime` | `number \| null` | `1500` | How long `copied` stays `true` before resetting. Use `null` to keep the success state until `reset()`. |
-| `onSuccess` | `(copiedText: string) => void` | `undefined` | Runs after a successful copy. |
-| `onError` | `(error: Error) => void` | `undefined` | Runs when copy fails. |
-| `disableFallback` | `boolean` | `false` | Disables the `execCommand("copy")` fallback and requires the Clipboard API. |
+| Name              | Type                           | Default     | Description                                                                                            |
+| ----------------- | ------------------------------ | ----------- | ------------------------------------------------------------------------------------------------------ |
+| `resetTime`       | `number \| null`               | `1500`      | How long `copied` stays `true` before resetting. Use `null` to keep the success state until `reset()`. |
+| `onSuccess`       | `(copiedText: string) => void` | `undefined` | Runs after a successful copy.                                                                          |
+| `onError`         | `(error: Error) => void`       | `undefined` | Runs when copy fails.                                                                                  |
+| `disableFallback` | `boolean`                      | `false`     | Disables the `execCommand("copy")` fallback and requires the Clipboard API.                            |
 
 ## Returns
 
-| Key | Type | Description |
-| --- | --- | --- |
-| `copied` | `boolean` | Whether the last copy succeeded and is still in its success window. |
-| `copiedText` | `string \| null` | Last successfully copied text. |
-| `error` | `Error \| null` | Last copy error, if one exists. |
-| `status` | `"idle" \| "success" \| "error"` | Current copy state. |
-| `isSupported` | `boolean` | Whether copy support exists in the current environment. |
-| `copy` | `(text: string) => Promise<void>` | Copies text to the clipboard. |
-| `reset` | `() => void` | Clears success and error state manually. |
+| Key           | Type                              | Description                                                         |
+| ------------- | --------------------------------- | ------------------------------------------------------------------- |
+| `copied`      | `boolean`                         | Whether the last copy succeeded and is still in its success window. |
+| `copiedText`  | `string \| null`                  | Last successfully copied text.                                      |
+| `error`       | `Error \| null`                   | Last copy error, if one exists.                                     |
+| `status`      | `"idle" \| "success" \| "error"`  | Current copy state.                                                 |
+| `isSupported` | `boolean`                         | Whether copy support exists in the current environment.             |
+| `copy`        | `(text: string) => Promise<void>` | Copies text to the clipboard.                                       |
+| `reset`       | `() => void`                      | Clears success and error state manually.                            |
 
 ## Usage
 
 ```tsx
 "use client";
 
-import { useCopyToClipboard } from "@thepuskar/use-kit/client";
+import { useCopyToClipboard } from "react-rsc-kit/client";
 
 export function CopyInviteLink() {
   const { copied, error, copy } = useCopyToClipboard({

@@ -15,26 +15,26 @@ import { ForDemo } from "../../components/demos/for-demo";
 ## Import
 
 ```tsx
-import { For } from "@thepuskar/use-kit";
+import { For } from "react-rsc-kit";
 ```
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `each` | `T[]` | required | Array to render. |
-| `children` | `(item: T, index: number, array: T[]) => ReactNode` | required | Render function for each item. |
-| `getKey` | `(item: T, index: number) => string \| number` | `undefined` | Stable key extractor. |
-| `empty` | `() => ReactNode` | `undefined` | Render function used when the array is empty. |
-| `loading` | `() => ReactNode` | `undefined` | Render function used when loading. |
-| `isLoading` | `boolean` | `false` | Enables the loading branch. |
-| `as` | `ElementType` | `undefined` | Wrapper element or component. |
-| `wrapperProps` | `Omit<ComponentProps<E>, "children">` | `{}` | Props passed to the wrapper. |
+| Prop           | Type                                                | Default     | Description                                   |
+| -------------- | --------------------------------------------------- | ----------- | --------------------------------------------- |
+| `each`         | `T[]`                                               | required    | Array to render.                              |
+| `children`     | `(item: T, index: number, array: T[]) => ReactNode` | required    | Render function for each item.                |
+| `getKey`       | `(item: T, index: number) => string \| number`      | `undefined` | Stable key extractor.                         |
+| `empty`        | `() => ReactNode`                                   | `undefined` | Render function used when the array is empty. |
+| `loading`      | `() => ReactNode`                                   | `undefined` | Render function used when loading.            |
+| `isLoading`    | `boolean`                                           | `false`     | Enables the loading branch.                   |
+| `as`           | `ElementType`                                       | `undefined` | Wrapper element or component.                 |
+| `wrapperProps` | `Omit<ComponentProps<E>, "children">`               | `{}`        | Props passed to the wrapper.                  |
 
 ## Usage
 
 ```tsx
-import { For } from "@thepuskar/use-kit";
+import { For } from "react-rsc-kit";
 
 function ProductList({
   products,

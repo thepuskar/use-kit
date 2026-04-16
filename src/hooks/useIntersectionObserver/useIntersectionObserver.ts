@@ -164,7 +164,7 @@ export function useIntersectionObserver<T extends Element = Element>({
   const [hasIntersected, setHasIntersected] = useState(initialInView);
 
   const freeze = freezeOnceVisible || triggerOnce;
-  const rootNode = resolveMaybeRef(root);
+  const rootNode: IntersectionObserverInit["root"] = resolveMaybeRef<ObserverRoot>(root);
   const thresholdKey = serializeThreshold(threshold);
 
   const disconnect = useCallback(() => {

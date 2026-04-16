@@ -15,7 +15,7 @@ import { UseToggleDemo } from "../../components/demos/use-toggle-demo";
 ## Import
 
 ```tsx
-import { useToggle } from "@thepuskar/use-kit/client";
+import { useToggle } from "react-rsc-kit/client";
 ```
 
 ## Signature
@@ -26,25 +26,25 @@ const [value, toggle, setValue, actions] = useToggle(initialValue?);
 
 ## Parameters
 
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
+| Name           | Type                         | Default | Description                                             |
+| -------------- | ---------------------------- | ------- | ------------------------------------------------------- |
 | `initialValue` | `boolean \| (() => boolean)` | `false` | Initial toggle state, with lazy initialization support. |
 
 ## Returns
 
-| Item | Description |
-| --- | --- |
-| `value` | Current boolean state. |
-| `toggle` | Flips the value, or forces it when called with `true` or `false`. |
-| `setValue` | React state setter for direct control. |
-| `actions` | Helper object with `setTrue`, `setFalse`, and `reset`. |
+| Item       | Description                                                       |
+| ---------- | ----------------------------------------------------------------- |
+| `value`    | Current boolean state.                                            |
+| `toggle`   | Flips the value, or forces it when called with `true` or `false`. |
+| `setValue` | React state setter for direct control.                            |
+| `actions`  | Helper object with `setTrue`, `setFalse`, and `reset`.            |
 
 ## Usage
 
 ```tsx
 "use client";
 
-import { useToggle } from "@thepuskar/use-kit/client";
+import { useToggle } from "react-rsc-kit/client";
 
 export function FeatureFlagControls() {
   const [enabled, toggle, , { setTrue, setFalse, reset }] = useToggle(false);

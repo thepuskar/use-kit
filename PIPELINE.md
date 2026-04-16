@@ -1,6 +1,6 @@
 # Pipeline
 
-Project pipeline for `@thepuskar/use-kit`.
+Project pipeline for `react-rsc-kit`.
 
 The goal is to grow the library in a way that strengthens its core identity:
 typed reusable React hooks, small utility components, and clear client/server boundaries.

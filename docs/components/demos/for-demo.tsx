@@ -1,6 +1,6 @@
 "use client";
 
-import { For } from "@thepuskar/use-kit";
+import { For } from "react-rsc-kit";
 import { useState } from "react";
 
 import styles from "./demo-tokens.module.css";

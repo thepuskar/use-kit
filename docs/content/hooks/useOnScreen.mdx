@@ -3,7 +3,7 @@ import { UseOnScreenDemo } from "../../components/demos/use-on-screen-demo";
 
 # useOnScreen
 
-`useOnScreen` is the boolean-only visibility hook in `use-kit`. It is built on `useIntersectionObserver` but keeps the API focused when you already have a ref and only need a yes-or-no answer.
+`useOnScreen` is the boolean-only visibility hook in `react-rsc-kit`. It is built on `useIntersectionObserver` but keeps the API focused when you already have a ref and only need a yes-or-no answer.
 
 <DemoFrame
   title="Boolean visibility"
@@ -15,7 +15,7 @@ import { UseOnScreenDemo } from "../../components/demos/use-on-screen-demo";
 ## Import
 
 ```tsx
-import { useOnScreen } from "@thepuskar/use-kit/client";
+import { useOnScreen } from "react-rsc-kit/client";
 ```
 
 ## Signature
@@ -26,18 +26,18 @@ const isVisible = useOnScreen(ref, options?);
 
 ## Parameters
 
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| `ref` | `RefObject<T \| null>` | required | Ref for the element you want to observe. |
-| `options.root` | `Element \| Document \| RefObject<Element \| null> \| null` | `null` | Custom observer root. |
-| `options.rootMargin` | `string` | `"0px"` | Root margin passed to the observer. |
-| `options.threshold` | `number \| number[]` | `0` | Visibility threshold or thresholds. |
-| `options.once` | `boolean` | `false` | Friendly alias for freezing after the first visible intersection. |
-| `options.freezeOnceVisible` | `boolean` | `false` | Stops observing after the first visible intersection. |
-| `options.triggerOnce` | `boolean` | `false` | Legacy compatibility alias for one-time observation. |
-| `options.disabled` | `boolean` | `false` | Prevents observation without unmounting. |
-| `options.initialIsVisible` | `boolean` | `false` | Initial visibility before the first observer update. |
-| `options.fallbackInView` | `boolean` | `undefined` | Fallback boolean when `IntersectionObserver` is unavailable. |
+| Name                        | Type                                                        | Default     | Description                                                       |
+| --------------------------- | ----------------------------------------------------------- | ----------- | ----------------------------------------------------------------- |
+| `ref`                       | `RefObject<T \| null>`                                      | required    | Ref for the element you want to observe.                          |
+| `options.root`              | `Element \| Document \| RefObject<Element \| null> \| null` | `null`      | Custom observer root.                                             |
+| `options.rootMargin`        | `string`                                                    | `"0px"`     | Root margin passed to the observer.                               |
+| `options.threshold`         | `number \| number[]`                                        | `0`         | Visibility threshold or thresholds.                               |
+| `options.once`              | `boolean`                                                   | `false`     | Friendly alias for freezing after the first visible intersection. |
+| `options.freezeOnceVisible` | `boolean`                                                   | `false`     | Stops observing after the first visible intersection.             |
+| `options.triggerOnce`       | `boolean`                                                   | `false`     | Legacy compatibility alias for one-time observation.              |
+| `options.disabled`          | `boolean`                                                   | `false`     | Prevents observation without unmounting.                          |
+| `options.initialIsVisible`  | `boolean`                                                   | `false`     | Initial visibility before the first observer update.              |
+| `options.fallbackInView`    | `boolean`                                                   | `undefined` | Fallback boolean when `IntersectionObserver` is unavailable.      |
 
 ## Returns
 
@@ -49,7 +49,7 @@ const isVisible = useOnScreen(ref, options?);
 "use client";
 
 import { useRef } from "react";
-import { useOnScreen } from "@thepuskar/use-kit/client";
+import { useOnScreen } from "react-rsc-kit/client";
 
 export function OnScreenSection() {
   const ref = useRef<HTMLDivElement | null>(null);

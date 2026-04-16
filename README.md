@@ -1,11 +1,23 @@
-# @thepuskar/use-kit
+# react-rsc-kit
 
 Typed React hooks and utility components with explicit **RSC-safe** and **client** entrypoints for Next.js App Router and other React 18+ apps.
+
+[![npm version](https://img.shields.io/npm/v/react-rsc-kit)](https://www.npmjs.com/package/react-rsc-kit)
+[![npm downloads](https://img.shields.io/npm/dm/react-rsc-kit)](https://www.npmjs.com/package/react-rsc-kit)
+[![Docs](https://img.shields.io/badge/docs-live-0f766e)](https://react-rsc-kit.puskaradhikari.com.np/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
+
+## Links
+
+- Docs: [react-rsc-kit.puskaradhikari.com.np](https://react-rsc-kit.puskaradhikari.com.np/)
+- npm: [npmjs.com/package/react-rsc-kit](https://www.npmjs.com/package/react-rsc-kit)
+- Issues: [github.com/thepuskar/react-rsc-kit/issues](https://github.com/thepuskar/react-rsc-kit/issues)
+- Repository: [github.com/thepuskar/react-rsc-kit](https://github.com/thepuskar/react-rsc-kit)
 
 ## Install
 
 ```bash
-npm install @thepuskar/use-kit
+npm install react-rsc-kit
 ```
 
 ## Usage
@@ -13,7 +25,7 @@ npm install @thepuskar/use-kit
 ### Component (server-safe)
 
 ```tsx
-import { Match, Show, Switch } from "@thepuskar/use-kit";
+import { Match, Show, Switch } from "react-rsc-kit";
 
 export function Greeting({ user }: { user: { name: string } | null }) {
   return (
@@ -37,7 +49,7 @@ export function Status({ user }: { user: { name: string } | null }) {
 ```tsx
 "use client";
 
-import { useToggle } from "@thepuskar/use-kit/client";
+import { useToggle } from "react-rsc-kit/client";
 
 export function ToggleButton() {
   const [on, toggle] = useToggle(false);
@@ -47,8 +59,8 @@ export function ToggleButton() {
 
 ## RSC Guidance
 
-- `@thepuskar/use-kit` and `@thepuskar/use-kit/server` are **server-safe** entrypoints.
-- `@thepuskar/use-kit/client` and `@thepuskar/use-kit/hooks` are **client entrypoints**.
+- `react-rsc-kit` and `react-rsc-kit/server` are **server-safe** entrypoints.
+- `react-rsc-kit/client` and `react-rsc-kit/hooks` are **client entrypoints**.
 - In Next.js App Router, import hooks/client-only APIs only from `.../client` (or `.../hooks`) inside files that have `"use client"`.
 
 ## Development

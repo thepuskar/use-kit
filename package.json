@@ -1,16 +1,16 @@
 {
-  "name": "@thepuskar/use-kit",
+  "name": "react-rsc-kit",
   "version": "1.2.1",
   "description": "React hooks and utility components with RSC-safe server/client entrypoints.",
-  "author": "Puskar Adhikari <puskar.ad@gmail.com>",
+  "author": "react-rsc-kit contributors",
   "license": "MIT",
-  "homepage": "https://github.com/thepuskar/use-kit#readme",
+  "homepage": "https://react-rsc-kit.puskaradhikari.com.np/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thepuskar/use-kit.git"
+    "url": "git+https://github.com/thepuskar/react-rsc-kit.git"
   },
   "bugs": {
-    "url": "https://github.com/thepuskar/use-kit/issues"
+    "url": "https://github.com/thepuskar/react-rsc-kit/issues"
   },
   "engines": {
     "node": ">=20"

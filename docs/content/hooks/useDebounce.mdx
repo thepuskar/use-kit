@@ -15,7 +15,7 @@ import { UseDebounceDemo } from "../../components/demos/use-debounce-demo";
 ## Import
 
 ```tsx
-import { useDebounce } from "@thepuskar/use-kit/client";
+import { useDebounce } from "react-rsc-kit/client";
 ```
 
 ## Signature
@@ -26,13 +26,13 @@ const debouncedValue = useDebounce<T>(value, delay?, options?);
 
 ## Parameters
 
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| `value` | `T` | required | Value to debounce. |
-| `delay` | `number \| null \| undefined` | `500` | Delay before the returned value updates. Use `null` or `undefined` to disable debouncing. |
-| `options.leading` | `boolean` | `false` | Emits the first change immediately within a debounce window. |
-| `options.trailing` | `boolean` | `true` | Emits the settled value after the debounce delay. |
-| `options.equalityFn` | `(previousValue, nextValue) => boolean` | `Object.is` | Custom equality function for noisy or object-based values. |
+| Name                 | Type                                    | Default     | Description                                                                               |
+| -------------------- | --------------------------------------- | ----------- | ----------------------------------------------------------------------------------------- |
+| `value`              | `T`                                     | required    | Value to debounce.                                                                        |
+| `delay`              | `number \| null \| undefined`           | `500`       | Delay before the returned value updates. Use `null` or `undefined` to disable debouncing. |
+| `options.leading`    | `boolean`                               | `false`     | Emits the first change immediately within a debounce window.                              |
+| `options.trailing`   | `boolean`                               | `true`      | Emits the settled value after the debounce delay.                                         |
+| `options.equalityFn` | `(previousValue, nextValue) => boolean` | `Object.is` | Custom equality function for noisy or object-based values.                                |
 
 ## Returns
 
@@ -44,7 +44,7 @@ const debouncedValue = useDebounce<T>(value, delay?, options?);
 "use client";
 
 import { useState } from "react";
-import { useDebounce } from "@thepuskar/use-kit/client";
+import { useDebounce } from "react-rsc-kit/client";
 
 export function SearchExample() {
   const [query, setQuery] = useState("");

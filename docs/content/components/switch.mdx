@@ -17,29 +17,29 @@ It is a small branching utility component and is safe to use from server-rendere
 ## Import
 
 ```tsx
-import { Match, Switch } from "@thepuskar/use-kit";
+import { Match, Switch } from "react-rsc-kit";
 ```
 
 ## Props
 
 ### `Switch`
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `children` | `ReactNode` | required | One or more `Match` elements. |
+| Prop       | Type        | Default     | Description                      |
+| ---------- | ----------- | ----------- | -------------------------------- |
+| `children` | `ReactNode` | required    | One or more `Match` elements.    |
 | `fallback` | `ReactNode` | `undefined` | Rendered when no match succeeds. |
 
 ### `Match`
 
-| Prop | Type | Description |
-| --- | --- | --- |
-| `when` | `T \| (() => T)` | Value or getter used for matching. |
+| Prop       | Type                                             | Description                                   |
+| ---------- | ------------------------------------------------ | --------------------------------------------- |
+| `when`     | `T \| (() => T)`                                 | Value or getter used for matching.            |
 | `children` | `ReactNode \| ((value: Truthy<T>) => ReactNode)` | UI or render function for the matched branch. |
 
 ## Usage
 
 ```tsx
-import { Match, Switch } from "@thepuskar/use-kit";
+import { Match, Switch } from "react-rsc-kit";
 
 function StatusView({
   isLoading,

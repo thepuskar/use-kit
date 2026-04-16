@@ -17,21 +17,21 @@ Use it for a single optional branch. For multiple ordered branches, use [`Switch
 ## Import
 
 ```tsx
-import { Show } from "@thepuskar/use-kit";
+import { Show } from "react-rsc-kit";
 ```
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `when` | `T \| (() => T)` | required | Value or getter; if truthy after resolution, `children` render. |
-| `children` | `ReactNode \| ((value: Truthy<T>) => ReactNode)` | required | Static content or a function that receives the truthy `when` value. |
-| `fallback` | `ReactNode` | `undefined` | Rendered when `when` is falsy. If omitted, renders nothing. |
+| Prop       | Type                                             | Default     | Description                                                         |
+| ---------- | ------------------------------------------------ | ----------- | ------------------------------------------------------------------- |
+| `when`     | `T \| (() => T)`                                 | required    | Value or getter; if truthy after resolution, `children` render.     |
+| `children` | `ReactNode \| ((value: Truthy<T>) => ReactNode)` | required    | Static content or a function that receives the truthy `when` value. |
+| `fallback` | `ReactNode`                                      | `undefined` | Rendered when `when` is falsy. If omitted, renders nothing.         |
 
 ## Usage
 
 ```tsx
-import { Show } from "@thepuskar/use-kit";
+import { Show } from "react-rsc-kit";
 
 function Greeting({ user }: { user: { name: string } | null }) {
   return (

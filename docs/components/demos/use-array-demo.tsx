@@ -1,6 +1,6 @@
 "use client";
 
-import { useArray } from "@thepuskar/use-kit/client";
+import { useArray } from "react-rsc-kit/client";
 
 import styles from "./demo-tokens.module.css";
 

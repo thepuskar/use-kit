@@ -15,7 +15,7 @@ import { UseFetchDemo } from "../../components/demos/use-fetch-demo";
 ## Import
 
 ```tsx
-import { useFetch } from "@thepuskar/use-kit/client";
+import { useFetch } from "react-rsc-kit/client";
 ```
 
 ## Signature
@@ -26,40 +26,40 @@ const result = useFetch<T>(input, init?, options?);
 
 ## Parameters
 
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| `input` | `RequestInfo \| URL \| null \| undefined` | required | Request target. Use `null` or `undefined` to disable requests entirely. |
-| `init` | `RequestInit` | `undefined` | Fetch options such as method, headers, and body. |
-| `options.enabled` | `boolean` | `true` | Runs the request automatically when enabled. |
-| `options.initialData` | `T \| null` | `null` | Initial data before the first successful response. |
-| `options.cacheTime` | `number` | `0` | Cache lifetime in milliseconds. `0` disables caching. |
-| `options.cacheKey` | `string \| null` | derived for `GET`/`HEAD` | Custom cache key. Set `null` to disable caching for that request. |
-| `options.keepPreviousData` | `boolean` | `true` | Keeps the last successful data visible while a new request is running. |
-| `options.parse` | `(response: Response) => Promise<T>` | smart parser | Custom response parser. Defaults to JSON for JSON responses, text for text responses, and `Blob` otherwise. |
+| Name                       | Type                                      | Default                  | Description                                                                                                 |
+| -------------------------- | ----------------------------------------- | ------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| `input`                    | `RequestInfo \| URL \| null \| undefined` | required                 | Request target. Use `null` or `undefined` to disable requests entirely.                                     |
+| `init`                     | `RequestInit`                             | `undefined`              | Fetch options such as method, headers, and body.                                                            |
+| `options.enabled`          | `boolean`                                 | `true`                   | Runs the request automatically when enabled.                                                                |
+| `options.initialData`      | `T \| null`                               | `null`                   | Initial data before the first successful response.                                                          |
+| `options.cacheTime`        | `number`                                  | `0`                      | Cache lifetime in milliseconds. `0` disables caching.                                                       |
+| `options.cacheKey`         | `string \| null`                          | derived for `GET`/`HEAD` | Custom cache key. Set `null` to disable caching for that request.                                           |
+| `options.keepPreviousData` | `boolean`                                 | `true`                   | Keeps the last successful data visible while a new request is running.                                      |
+| `options.parse`            | `(response: Response) => Promise<T>`      | smart parser             | Custom response parser. Defaults to JSON for JSON responses, text for text responses, and `Blob` otherwise. |
 
 ## Returns
 
-| Key | Type | Description |
-| --- | --- | --- |
-| `data` | `T \| null` | Parsed response data. |
-| `error` | `Error \| UseFetchError \| null` | Last request error, including HTTP metadata for failed responses. |
-| `response` | `Response \| null` | Last successful network response object. |
-| `status` | `"idle" \| "loading" \| "success" \| "error"` | Current request status. |
-| `statusCode` | `number \| null` | Last HTTP status code seen by the hook. |
-| `loading` | `boolean` | Alias for `isFetching`. |
-| `isFetching` | `boolean` | Whether a request is currently in flight. |
-| `isIdle` | `boolean` | Whether no request has run yet. |
-| `isSuccess` | `boolean` | Whether the last request completed successfully. |
-| `isError` | `boolean` | Whether the last request ended in error. |
-| `refetch` | `(options?: { ignoreCache?: boolean }) => Promise<T \| null>` | Runs the request again. By default it bypasses cache. |
-| `abort` | `() => void` | Aborts the active request. |
+| Key          | Type                                                          | Description                                                       |
+| ------------ | ------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `data`       | `T \| null`                                                   | Parsed response data.                                             |
+| `error`      | `Error \| UseFetchError \| null`                              | Last request error, including HTTP metadata for failed responses. |
+| `response`   | `Response \| null`                                            | Last successful network response object.                          |
+| `status`     | `"idle" \| "loading" \| "success" \| "error"`                 | Current request status.                                           |
+| `statusCode` | `number \| null`                                              | Last HTTP status code seen by the hook.                           |
+| `loading`    | `boolean`                                                     | Alias for `isFetching`.                                           |
+| `isFetching` | `boolean`                                                     | Whether a request is currently in flight.                         |
+| `isIdle`     | `boolean`                                                     | Whether no request has run yet.                                   |
+| `isSuccess`  | `boolean`                                                     | Whether the last request completed successfully.                  |
+| `isError`    | `boolean`                                                     | Whether the last request ended in error.                          |
+| `refetch`    | `(options?: { ignoreCache?: boolean }) => Promise<T \| null>` | Runs the request again. By default it bypasses cache.             |
+| `abort`      | `() => void`                                                  | Aborts the active request.                                        |
 
 ## Usage
 
 ```tsx
 "use client";
 
-import { useFetch } from "@thepuskar/use-kit/client";
+import { useFetch } from "react-rsc-kit/client";
 
 type Post = {
   id: number;

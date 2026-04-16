@@ -15,7 +15,7 @@ import { UseArrayDemo } from "../../components/demos/use-array-demo";
 ## Import
 
 ```tsx
-import { useArray } from "@thepuskar/use-kit/client";
+import { useArray } from "react-rsc-kit/client";
 ```
 
 ## Signature
@@ -26,41 +26,37 @@ const array = useArray<T>(initialValue?);
 
 ## Parameters
 
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| `initialValue` | `T[] \| () => T[]` | `[]` | Initial array value. Supports lazy initialization. |
+| Name           | Type               | Default | Description                                        |
+| -------------- | ------------------ | ------- | -------------------------------------------------- |
+| `initialValue` | `T[] \| () => T[]` | `[]`    | Initial array value. Supports lazy initialization. |
 
 ## Returns
 
-| Key | Description |
-| --- | --- |
-| `value` | The current array state. |
-| `length` | Current array length. |
-| `isEmpty` | Whether the array is empty. |
-| `setValue` | Direct `useState` setter for custom updates. |
-| `push` | Appends one or more items. |
-| `filter` | Keeps only the items that match a predicate. |
-| `removeAt` | Removes a single item by index. Supports negative indices. |
+| Key           | Description                                                         |
+| ------------- | ------------------------------------------------------------------- |
+| `value`       | The current array state.                                            |
+| `length`      | Current array length.                                               |
+| `isEmpty`     | Whether the array is empty.                                         |
+| `setValue`    | Direct `useState` setter for custom updates.                        |
+| `push`        | Appends one or more items.                                          |
+| `filter`      | Keeps only the items that match a predicate.                        |
+| `removeAt`    | Removes a single item by index. Supports negative indices.          |
 | `removeValue` | Removes all items that are `Object.is`-equal to the supplied value. |
-| `update` | Replaces one item by index. Supports negative indices. |
-| `move` | Moves one item to a different index. Supports negative indices. |
-| `clear` | Removes all items. |
-| `reset` | Restores the original mount-time array snapshot. |
-| `shuffle` | Randomizes the array order immutably. |
+| `update`      | Replaces one item by index. Supports negative indices.              |
+| `move`        | Moves one item to a different index. Supports negative indices.     |
+| `clear`       | Removes all items.                                                  |
+| `reset`       | Restores the original mount-time array snapshot.                    |
+| `shuffle`     | Randomizes the array order immutably.                               |
 
 ## Usage
 
 ```tsx
 "use client";
 
-import { useArray } from "@thepuskar/use-kit/client";
+import { useArray } from "react-rsc-kit/client";
 
 export function TodoTags() {
-  const { value, push, removeValue, move, reset } = useArray([
-    "react",
-    "typescript",
-    "docs",
-  ]);
+  const { value, push, removeValue, move, reset } = useArray(["react", "typescript", "docs"]);
 
   return (
     <div>

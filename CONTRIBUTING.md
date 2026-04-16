@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for contributing to `@thepuskar/use-kit`.
+Thanks for contributing to `react-rsc-kit`.
 
 ## Development Setup
 
