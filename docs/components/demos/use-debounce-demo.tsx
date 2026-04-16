@@ -1,6 +1,6 @@
 "use client";
 
-import { useDebounce } from "@thepuskar/use-kit/client";
+import { useDebounce } from "react-rsc-kit/client";
 import { useState } from "react";
 
 import styles from "./demo-tokens.module.css";

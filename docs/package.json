@@ -1,26 +1,26 @@
 {
-  "name": "use-kit",
+  "name": "react-rsc-kit-docs",
   "version": "0.0.1",
-  "description": "Documentation site for @thepuskar/use-kit",
+  "description": "Documentation site for react-rsc-kit",
   "scripts": {
     "dev": "node ./scripts/generate-search-index.mjs && next dev",
-    "dev:published": "node ./scripts/generate-search-index.mjs && cross-env USE_KIT_SOURCE=0 next dev",
+    "dev:package": "node ./scripts/generate-search-index.mjs && cross-env REACT_RSC_KIT_SOURCE=0 next dev",
     "build": "node ./scripts/generate-search-index.mjs && next build",
-    "build:published": "node ./scripts/generate-search-index.mjs && cross-env USE_KIT_SOURCE=0 next build",
+    "build:package": "node ./scripts/generate-search-index.mjs && cross-env REACT_RSC_KIT_SOURCE=0 next build",
     "start": "next start"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thepuskar/use-kit"
+    "url": "git+https://github.com/thepuskar/react-rsc-kit"
   },
-  "author": "Puskar Adhikari <https://www.puskaradhikari.com.np/>",
+  "author": "react-rsc-kit contributors",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/thepuskar/use-kit/issues"
+    "url": "https://github.com/thepuskar/react-rsc-kit/issues"
   },
-  "homepage": "https://github.com/thepuskar/use-kit#readme",
+  "homepage": "https://github.com/thepuskar/react-rsc-kit#readme",
   "dependencies": {
-    "@thepuskar/use-kit": "^1.2.0",
+    "react-rsc-kit": "file:..",
     "lucide-react": "^0.577.0",
     "next": "^16.1.6",
     "nextra": "4.6.1",

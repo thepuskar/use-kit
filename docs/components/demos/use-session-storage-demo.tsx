@@ -1,10 +1,10 @@
 "use client";
 
-import * as useKitClient from "@thepuskar/use-kit/client";
+import * as useKitClient from "react-rsc-kit/client";
 
 import styles from "./demo-tokens.module.css";
 
-const STORAGE_KEY = "use-kit-demo-session-storage";
+const STORAGE_KEY = "react-rsc-kit-demo-session-storage";
 const DEFAULT_DRAFT = "Ship the docs update.\nAdd tests before lunch.";
 
 type UseSessionStorageHook = <T>(

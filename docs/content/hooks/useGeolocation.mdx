@@ -15,7 +15,7 @@ import { UseGeolocationDemo } from "../../components/demos/use-geolocation-demo"
 ## Import
 
 ```tsx
-import { useGeolocation } from "@thepuskar/use-kit/client";
+import { useGeolocation } from "react-rsc-kit/client";
 ```
 
 ## Signature
@@ -26,41 +26,35 @@ const geolocation = useGeolocation(options?, callback?, isEnabled?);
 
 ## Parameters
 
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| `options` | `{ enableHighAccuracy?: boolean; maximumAge?: number; timeout?: number; watch?: boolean; requestOnMount?: boolean }` | `{}` | Browser geolocation options plus hook behavior flags. |
-| `callback` | `(coordinates) => void` | `undefined` | Runs whenever coordinates update successfully. |
-| `isEnabled` | `boolean` | `true` | Enables or disables geolocation watching. |
+| Name        | Type                                                                                                                 | Default     | Description                                           |
+| ----------- | -------------------------------------------------------------------------------------------------------------------- | ----------- | ----------------------------------------------------- |
+| `options`   | `{ enableHighAccuracy?: boolean; maximumAge?: number; timeout?: number; watch?: boolean; requestOnMount?: boolean }` | `{}`        | Browser geolocation options plus hook behavior flags. |
+| `callback`  | `(coordinates) => void`                                                                                              | `undefined` | Runs whenever coordinates update successfully.        |
+| `isEnabled` | `boolean`                                                                                                            | `true`      | Enables or disables geolocation watching.             |
 
 ## Returns
 
-| Key | Description |
-| --- | --- |
-| `accuracy`, `altitude`, `altitudeAccuracy`, `heading`, `latitude`, `longitude`, `speed`, `timestamp` | Latest location fields. |
-| `error` | Last `GeolocationPositionError`, if one exists. |
-| `loading` | Whether a geolocation request is in progress. |
-| `permissionState` | Permission state from the Permissions API when available. |
-| `isSupported` | Whether geolocation exists in the current environment. |
-| `isEnabled` | Whether the hook is currently enabled. |
-| `isWatching` | Whether a watch subscription is active. |
-| `getCurrentPosition` | Runs a manual one-time location lookup. |
-| `cancel` | Clears the active watch subscription. |
+| Key                                                                                                  | Description                                               |
+| ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| `accuracy`, `altitude`, `altitudeAccuracy`, `heading`, `latitude`, `longitude`, `speed`, `timestamp` | Latest location fields.                                   |
+| `error`                                                                                              | Last `GeolocationPositionError`, if one exists.           |
+| `loading`                                                                                            | Whether a geolocation request is in progress.             |
+| `permissionState`                                                                                    | Permission state from the Permissions API when available. |
+| `isSupported`                                                                                        | Whether geolocation exists in the current environment.    |
+| `isEnabled`                                                                                          | Whether the hook is currently enabled.                    |
+| `isWatching`                                                                                         | Whether a watch subscription is active.                   |
+| `getCurrentPosition`                                                                                 | Runs a manual one-time location lookup.                   |
+| `cancel`                                                                                             | Clears the active watch subscription.                     |
 
 ## Usage
 
 ```tsx
 "use client";
 
-import { useGeolocation } from "@thepuskar/use-kit/client";
+import { useGeolocation } from "react-rsc-kit/client";
 
 export function LocationReadout() {
-  const {
-    latitude,
-    longitude,
-    loading,
-    error,
-    getCurrentPosition,
-  } = useGeolocation(
+  const { latitude, longitude, loading, error, getCurrentPosition } = useGeolocation(
     {
       enableHighAccuracy: true,
       watch: false,
@@ -80,7 +74,11 @@ export function LocationReadout() {
       </button>
       {loading ? <p>Locating...</p> : null}
       {error ? <p>Unable to read location.</p> : null}
-      {latitude !== null && longitude !== null ? <p>{latitude}, {longitude}</p> : null}
+      {latitude !== null && longitude !== null ? (
+        <p>
+          {latitude}, {longitude}
+        </p>
+      ) : null}
     </div>
   );
 }

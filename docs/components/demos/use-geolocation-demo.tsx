@@ -1,6 +1,6 @@
 "use client";
 
-import { useGeolocation } from "@thepuskar/use-kit/client";
+import { useGeolocation } from "react-rsc-kit/client";
 
 import styles from "./demo-tokens.module.css";
 

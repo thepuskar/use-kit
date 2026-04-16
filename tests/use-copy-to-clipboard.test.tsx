@@ -42,12 +42,12 @@ describe("useCopyToClipboard", () => {
     );
 
     await act(async () => {
-      await result.current.copy("https://use-kit.dev/invite");
+      await result.current.copy("https://react-rsc-kit.dev/invite");
     });
 
-    expect(writeText).toHaveBeenCalledWith("https://use-kit.dev/invite");
+    expect(writeText).toHaveBeenCalledWith("https://react-rsc-kit.dev/invite");
     expect(result.current.copied).toBe(true);
-    expect(result.current.copiedText).toBe("https://use-kit.dev/invite");
+    expect(result.current.copiedText).toBe("https://react-rsc-kit.dev/invite");
     expect(result.current.status).toBe("success");
     expect(result.current.error).toBeNull();
 
@@ -57,7 +57,7 @@ describe("useCopyToClipboard", () => {
 
     expect(result.current.copied).toBe(false);
     expect(result.current.status).toBe("idle");
-    expect(result.current.copiedText).toBe("https://use-kit.dev/invite");
+    expect(result.current.copiedText).toBe("https://react-rsc-kit.dev/invite");
   });
 
   it("uses the execCommand fallback when the Clipboard API is unavailable", async () => {

@@ -6,7 +6,7 @@ import nextra from "nextra";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
 const docsNodeModules = path.resolve(__dirname, "node_modules");
-const useSourceAliases = process.env.USE_KIT_SOURCE !== "0";
+const useSourceAliases = process.env.REACT_RSC_KIT_SOURCE !== "0";
 const toTurbopackAliasPath = (targetPath) => {
   const relativePath = path.relative(__dirname, targetPath).split(path.sep).join("/");
   return relativePath.startsWith(".") ? relativePath : `./${relativePath}`;
@@ -17,29 +17,29 @@ const webpackAlias = useSourceAliases
       "react-dom": path.resolve(docsNodeModules, "react-dom"),
       "react/jsx-runtime": path.resolve(docsNodeModules, "react/jsx-runtime.js"),
       "react/jsx-dev-runtime": path.resolve(docsNodeModules, "react/jsx-dev-runtime.js"),
-      "@thepuskar/use-kit": path.resolve(projectRoot, "src/index.ts"),
-      "@thepuskar/use-kit/client": path.resolve(projectRoot, "src/client/index.ts"),
-      "@thepuskar/use-kit/hooks": path.resolve(projectRoot, "src/client/hooks.ts"),
-      "@thepuskar/use-kit/server": path.resolve(projectRoot, "src/server/index.ts"),
+      "react-rsc-kit": path.resolve(projectRoot, "src/index.ts"),
+      "react-rsc-kit/client": path.resolve(projectRoot, "src/client/index.ts"),
+      "react-rsc-kit/hooks": path.resolve(projectRoot, "src/client/hooks.ts"),
+      "react-rsc-kit/server": path.resolve(projectRoot, "src/server/index.ts"),
     }
   : null;
 const turbopackAlias = useSourceAliases
   ? {
       react: toTurbopackAliasPath(path.resolve(docsNodeModules, "react")),
       "react-dom": toTurbopackAliasPath(path.resolve(docsNodeModules, "react-dom")),
-      "react/jsx-runtime": toTurbopackAliasPath(path.resolve(docsNodeModules, "react/jsx-runtime.js")),
+      "react/jsx-runtime": toTurbopackAliasPath(
+        path.resolve(docsNodeModules, "react/jsx-runtime.js"),
+      ),
       "react/jsx-dev-runtime": toTurbopackAliasPath(
-        path.resolve(docsNodeModules, "react/jsx-dev-runtime.js")
+        path.resolve(docsNodeModules, "react/jsx-dev-runtime.js"),
       ),
-      "@thepuskar/use-kit": toTurbopackAliasPath(path.resolve(projectRoot, "src/index.ts")),
-      "@thepuskar/use-kit/client": toTurbopackAliasPath(
-        path.resolve(projectRoot, "src/client/index.ts")
+      "react-rsc-kit": toTurbopackAliasPath(path.resolve(projectRoot, "src/index.ts")),
+      "react-rsc-kit/client": toTurbopackAliasPath(
+        path.resolve(projectRoot, "src/client/index.ts"),
       ),
-      "@thepuskar/use-kit/hooks": toTurbopackAliasPath(
-        path.resolve(projectRoot, "src/client/hooks.ts")
-      ),
-      "@thepuskar/use-kit/server": toTurbopackAliasPath(
-        path.resolve(projectRoot, "src/server/index.ts")
+      "react-rsc-kit/hooks": toTurbopackAliasPath(path.resolve(projectRoot, "src/client/hooks.ts")),
+      "react-rsc-kit/server": toTurbopackAliasPath(
+        path.resolve(projectRoot, "src/server/index.ts"),
       ),
     }
   : undefined;

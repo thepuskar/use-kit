@@ -33,10 +33,10 @@ export function SiteLogo({ compact = false }: SiteLogoProps) {
       </span>
 
       <span className="flex flex-col">
-        <span className="use-kit-muted-label">{compact ? "Docs" : "React utility library"}</span>
-        <span className="text-base font-semibold tracking-[-0.02em] sm:text-lg">
-          @thepuskar/use-kit
+        <span className="react-rsc-kit-muted-label">
+          {compact ? "Docs" : "React utility library"}
         </span>
+        <span className="text-base font-semibold tracking-[-0.02em] sm:text-lg">react-rsc-kit</span>
       </span>
     </span>
   );

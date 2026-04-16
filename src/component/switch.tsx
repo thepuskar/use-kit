@@ -24,7 +24,7 @@ type MatchComponent = {
   displayName?: string;
 };
 
-const MATCH_MARKER = Symbol.for("use-kit.switch.match");
+const MATCH_MARKER = Symbol.for("react-rsc-kit.switch.match");
 
 function isMatchElement(node: ReactNode): node is MatchElement {
   if (!React.isValidElement(node)) {

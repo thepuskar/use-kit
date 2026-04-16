@@ -1,6 +1,6 @@
 "use client";
 
-import { useFetch } from "@thepuskar/use-kit/client";
+import { useFetch } from "react-rsc-kit/client";
 
 import styles from "./demo-tokens.module.css";
 

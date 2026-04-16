@@ -1,12 +1,12 @@
 "use client";
 
-import { useCopyToClipboard } from "@thepuskar/use-kit/client";
+import { useCopyToClipboard } from "react-rsc-kit/client";
 import { useState } from "react";
 
 import styles from "./demo-tokens.module.css";
 
 export function UseCopyToClipboardDemo() {
-  const [value, setValue] = useState("npx @thepuskar/use-kit");
+  const [value, setValue] = useState("npx react-rsc-kit");
   const { copied, copiedText, error, status, copy, reset } = useCopyToClipboard({
     resetTime: 2000,
   });

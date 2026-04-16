@@ -1,8 +1,6 @@
 "use client";
 
-// Import from library source so the demo matches main (Turbopack prefers `node_modules` over aliases).
-// Repo root uses the same React major as `docs` (see root `package.json`) so this is not a second React instance.
-import { Show } from "../../../src/component/show";
+import { Show } from "react-rsc-kit";
 import { useMemo, useState } from "react";
 
 import styles from "./demo-tokens.module.css";

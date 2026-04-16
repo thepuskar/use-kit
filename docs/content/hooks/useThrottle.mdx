@@ -15,7 +15,7 @@ import { UseThrottleDemo } from "../../components/demos/use-throttle-demo";
 ## Import
 
 ```tsx
-import { useThrottle } from "@thepuskar/use-kit/client";
+import { useThrottle } from "react-rsc-kit/client";
 ```
 
 ## Signature
@@ -26,13 +26,13 @@ const throttledValue = useThrottle<T>(value, delay?, options?);
 
 ## Parameters
 
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| `value` | `T` | required | Value to throttle. |
-| `delay` | `number \| null \| undefined` | `5000` | Minimum interval between updates. Use `null` or `undefined` to disable throttling. |
-| `options.leading` | `boolean` | `true` | Emits the first change immediately at the start of a throttle window. |
-| `options.trailing` | `boolean` | `true` | Emits the latest value at the end of the active throttle window. |
-| `options.equalityFn` | `(previousValue, nextValue) => boolean` | `Object.is` | Custom equality function for noisy object or array values. |
+| Name                 | Type                                    | Default     | Description                                                                        |
+| -------------------- | --------------------------------------- | ----------- | ---------------------------------------------------------------------------------- |
+| `value`              | `T`                                     | required    | Value to throttle.                                                                 |
+| `delay`              | `number \| null \| undefined`           | `5000`      | Minimum interval between updates. Use `null` or `undefined` to disable throttling. |
+| `options.leading`    | `boolean`                               | `true`      | Emits the first change immediately at the start of a throttle window.              |
+| `options.trailing`   | `boolean`                               | `true`      | Emits the latest value at the end of the active throttle window.                   |
+| `options.equalityFn` | `(previousValue, nextValue) => boolean` | `Object.is` | Custom equality function for noisy object or array values.                         |
 
 ## Returns
 
@@ -44,7 +44,7 @@ const throttledValue = useThrottle<T>(value, delay?, options?);
 "use client";
 
 import { useState } from "react";
-import { useThrottle } from "@thepuskar/use-kit/client";
+import { useThrottle } from "react-rsc-kit/client";
 
 export function InputThrottleExample() {
   const [value, setValue] = useState("");

@@ -164,9 +164,14 @@ export function DocsSearch() {
   const showEmptyState = isReady && trimmedQuery && !hasResults;
 
   return (
-    <div ref={containerRef} className="use-kit-search">
-      <div className="use-kit-search-shell">
-        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="use-kit-search-icon">
+    <div ref={containerRef} className="react-rsc-kit-search">
+      <div className="react-rsc-kit-search-shell">
+        <svg
+          viewBox="0 0 20 20"
+          fill="none"
+          aria-hidden="true"
+          className="react-rsc-kit-search-icon"
+        >
           <path
             d="M14.375 14.375L17.5 17.5M16.25 9.16667C16.25 13.0797 13.0797 16.25 9.16667 16.25C5.25365 16.25 2.08334 13.0797 2.08334 9.16667C2.08334 5.25365 5.25365 2.08334 9.16667 2.08334C13.0797 2.08334 16.25 5.25365 16.25 9.16667Z"
             stroke="currentColor"
@@ -182,35 +187,39 @@ export function DocsSearch() {
           onFocus={() => setIsOpen(true)}
           onChange={(event) => setQuery(event.currentTarget.value)}
           placeholder={isReady ? "Search docs..." : "Loading search..."}
-          className="use-kit-search-input"
+          className="react-rsc-kit-search-input"
           aria-label="Search documentation"
         />
-        <kbd className="use-kit-search-shortcut">Cmd/Ctrl K</kbd>
+        <kbd className="react-rsc-kit-search-shortcut">Cmd/Ctrl K</kbd>
       </div>
 
       {isOpen && trimmedQuery ? (
-        <div className="use-kit-search-results">
+        <div className="react-rsc-kit-search-results">
           {hasResults
             ? results.map((result) => (
                 <Link
                   key={result.route}
                   href={result.route}
-                  className="use-kit-search-result"
+                  className="react-rsc-kit-search-result"
                   onClick={() => {
                     setIsOpen(false);
                     setQuery("");
                   }}
                 >
-                  <span className="use-kit-search-result-title">{result.title}</span>
+                  <span className="react-rsc-kit-search-result-title">{result.title}</span>
                   {result.description ? (
-                    <span className="use-kit-search-result-description">{result.description}</span>
+                    <span className="react-rsc-kit-search-result-description">
+                      {result.description}
+                    </span>
                   ) : null}
-                  <span className="use-kit-search-result-route">{result.route}</span>
+                  <span className="react-rsc-kit-search-result-route">{result.route}</span>
                 </Link>
               ))
             : null}
 
-          {showEmptyState ? <p className="use-kit-search-empty">No matching docs pages.</p> : null}
+          {showEmptyState ? (
+            <p className="react-rsc-kit-search-empty">No matching docs pages.</p>
+          ) : null}
         </div>
       ) : null}
     </div>

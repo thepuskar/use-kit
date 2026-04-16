@@ -15,7 +15,7 @@ import { UseLocalStorageDemo } from "../../components/demos/use-local-storage-de
 ## Import
 
 ```tsx
-import { useLocalStorage } from "@thepuskar/use-kit/client";
+import { useLocalStorage } from "react-rsc-kit/client";
 ```
 
 ## Signature
@@ -46,7 +46,7 @@ const { value, setValue, remove, reset, isSupported } = useLocalStorage<T>(key, 
 ```tsx
 "use client";
 
-import { useLocalStorage } from "@thepuskar/use-kit/client";
+import { useLocalStorage } from "react-rsc-kit/client";
 
 export function DraftMessage() {
   const { value: draft, setValue, remove } = useLocalStorage("draft-message", "");
@@ -65,7 +65,7 @@ export function DraftMessage() {
 ```tsx
 "use client";
 
-import { useLocalStorage } from "@thepuskar/use-kit/client";
+import { useLocalStorage } from "react-rsc-kit/client";
 
 interface UserPreferences {
   compactMode: boolean;

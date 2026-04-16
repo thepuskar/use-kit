@@ -15,7 +15,7 @@ import { UseClickOutsideDemo } from "../../components/demos/use-click-outside-de
 ## Import
 
 ```tsx
-import { useClickOutside } from "@thepuskar/use-kit/client";
+import { useClickOutside } from "react-rsc-kit/client";
 ```
 
 ## Signature
@@ -26,17 +26,17 @@ const ref = useClickOutside<T>(handler, options?);
 
 ## Parameters
 
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| `handler` | `(event: Event) => void` | required | Runs when an outside interaction is detected. |
-| `options.ref` | `RefObject<T \| null>` | internal ref | Optional external ref for the primary target. |
-| `options.refs` | `RefObject<Element \| null>[]` | `[]` | Additional refs that should also count as inside. |
-| `options.ignore` | `(Element \| RefObject<Element \| null>)[]` | `[]` | Elements or refs that should be ignored even if they are outside the target. |
-| `options.events` | `("pointerdown" \| "mousedown" \| "mouseup" \| "touchstart" \| "touchend" \| "focusin" \| "focusout")[]` | `["pointerdown"]` | Events to observe. |
-| `options.capture` | `boolean` | `true` | Whether listeners are attached in the capture phase. |
-| `options.passive` | `boolean` | `false` | Whether listeners are passive when supported. |
-| `options.disabled` | `boolean` | `false` | Disables outside detection without unmounting. |
-| `options.document` | `Document \| null` | global `document` | Custom document target for portals or iframes. |
+| Name               | Type                                                                                                     | Default           | Description                                                                  |
+| ------------------ | -------------------------------------------------------------------------------------------------------- | ----------------- | ---------------------------------------------------------------------------- |
+| `handler`          | `(event: Event) => void`                                                                                 | required          | Runs when an outside interaction is detected.                                |
+| `options.ref`      | `RefObject<T \| null>`                                                                                   | internal ref      | Optional external ref for the primary target.                                |
+| `options.refs`     | `RefObject<Element \| null>[]`                                                                           | `[]`              | Additional refs that should also count as inside.                            |
+| `options.ignore`   | `(Element \| RefObject<Element \| null>)[]`                                                              | `[]`              | Elements or refs that should be ignored even if they are outside the target. |
+| `options.events`   | `("pointerdown" \| "mousedown" \| "mouseup" \| "touchstart" \| "touchend" \| "focusin" \| "focusout")[]` | `["pointerdown"]` | Events to observe.                                                           |
+| `options.capture`  | `boolean`                                                                                                | `true`            | Whether listeners are attached in the capture phase.                         |
+| `options.passive`  | `boolean`                                                                                                | `false`           | Whether listeners are passive when supported.                                |
+| `options.disabled` | `boolean`                                                                                                | `false`           | Disables outside detection without unmounting.                               |
+| `options.document` | `Document \| null`                                                                                       | global `document` | Custom document target for portals or iframes.                               |
 
 ## Returns
 
@@ -48,7 +48,7 @@ const ref = useClickOutside<T>(handler, options?);
 "use client";
 
 import { useState } from "react";
-import { useClickOutside } from "@thepuskar/use-kit/client";
+import { useClickOutside } from "react-rsc-kit/client";
 
 export function Dropdown() {
   const [open, setOpen] = useState(false);
