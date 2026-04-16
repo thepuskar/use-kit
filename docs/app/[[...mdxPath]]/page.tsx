@@ -15,7 +15,8 @@ type PageProps = {
 };
 
 const CONTENT_ROOT = path.join(process.cwd(), "content");
-const CONTENT_EXTENSIONS = new Set([".md", ".mdx"]);
+// Keep docs content on MDX only so the plain-Markdown rehype-raw path stays unreachable.
+const CONTENT_EXTENSIONS = new Set([".mdx"]);
 
 async function collectStaticMdxPaths(
   directory: string,
