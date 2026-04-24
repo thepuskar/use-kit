@@ -1,0 +1,86 @@
+import { DemoFrame } from "../../components/demo-frame";
+import { UsePreviousDemo } from "../../components/demos/use-previous-demo";
+
+# usePrevious
+
+`usePrevious` returns the last committed value from the previous meaningful render, with optional reset boundaries, equality checks, and cloned snapshots for mutable values.
+
+<DemoFrame
+  title="Previous score comparison"
+  description="This demo compares the current value with the previous committed value and resets the timeline when the profile changes."
+>
+  <UsePreviousDemo />
+</DemoFrame>
+
+## Import
+
+```tsx
+import { usePrevious } from "react-rsc-kit/client";
+```
+
+## Signature
+
+```ts
+const previousValue = usePrevious<T>(value, options?);
+```
+
+## Parameters
+
+| Name                   | Type                                    | Default     | Description                                                                                          |
+| ---------------------- | --------------------------------------- | ----------- | ---------------------------------------------------------------------------------------------------- |
+| `value`                | `T`                                     | required    | Current value to track.                                                                              |
+| `options.initialValue` | `TInitial`                              | `undefined` | Value returned before a previous value exists or after `resetKeys` change.                           |
+| `options.equalityFn`   | `(previousValue, nextValue) => boolean` | `Object.is` | Custom equality function used to decide whether the incoming value should replace the tracked value. |
+| `options.clone`        | `(value) => T`                          | `undefined` | Creates a snapshot before storing the tracked value, useful for mutable objects or arrays.           |
+| `options.resetKeys`    | `readonly unknown[]`                    | `[]`        | Shallow-compared keys that reset previous-value tracking when one changes.                           |
+
+## Returns
+
+- `previousValue`: the last tracked value. Without `initialValue`, the first render returns `undefined`.
+
+## Usage
+
+```tsx
+"use client";
+
+import { usePrevious } from "react-rsc-kit/client";
+
+export function CounterDelta({ count }: { count: number }) {
+  const previousCount = usePrevious(count, {
+    initialValue: count,
+  });
+
+  return <p>Delta: {count - previousCount}</p>;
+}
+```
+
+```tsx
+"use client";
+
+import { usePrevious } from "react-rsc-kit/client";
+
+interface UserSummary {
+  id: string;
+  name: string;
+  updatedAt: number;
+}
+
+export function UserChangeSummary({ user }: { user: UserSummary }) {
+  const previousUser = usePrevious(user, {
+    equalityFn: (previous, next) =>
+      previous.id === next.id && previous.updatedAt === next.updatedAt,
+    clone: (value) => ({ ...value }),
+    resetKeys: [user.id],
+  });
+
+  return <p>Previous name: {previousUser?.name ?? "No previous user"}</p>;
+}
+```
+
+## Notes
+
+- The hook stores values in refs and does not schedule state updates.
+- `equalityFn` lets you ignore recreated values that should be treated as unchanged.
+- Use `clone` when callers may mutate the same object or array reference after render.
+- `resetKeys` creates a new tracking timeline for a different entity, route, session, or filter scope.
+- The hook records values after React commits, so it works with Strict Mode and avoids reading speculative render values.

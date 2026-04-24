@@ -10,6 +10,7 @@
   "useGeolocation": "useGeolocation",
   "useDebounce": "useDebounce",
   "useThrottle": "useThrottle",
+  "usePrevious": "usePrevious",
   "useArray": "useArray",
   "useLocalStorage": "useLocalStorage",
   "useSessionStorage": "useSessionStorage",

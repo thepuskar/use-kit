@@ -13,6 +13,14 @@
 npm run build
 ```
 
+When validating a local `file:..` package change, refresh the docs install after the root build so
+the package-mode app sees the latest `dist` output:
+
+```bash
+cd docs
+pnpm install
+```
+
 **New exports vs package mode:** The live docs app may demonstrate APIs that are not in the current packaged build yet. In that case a demo may import from `../../../src/...` so Turbopack does not prefer `node_modules/react-rsc-kit` over the alias. Keep the **repo root** `react` / `react-dom` versions aligned with `docs/package.json` (same major) so those imports do not load a second React copy (`ReactCurrentDispatcher` errors).
 
 Examples:
@@ -32,3 +40,10 @@ pnpm build:package
 ```
 
 Those commands set `REACT_RSC_KIT_SOURCE=0` and use the installed package dependency.
+
+### Adding hook docs
+
+For a new hook, add the MDX page under `docs/content/hooks`, add any live example under
+`docs/components/demos`, and register the page in `docs/content/hooks/_meta.json` so it appears in
+the sidebar. The docs scripts regenerate `docs/public/search-index.json` before `dev` and `build`,
+so search stays aligned with the MDX content.

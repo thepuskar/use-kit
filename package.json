@@ -1,6 +1,6 @@
 {
   "name": "react-rsc-kit",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "description": "React hooks and utility components with RSC-safe server/client entrypoints.",
   "author": "react-rsc-kit contributors",
   "license": "MIT",
