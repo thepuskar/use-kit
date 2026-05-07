@@ -2,6 +2,7 @@ export * from "./useArray";
 export * from "./useAsync";
 export * from "./useAsyncFnc";
 export * from "./useClickOutside";
+export * from "./useControllableState";
 export * from "./useCopyToClipboard";
 export * from "./useDebounce";
 export * from "./useEventListener";
