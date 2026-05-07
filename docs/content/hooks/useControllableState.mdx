@@ -1,0 +1,177 @@
+import { DemoFrame } from "../../components/demo-frame";
+import { UseControllableStateDemo } from "../../components/demos/use-controllable-state-demo";
+
+# useControllableState
+
+`useControllableState` lets design-system components support controlled and uncontrolled state with one consistent setter contract.
+
+<DemoFrame
+  title="Controllable component state"
+  description="This demo shows one controlled value owned by the parent and one uncontrolled value owned by the hook."
+>
+  <UseControllableStateDemo />
+</DemoFrame>
+
+## Import
+
+```tsx
+import { useControllableState } from "react-rsc-kit/client";
+```
+
+## Signature
+
+```ts
+const [value, setValue, meta] = useControllableState<T>({
+  value,
+  defaultValue,
+  onChange,
+  name,
+  shouldUpdate,
+});
+```
+
+## Parameters
+
+| Name           | Type                                          | Default     | Description                                                                  |
+| -------------- | --------------------------------------------- | ----------- | ---------------------------------------------------------------------------- |
+| `value`        | `T`                                           | `undefined` | Controlled value. The hook is controlled when this is not `undefined`.       |
+| `defaultValue` | `T \| () => T`                                | `undefined` | Initial uncontrolled value. Later changes to `defaultValue` are ignored.     |
+| `onChange`     | `(nextValue: T, previousValue: T) => void`    | `undefined` | Called when an accepted value change is requested.                           |
+| `name`         | `string`                                      | `undefined` | Component or state name included in development warnings.                    |
+| `shouldUpdate` | `(nextValue: T, previousValue: T) => boolean` | `Object.is` | Custom predicate. Return `true` when the requested update should be applied. |
+
+## Returns
+
+| Item       | Description                                                                 |
+| ---------- | --------------------------------------------------------------------------- |
+| `value`    | Controlled `value` when controlled, otherwise internal uncontrolled state.  |
+| `setValue` | React-style setter supporting direct values and functional updates.         |
+| `meta`     | Object with `isControlled`, useful for diagnostics and component internals. |
+
+## Controlled Toggle
+
+```tsx
+"use client";
+
+import { useControllableState } from "react-rsc-kit/client";
+
+interface ControlledToggleProps {
+  pressed: boolean;
+  onPressedChange: (nextPressed: boolean, previousPressed: boolean) => void;
+}
+
+export function ControlledToggle({ pressed, onPressedChange }: ControlledToggleProps) {
+  const [isPressed, setPressed] = useControllableState<boolean>({
+    value: pressed,
+    onChange: onPressedChange,
+    name: "Toggle.pressed",
+  });
+
+  return (
+    <button
+      type="button"
+      aria-pressed={isPressed ?? false}
+      onClick={() => setPressed((currentValue) => !currentValue)}
+    >
+      {isPressed ? "On" : "Off"}
+    </button>
+  );
+}
+```
+
+## Uncontrolled Toggle
+
+```tsx
+"use client";
+
+import { useControllableState } from "react-rsc-kit/client";
+
+export function UncontrolledToggle() {
+  const [isPressed, setPressed] = useControllableState<boolean>({
+    defaultValue: false,
+    name: "Toggle.pressed",
+  });
+
+  return (
+    <button
+      type="button"
+      aria-pressed={isPressed ?? false}
+      onClick={() => setPressed((currentValue) => !currentValue)}
+    >
+      {isPressed ? "On" : "Off"}
+    </button>
+  );
+}
+```
+
+## Controlled Dialog
+
+```tsx
+"use client";
+
+import { useControllableState } from "react-rsc-kit/client";
+
+interface DialogProps {
+  open: boolean;
+  onOpenChange: (nextOpen: boolean, previousOpen: boolean) => void;
+}
+
+export function Dialog({ open, onOpenChange }: DialogProps) {
+  const [isOpen, setOpen] = useControllableState<boolean>({
+    value: open,
+    onChange: onOpenChange,
+    name: "Dialog.open",
+  });
+
+  return (
+    <section hidden={!isOpen}>
+      <button type="button" onClick={() => setOpen(false)}>
+        Close
+      </button>
+    </section>
+  );
+}
+```
+
+## Select Value
+
+```tsx
+"use client";
+
+import { useControllableState } from "react-rsc-kit/client";
+
+interface SelectProps {
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (nextValue: string, previousValue: string) => void;
+}
+
+export function Select({ value, defaultValue, onValueChange }: SelectProps) {
+  const [selectedValue, setSelectedValue] = useControllableState<string>({
+    value,
+    defaultValue,
+    onChange: onValueChange,
+    name: "Select.value",
+  });
+
+  return (
+    <select value={selectedValue ?? ""} onChange={(event) => setSelectedValue(event.target.value)}>
+      <option value="" disabled>
+        Choose a value
+      </option>
+      <option value="react">React</option>
+      <option value="typescript">TypeScript</option>
+      <option value="design-system">Design System</option>
+    </select>
+  );
+}
+```
+
+## Notes
+
+- The hook is controlled when `value !== undefined`; `undefined` intentionally means "uncontrolled".
+- `defaultValue` is read only for uncontrolled initialization.
+- `setValue` supports functional updates and calls the latest `onChange` callback.
+- `shouldUpdate` defaults to skipping updates where `Object.is(nextValue, previousValue)` is true.
+- Development warnings report controlled/uncontrolled mode switches and mixed `value` plus `defaultValue` usage.
+- Avoid switching a component between controlled and uncontrolled modes after mount.
