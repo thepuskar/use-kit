@@ -19,7 +19,7 @@ typed reusable React hooks, small utility components, and clear client/server bo
 - [x] `useLocalStorage`
 - [x] `useSessionStorage`
 - [x] `usePrevious`
-- [ ] `useControllableState`
+- [x] `useControllableState`
 - [ ] `useDisclosure`
 - [ ] `useMediaQuery`
 - [ ] `useWindowSize`

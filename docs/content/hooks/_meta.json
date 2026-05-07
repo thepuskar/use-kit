@@ -6,6 +6,7 @@
     "subcategory": "UI"
   },
   "useToggle": "useToggle",
+  "useControllableState": "useControllableState",
   "useTimeout": "useTimeout",
   "useGeolocation": "useGeolocation",
   "useDebounce": "useDebounce",
