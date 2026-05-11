@@ -218,8 +218,9 @@ describe("useDisclosure", () => {
     expect(nextOnChange).toHaveBeenCalledWith(true);
   });
 
-  it("keeps action references stable across rerenders", () => {
+  it("keeps the return object and action references stable across unchanged rerenders", () => {
     const { result, rerender } = renderHook(() => useDisclosure());
+    const firstReturn = result.current;
     const firstOpen = result.current.open;
     const firstClose = result.current.close;
     const firstToggle = result.current.toggle;
@@ -227,6 +228,7 @@ describe("useDisclosure", () => {
 
     rerender();
 
+    expect(result.current).toBe(firstReturn);
     expect(result.current.open).toBe(firstOpen);
     expect(result.current.close).toBe(firstClose);
     expect(result.current.toggle).toBe(firstToggle);
