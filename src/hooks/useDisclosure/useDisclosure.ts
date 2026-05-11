@@ -1,5 +1,7 @@
 import { MutableRefObject, useCallback, useMemo, useRef, useState } from "react";
 
+import { useIsomorphicEffect } from "../useIsomorphicEffect";
+
 /**
  * Options for `useDisclosure`.
  */
@@ -64,7 +66,11 @@ export interface UseDisclosureReturn {
 
 function useLatestRef<T>(value: T): MutableRefObject<T> {
   const ref = useRef(value);
-  ref.current = value;
+
+  useIsomorphicEffect(() => {
+    ref.current = value;
+  }, [value]);
+
   return ref;
 }
 
