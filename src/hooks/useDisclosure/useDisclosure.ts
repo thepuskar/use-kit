@@ -93,8 +93,9 @@ export function useDisclosure(options: UseDisclosureOptions = {}): UseDisclosure
       return;
     }
 
+    isOpenRef.current = nextOpen;
+
     if (!isControlledRef.current) {
-      isOpenRef.current = nextOpen;
       setUncontrolledOpen(nextOpen);
     }
 
