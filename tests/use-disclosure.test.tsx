@@ -158,6 +158,32 @@ describe("useDisclosure", () => {
     expect(onChange).toHaveBeenLastCalledWith(false);
   });
 
+  it("tracks pending controlled transitions across consecutive calls before rerender", () => {
+    const onOpen = vi.fn();
+    const onClose = vi.fn();
+    const onChange = vi.fn();
+    const { result } = renderHook(() =>
+      useDisclosure({
+        open: false,
+        onOpen,
+        onClose,
+        onChange,
+      }),
+    );
+
+    act(() => {
+      result.current.setOpen(true);
+      result.current.setOpen(true);
+      result.current.toggle();
+    });
+
+    expect(result.current.isOpen).toBe(false);
+    expect(onOpen).toHaveBeenCalledTimes(1);
+    expect(onClose).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenNthCalledWith(1, true);
+    expect(onChange).toHaveBeenNthCalledWith(2, false);
+  });
+
   it("uses the latest callbacks", () => {
     const firstOnOpen = vi.fn();
     const nextOnOpen = vi.fn();
