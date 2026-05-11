@@ -1,0 +1,109 @@
+import { DemoFrame } from "../../components/demo-frame";
+import { UseDisclosureDemo } from "../../components/demos/use-disclosure-demo";
+
+# useDisclosure
+
+`useDisclosure` manages boolean open state for UI such as dialogs, popovers, accordions, and details panels.
+
+<DemoFrame
+  title="Disclosure controls"
+  description="This demo shows one uncontrolled disclosure and one controlled panel using the same action API."
+>
+  <UseDisclosureDemo />
+</DemoFrame>
+
+## Import
+
+```tsx
+import { useDisclosure } from "react-rsc-kit/client";
+```
+
+## Signature
+
+```ts
+const { isOpen, open, close, toggle, setOpen } = useDisclosure({
+  open,
+  defaultOpen,
+  onOpen,
+  onClose,
+  onChange,
+});
+```
+
+## Parameters
+
+| Name          | Type                      | Default     | Description                                                                  |
+| ------------- | ------------------------- | ----------- | ---------------------------------------------------------------------------- |
+| `open`        | `boolean`                 | `undefined` | Controlled open state. The hook is controlled when this is not `undefined`.  |
+| `defaultOpen` | `boolean`                 | `false`     | Initial uncontrolled open state. Later changes to `defaultOpen` are ignored. |
+| `onOpen`      | `() => void`              | `undefined` | Called when the disclosure transitions from closed to open.                  |
+| `onClose`     | `() => void`              | `undefined` | Called when the disclosure transitions from open to closed.                  |
+| `onChange`    | `(open: boolean) => void` | `undefined` | Called when the disclosure open state changes.                               |
+
+## Returns
+
+| Key       | Description                                                  |
+| --------- | ------------------------------------------------------------ |
+| `isOpen`  | Controlled `open` when controlled, otherwise internal state. |
+| `open`    | Opens the disclosure.                                        |
+| `close`   | Closes the disclosure.                                       |
+| `toggle`  | Flips the disclosure state.                                  |
+| `setOpen` | Sets the disclosure state to a specific boolean value.       |
+
+## Controlled Dialog
+
+```tsx
+"use client";
+
+import { useDisclosure } from "react-rsc-kit/client";
+
+interface DialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export function Dialog({ open, onOpenChange }: DialogProps) {
+  const disclosure = useDisclosure({
+    open,
+    onChange: onOpenChange,
+  });
+
+  return (
+    <section hidden={!disclosure.isOpen}>
+      <button type="button" onClick={disclosure.close}>
+        Close
+      </button>
+    </section>
+  );
+}
+```
+
+## Uncontrolled Details
+
+```tsx
+"use client";
+
+import { useDisclosure } from "react-rsc-kit/client";
+
+export function DetailsPanel() {
+  const disclosure = useDisclosure({
+    defaultOpen: true,
+  });
+
+  return (
+    <section>
+      <button type="button" aria-expanded={disclosure.isOpen} onClick={disclosure.toggle}>
+        {disclosure.isOpen ? "Hide details" : "Show details"}
+      </button>
+      {disclosure.isOpen ? <p>Plan details and account limits.</p> : null}
+    </section>
+  );
+}
+```
+
+## Notes
+
+- The hook is controlled when `open !== undefined`; `undefined` intentionally means "uncontrolled".
+- `defaultOpen` is read only for uncontrolled initialization.
+- `open`, `close`, `toggle`, and `setOpen` are stable callbacks.
+- `onOpen`, `onClose`, and `onChange` run only when the requested state differs from the current state.

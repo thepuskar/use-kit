@@ -5,6 +5,7 @@ export * from "./useClickOutside";
 export * from "./useControllableState";
 export * from "./useCopyToClipboard";
 export * from "./useDebounce";
+export * from "./useDisclosure";
 export * from "./useEventListener";
 export * from "./useFetch";
 export * from "./useGeolocation";
