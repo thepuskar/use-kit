@@ -1,4 +1,4 @@
-import { MutableRefObject, useCallback, useRef, useState } from "react";
+import { MutableRefObject, useCallback, useMemo, useRef, useState } from "react";
 
 /**
  * Options for `useDisclosure`.
@@ -120,11 +120,14 @@ export function useDisclosure(options: UseDisclosureOptions = {}): UseDisclosure
     setOpen(!isOpenRef.current);
   }, [setOpen]);
 
-  return {
-    isOpen,
-    open,
-    close,
-    toggle,
-    setOpen,
-  };
+  return useMemo<UseDisclosureReturn>(
+    () => ({
+      isOpen,
+      open,
+      close,
+      toggle,
+      setOpen,
+    }),
+    [close, isOpen, open, setOpen, toggle],
+  );
 }
