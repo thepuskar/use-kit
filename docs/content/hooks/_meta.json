@@ -5,6 +5,12 @@
     "category": "Hooks",
     "subcategory": "UI"
   },
+  "useMediaQuery": {
+    "title": "useMediaQuery",
+    "order": 2,
+    "category": "Hooks",
+    "subcategory": "UI"
+  },
   "useToggle": "useToggle",
   "useControllableState": "useControllableState",
   "useDisclosure": "useDisclosure",

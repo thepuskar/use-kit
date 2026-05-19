@@ -14,6 +14,7 @@ export * from "./useGetScrollPosition";
 export * from "./useIntersectionObserver";
 export * from "./useIsomorphicEffect";
 export * from "./useLocalStorage";
+export * from "./useMediaQuery";
 export * from "./useMounted";
 export * from "./useMutation";
 export * from "./useOnScreen";

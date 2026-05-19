@@ -1,0 +1,215 @@
+import { DemoFrame } from "../../components/demo-frame";
+import { UseMediaQueryDemo } from "../../components/demos/use-media-query-demo";
+
+# useMediaQuery
+
+`useMediaQuery` is a TypeScript-first React hook for reading CSS media query state in SSR and CSR apps. It accepts a media query `string` and returns a `UseMediaQueryReturn` object with `matches`, `query`, and `supported`, so components can render responsive UI without manually managing `MediaQueryList` listeners.
+
+Internally, it uses `window.matchMedia`, shared subscriptions, and React 18+ `useSyncExternalStore` to keep snapshots hydration-safe and concurrent-rendering friendly. Use it for responsive rendering, preference queries such as reduced motion, and client-only layout state in Next.js apps.
+
+<DemoFrame
+  title="Responsive media state"
+  description="This demo shows a single query, a typed query map, and the default breakpoint helper updating from the same subscription layer."
+>
+  <UseMediaQueryDemo />
+</DemoFrame>
+
+## Install
+
+```bash
+npm install react-rsc-kit
+```
+
+## Import
+
+```tsx
+import { useBreakpoint, useMediaQueries, useMediaQuery } from "react-rsc-kit/client";
+```
+
+## Signature
+
+```ts
+const result = useMediaQuery(query, {
+  defaultValue,
+  ssrValue,
+  initializeWithValue,
+  onChange,
+});
+```
+
+## Parameters
+
+| Name                  | Type                         | Default        | Description                                                                                |
+| --------------------- | ---------------------------- | -------------- | ------------------------------------------------------------------------------------------ |
+| `query`               | `string`                     | required       | CSS media query string passed to `window.matchMedia`.                                      |
+| `defaultValue`        | `boolean`                    | `false`        | Fallback match value before browser resolution or when `matchMedia` is unavailable.        |
+| `ssrValue`            | `boolean`                    | `defaultValue` | Value returned during server rendering and the hydration pass.                             |
+| `initializeWithValue` | `boolean`                    | `true`         | Reads the browser value on the first client render. Set to `false` to start from fallback. |
+| `onChange`            | `(matches: boolean) => void` | `undefined`    | Runs after mount when the resolved match value changes.                                    |
+
+## Returns
+
+| Key         | Type      | Description                                                            |
+| ----------- | --------- | ---------------------------------------------------------------------- |
+| `matches`   | `boolean` | Whether the media query currently matches.                             |
+| `query`     | `string`  | The query string passed to the hook.                                   |
+| `supported` | `boolean` | Whether `window.matchMedia` is available for the query in this render. |
+
+## Usage
+
+```tsx
+"use client";
+
+import { useMediaQuery } from "react-rsc-kit/client";
+
+export function Navigation() {
+  const desktop = useMediaQuery("(min-width: 1024px)", {
+    defaultValue: false,
+    ssrValue: false,
+  });
+
+  return desktop.matches ? <DesktopNav /> : <MobileNav />;
+}
+```
+
+## Advanced Usage
+
+```tsx
+"use client";
+
+import { useMediaQuery } from "react-rsc-kit/client";
+
+export function MotionAwarePanel() {
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)", {
+    defaultValue: false,
+    ssrValue: false,
+    initializeWithValue: true,
+    onChange: (matches) => {
+      console.log("Reduced motion:", matches);
+    },
+  });
+
+  return <section data-reduced-motion={reducedMotion.matches} />;
+}
+```
+
+## Multiple Queries
+
+```tsx
+"use client";
+
+import { useMediaQueries } from "react-rsc-kit/client";
+
+export function ResponsiveState() {
+  const screens = useMediaQueries({
+    mobile: "(max-width: 767px)",
+    tablet: "(min-width: 768px)",
+    desktop: "(min-width: 1024px)",
+  });
+
+  return <span>{screens.desktop ? "Desktop" : "Compact"}</span>;
+}
+```
+
+`useMediaQueries` returns a typed boolean map keyed by the object you pass in.
+
+## Breakpoints
+
+```tsx
+"use client";
+
+import { useBreakpoint } from "react-rsc-kit/client";
+
+export function CurrentBreakpoint() {
+  const { breakpoint, matches } = useBreakpoint();
+
+  return (
+    <p>
+      Current: {breakpoint ?? "base"} / large: {String(matches.lg)}
+    </p>
+  );
+}
+```
+
+Default breakpoints:
+
+```ts
+const breakpoints = {
+  sm: "640px",
+  md: "768px",
+  lg: "1024px",
+  xl: "1280px",
+  "2xl": "1536px",
+};
+```
+
+Custom breakpoints:
+
+```tsx
+"use client";
+
+import { useBreakpoint } from "react-rsc-kit/client";
+
+const dashboardBreakpoints = {
+  nav: "900px",
+  analytics: "1180px",
+  wide: "1440px",
+};
+
+export function DashboardShell() {
+  const screen = useBreakpoint({
+    breakpoints: dashboardBreakpoints,
+    ssrValue: false,
+  });
+
+  return <span>{screen.breakpoint ?? "base"}</span>;
+}
+```
+
+## SSR And Next.js
+
+```tsx
+"use client";
+
+import { useMediaQuery } from "react-rsc-kit/client";
+
+export function Sidebar() {
+  const expanded = useMediaQuery("(min-width: 1200px)", {
+    ssrValue: false,
+    defaultValue: false,
+  });
+
+  return <aside data-expanded={expanded.matches} />;
+}
+```
+
+Use hooks from `react-rsc-kit/client` inside files with `"use client"` in the Next.js App Router. `ssrValue` controls the server-rendered value and the hydration snapshot, so the first hydrated client render matches the HTML sent by the server.
+
+## TypeScript
+
+```tsx
+"use client";
+
+import { useMediaQueries } from "react-rsc-kit/client";
+
+const queries = {
+  coarsePointer: "(pointer: coarse)",
+  darkMode: "(prefers-color-scheme: dark)",
+} as const;
+
+export function Preferences() {
+  const preferences = useMediaQueries(queries);
+
+  return <span>{preferences.darkMode ? "Dark" : "Light"}</span>;
+}
+```
+
+## Notes
+
+- The hook uses `useSyncExternalStore`, so server snapshots and client subscriptions follow React's concurrent rendering contract.
+- Repeated use of the same query shares one `MediaQueryList` listener and cleans it up when the last subscriber unmounts.
+- `addEventListener("change", ...)` is used when available, with `addListener` fallback for older browsers.
+- Use `ssrValue` when the server must render a deterministic responsive state.
+- Set `initializeWithValue: false` when the first client render should stay on the fallback value until subscription.
+- Custom breakpoints are evaluated in object order; define them from smallest to largest.
+- Keep query objects stable when practical. Inline objects are supported, but stable constants avoid needless signature work in large trees.
