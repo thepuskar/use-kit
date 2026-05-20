@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Layout, Navbar, ThemeSwitch } from "nextra-theme-docs";
 import { getPageMap } from "nextra/page-map";
 
+import packageJson from "../../package.json";
 import { DocsSearch } from "../components/docs-search";
 import { SiteLogo } from "../components/site-logo";
 import "../styles/index.css";
@@ -13,6 +14,7 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
 });
+const packageVersion = packageJson.version;
 
 function NpmIcon(props: SVGProps<SVGSVGElement>) {
   return (
@@ -273,7 +275,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           }}
           navbar={
             <Navbar
-              logo={<SiteLogo compact />}
+              logo={<SiteLogo compact version={packageVersion} />}
               projectLink="https://github.com/thepuskar/react-rsc-kit"
               className="react-rsc-kit-navbar"
             >
