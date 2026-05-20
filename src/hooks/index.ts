@@ -1,3 +1,4 @@
+export * from "./use-window-size";
 export * from "./useArray";
 export * from "./useAsync";
 export * from "./useAsyncFnc";
