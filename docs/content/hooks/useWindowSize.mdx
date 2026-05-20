@@ -1,0 +1,228 @@
+import { DemoFrame } from "../../components/demo-frame";
+import { UseWindowSizeDemo } from "../../components/demos/use-window-size-demo";
+
+# useWindowSize
+
+`useWindowSize` is an SSR-safe React 18+ hook for reading viewport dimensions and responsive layout state. It uses `useSyncExternalStore`, shared browser subscriptions, and typed breakpoint helpers so client components can react to size changes without duplicating `resize` listeners.
+
+<DemoFrame
+  title="Viewport state"
+  description="Resize the browser to see dimensions, orientation, breakpoints, and helper methods update from the shared window-size store."
+>
+  <UseWindowSizeDemo />
+</DemoFrame>
+
+## Why This Hook Exists
+
+Window size hooks are often written with `useEffect` and `useState`. That works for small demos, but it can cause repeated listeners, hydration surprises, and unnecessary renders in production applications. `useWindowSize` keeps browser subscriptions in one store and lets React read snapshots through `useSyncExternalStore`.
+
+The hook is built for both small projects and larger RSC applications:
+
+- Browser access is isolated to the subscription store.
+- Server rendering uses deterministic fallback snapshots.
+- Types and utilities can be imported from server-safe entrypoints.
+- Custom breakpoint objects infer their own key names.
+
+## Import
+
+```tsx
+import { useWindowSize } from "react-rsc-kit/client";
+```
+
+Types and utilities are safe to import outside client components:
+
+```tsx
+import type { UseWindowSizeOptions, UseWindowSizeReturn } from "react-rsc-kit";
+import { DEFAULT_WINDOW_SIZE_BREAKPOINTS } from "react-rsc-kit";
+```
+
+## Basic Usage
+
+```tsx
+"use client";
+
+import { useWindowSize } from "react-rsc-kit/client";
+
+export function ResponsiveToolbar() {
+  const size = useWindowSize();
+
+  return (
+    <header data-breakpoint={size.breakpoint ?? "base"}>
+      {size.isDesktop ? <DesktopActions /> : <CompactActions />}
+    </header>
+  );
+}
+```
+
+## Next.js App Router And RSC
+
+The hook itself must be used in a `"use client"` component.
+
+Server Components should not read viewport state directly because the server does not know the user's browser dimensions. If viewport state is required, pass stable server data to a Client Component and call `useWindowSize` there.
+
+```tsx
+// app/dashboard/page.tsx
+import { DashboardViewport } from "./dashboard-viewport";
+
+export default async function DashboardPage() {
+  const account = await getAccount();
+
+  return <DashboardViewport accountName={account.name} />;
+}
+```
+
+```tsx
+// app/dashboard/dashboard-viewport.tsx
+"use client";
+
+import { useWindowSize } from "react-rsc-kit/client";
+
+export function DashboardViewport({ accountName }: { accountName: string }) {
+  const { isDesktop } = useWindowSize();
+
+  return isDesktop ? <WideDashboard name={accountName} /> : <CompactDashboard name={accountName} />;
+}
+```
+
+Types and utilities from `window-size.types.ts` and `window-size.utils.ts` are safe to import in RSC files. The React hook and browser store are part of the client hook surface.
+
+## Custom Breakpoints
+
+```tsx
+"use client";
+
+import { useWindowSize } from "react-rsc-kit/client";
+
+const breakpoints = {
+  compact: 480,
+  workspace: 900,
+  command: 1200,
+} as const;
+
+export function Shell() {
+  const size = useWindowSize({ breakpoints });
+
+  size.breakpoint; // "compact" | "workspace" | "command" | null
+
+  return <main data-mode={size.isAbove("workspace") ? "expanded" : "compact"} />;
+}
+```
+
+Default breakpoints:
+
+```ts
+const DEFAULT_WINDOW_SIZE_BREAKPOINTS = {
+  sm: 640,
+  md: 768,
+  lg: 1024,
+  xl: 1280,
+  "2xl": 1536,
+} as const;
+```
+
+## Debounce And Throttle
+
+```tsx
+const debouncedSize = useWindowSize({ debounceMs: 150 });
+const throttledSize = useWindowSize({ throttleMs: 100 });
+```
+
+Use debounce when expensive layout work should wait until resizing pauses. Use throttle when the UI should update during resizing at a bounded rate. If both options are provided, debounce takes precedence.
+
+## Visual Viewport
+
+```tsx
+const size = useWindowSize({
+  useVisualViewport: true,
+});
+```
+
+When `useVisualViewport` is enabled and `window.visualViewport` exists, `width` and `height` use visual viewport dimensions. `visualWidth` and `visualHeight` are returned separately in every mode. This is useful on mobile browsers where the visual viewport can change when browser chrome or on-screen keyboards appear.
+
+## Signature
+
+```ts
+const size = useWindowSize({
+  initialWidth,
+  initialHeight,
+  breakpoints,
+  debounceMs,
+  throttleMs,
+  enabled,
+  useVisualViewport,
+  round,
+});
+```
+
+## Returns
+
+| Key                  | Type                        | Description                                                             |
+| -------------------- | --------------------------- | ----------------------------------------------------------------------- |
+| `width`              | `number`                    | Active viewport width. Uses visual viewport width when enabled.         |
+| `height`             | `number`                    | Active viewport height. Uses visual viewport height when enabled.       |
+| `visualWidth`        | `number`                    | `window.visualViewport.width` when available, otherwise layout width.   |
+| `visualHeight`       | `number`                    | `window.visualViewport.height` when available, otherwise layout height. |
+| `devicePixelRatio`   | `number`                    | Current device pixel ratio, or `1` on the server.                       |
+| `isClient`           | `boolean`                   | Whether the snapshot came from a browser environment.                   |
+| `orientation`        | `"portrait" \| "landscape"` | Orientation derived from active width and height.                       |
+| `isPortrait`         | `boolean`                   | Whether `orientation` is `"portrait"`.                                  |
+| `isLandscape`        | `boolean`                   | Whether `orientation` is `"landscape"`.                                 |
+| `isMobile`           | `boolean`                   | `true` below the tablet threshold.                                      |
+| `isTablet`           | `boolean`                   | `true` between tablet and desktop thresholds.                           |
+| `isDesktop`          | `boolean`                   | `true` at or above the desktop threshold.                               |
+| `breakpoint`         | `keyof breakpoints \| null` | Largest matching breakpoint key.                                        |
+| `isAbove(key)`       | `(key) => boolean`          | `true` when `width >= breakpoints[key]`.                                |
+| `isBelow(key)`       | `(key) => boolean`          | `true` when `width < breakpoints[key]`.                                 |
+| `isBetween(min,max)` | `(min, max) => boolean`     | `true` when `width >= min` and `width < max`.                           |
+| `remountKey`         | `string`                    | Stable key based on breakpoint and orientation.                         |
+
+## Options
+
+| Name                | Type                     | Default             | Description                                                            |
+| ------------------- | ------------------------ | ------------------- | ---------------------------------------------------------------------- |
+| `initialWidth`      | `number`                 | `0`                 | Server and hydration fallback width.                                   |
+| `initialHeight`     | `number`                 | `0`                 | Server and hydration fallback height.                                  |
+| `breakpoints`       | `Record<string, number>` | default breakpoints | Named breakpoint map, ordered by numeric value.                        |
+| `debounceMs`        | `number`                 | `undefined`         | Debounces resize notifications by the supplied milliseconds.           |
+| `throttleMs`        | `number`                 | `undefined`         | Throttles resize notifications by the supplied milliseconds.           |
+| `enabled`           | `boolean`                | `true`              | Set to `false` to avoid subscribing to browser resize events.          |
+| `useVisualViewport` | `boolean`                | `false`             | Uses visual viewport dimensions for `width` and `height` when present. |
+| `round`             | `boolean`                | `false`             | Rounds fractional dimensions with `Math.round`.                        |
+
+## Testing Notes
+
+The hook's tests cover SSR fallback snapshots, initial browser values, resize and orientation updates, default and custom breakpoints, helper methods, disabled subscriptions, visual viewport mode, device pixel ratio, rounding, cleanup, debounce, and throttle behavior.
+
+## Enterprise Usage Notes
+
+- Prefer one shared breakpoint constant for a product area so inferred keys stay consistent.
+- Use `throttleMs` for live resize-driven UI and `debounceMs` for expensive recalculation.
+- Use `remountKey` only when a component truly needs to reset across orientation or breakpoint changes.
+- Keep Server Components responsible for data and Client Components responsible for viewport-driven layout decisions.
+
+## Small Project Usage Notes
+
+For small apps, the default call is usually enough:
+
+```tsx
+const { width, isMobile } = useWindowSize();
+```
+
+Add options only when the default behavior is not enough.
+
+## Common Pitfalls
+
+- Do not call `useWindowSize` in a Server Component.
+- Do not import the client hook into RSC files. Import only types and utilities there.
+- Do not assume the server knows the real viewport. `initialWidth` and `initialHeight` are fallbacks.
+- Do not use viewport state when CSS media queries alone can solve the layout.
+- Keep breakpoint objects stable when possible.
+
+## Architecture
+
+- `use-window-size.ts` contains the React hook.
+- `window-size-store.ts` owns browser subscriptions.
+- `window-size.types.ts` owns public types.
+- `window-size.utils.ts` owns breakpoint and viewport utility functions.
+- `index.ts` is the public export surface.
+- Tests live beside the feature for maintainability.
