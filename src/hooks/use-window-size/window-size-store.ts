@@ -35,7 +35,13 @@ function normalizeDelay(value: number | undefined): number {
 }
 
 function hasVisualViewportSubscribers(): boolean {
-  return Array.from(subscriptions).some((subscription) => subscription.useVisualViewport);
+  for (const subscription of subscriptions) {
+    if (subscription.useVisualViewport) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 function clearSubscriptionTimer(subscription: WindowSizeSubscription): void {
