@@ -134,7 +134,11 @@ export function getWindowSizeBreakpointEntries<TBreakpoints extends WindowSizeBr
 }
 
 export function getWindowSizeBreakpointSignature(breakpoints: WindowSizeBreakpoints): string {
-  return JSON.stringify(Object.entries(breakpoints));
+  return JSON.stringify(
+    Object.entries(breakpoints).sort(([previousKey], [nextKey]) =>
+      previousKey.localeCompare(nextKey),
+    ),
+  );
 }
 
 export function getWindowSizeBreakpoint<TBreakpoints extends WindowSizeBreakpoints>(
