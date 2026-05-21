@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Pre } from "nextra/components";
 
 const EXPORTS: { path: string; note: string }[] = [
   { path: "react-rsc-kit", note: "Default entry - shared utilities and control-flow primitives." },
@@ -97,9 +98,9 @@ export function HomePage() {
           </Link>{" "}
           table below is the main contract to follow.
         </p>
-        <pre className="react-rsc-kit-code-snippet mt-3">
+        <Pre data-copy="" data-language="bash" className="react-rsc-kit-install-command mt-3">
           <code>npm install react-rsc-kit</code>
-        </pre>
+        </Pre>
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
           {QUICK_ACTIONS.map((action) =>
             action.internal ? (
