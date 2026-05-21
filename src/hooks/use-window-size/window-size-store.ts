@@ -140,13 +140,11 @@ function ensureWindowListeners(): void {
 
   if (shouldListenToWindow && !listeningToWindow) {
     window.addEventListener("resize", handleWindowSizeChange);
-    window.addEventListener("orientationchange", handleWindowSizeChange);
     listeningToWindow = true;
   }
 
   if (!shouldListenToWindow && listeningToWindow) {
     window.removeEventListener("resize", handleWindowSizeChange);
-    window.removeEventListener("orientationchange", handleWindowSizeChange);
     listeningToWindow = false;
   }
 

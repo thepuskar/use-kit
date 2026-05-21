@@ -182,7 +182,7 @@ describe("useWindowSize", () => {
 
     act(() => {
       setViewport(900, 500);
-      window.dispatchEvent(new Event("orientationchange"));
+      dispatchResize();
     });
 
     expect(result.current.orientation).toBe("landscape");
@@ -314,13 +314,11 @@ describe("useWindowSize", () => {
     );
 
     expect(addWindowListener).toHaveBeenCalledWith("resize", expect.any(Function));
-    expect(addWindowListener).toHaveBeenCalledWith("orientationchange", expect.any(Function));
     expect(visualViewport.addEventListener).toHaveBeenCalledWith("resize", expect.any(Function));
 
     unmount();
 
     expect(removeWindowListener).toHaveBeenCalledWith("resize", expect.any(Function));
-    expect(removeWindowListener).toHaveBeenCalledWith("orientationchange", expect.any(Function));
     expect(visualViewport.removeEventListener).toHaveBeenCalledWith("resize", expect.any(Function));
   });
 
