@@ -283,7 +283,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
             </Navbar>
           }
           footer={<SiteFooter />}
-          copyPageButton={false}
+          copyPageButton
         >
           {children}
         </Layout>
