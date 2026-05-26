@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useMemo, useRef, useSyncExternalStore } from "react";
 
 import {
   UseWindowSizeOptions,
@@ -56,6 +56,12 @@ export function useWindowSize<
       }),
     [initialHeight, initialWidth],
   );
+
+  useEffect(() => {
+    if (enabled) {
+      disabledSnapshotRef.current = null;
+    }
+  }, [enabled]);
 
   const getSnapshot = useCallback((): WindowSizeStoreSnapshot => {
     if (!enabled) {

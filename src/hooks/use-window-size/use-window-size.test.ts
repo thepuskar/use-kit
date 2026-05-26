@@ -271,6 +271,58 @@ describe("useWindowSize", () => {
     expect(result.current.height).toBe(600);
   });
 
+  it("captures a fresh disabled snapshot after being re-enabled", () => {
+    setViewport(700, 600);
+    const { result, rerender } = renderHook(
+      ({ enabled }: { enabled: boolean }) =>
+        useWindowSize({
+          enabled,
+        }),
+      {
+        initialProps: {
+          enabled: false,
+        },
+      },
+    );
+
+    expect(result.current.width).toBe(700);
+    expect(result.current.height).toBe(600);
+
+    act(() => {
+      setViewport(900, 650);
+      dispatchResize();
+    });
+
+    expect(result.current.width).toBe(700);
+    expect(result.current.height).toBe(600);
+
+    rerender({ enabled: true });
+
+    expect(result.current.width).toBe(900);
+    expect(result.current.height).toBe(650);
+
+    act(() => {
+      setViewport(1100, 720);
+      dispatchResize();
+    });
+
+    expect(result.current.width).toBe(1100);
+    expect(result.current.height).toBe(720);
+
+    rerender({ enabled: false });
+
+    expect(result.current.width).toBe(1100);
+    expect(result.current.height).toBe(720);
+
+    act(() => {
+      setViewport(1200, 800);
+      dispatchResize();
+    });
+
+    expect(result.current.width).toBe(1100);
+    expect(result.current.height).toBe(720);
+  });
+
   it("uses visual viewport dimensions when enabled and available", () => {
     setViewport(1200, 900);
     const visualViewport = new MockVisualViewport(375, 667);
