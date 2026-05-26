@@ -57,10 +57,6 @@ export function useWindowSize<
     [initialHeight, initialWidth],
   );
 
-  if (enabled && disabledSnapshotRef.current !== null) {
-    disabledSnapshotRef.current = null;
-  }
-
   const getSnapshot = useCallback((): WindowSizeStoreSnapshot => {
     if (!enabled) {
       disabledSnapshotRef.current ??= getWindowSizeStoreSnapshot();
