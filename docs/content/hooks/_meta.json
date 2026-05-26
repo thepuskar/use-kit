@@ -11,6 +11,12 @@
     "category": "Hooks",
     "subcategory": "UI"
   },
+  "useWindowSize": {
+    "title": "useWindowSize",
+    "order": 3,
+    "category": "Hooks",
+    "subcategory": "UI"
+  },
   "useToggle": "useToggle",
   "useControllableState": "useControllableState",
   "useDisclosure": "useDisclosure",

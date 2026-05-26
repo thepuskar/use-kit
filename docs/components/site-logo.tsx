@@ -1,8 +1,9 @@
 type SiteLogoProps = {
   compact?: boolean;
+  version?: string;
 };
 
-export function SiteLogo({ compact = false }: SiteLogoProps) {
+export function SiteLogo({ compact = false, version }: SiteLogoProps) {
   return (
     <span className="flex items-center gap-3 text-[var(--uk-text-primary)]">
       <span className="flex h-11 w-11 items-center justify-center rounded-lg border border-[var(--uk-border-subtle)] bg-[rgba(255,255,255,0.75)] shadow-[var(--uk-shadow-soft)] dark:bg-[rgba(255,255,255,0.05)]">
@@ -36,7 +37,12 @@ export function SiteLogo({ compact = false }: SiteLogoProps) {
         <span className="react-rsc-kit-muted-label">
           {compact ? "Docs" : "React utility library"}
         </span>
-        <span className="text-base font-semibold tracking-[-0.02em] sm:text-lg">react-rsc-kit</span>
+        <span className="flex items-center gap-2">
+          <span className="text-base font-semibold tracking-[-0.02em] sm:text-lg">
+            react-rsc-kit
+          </span>
+          {version ? <span className="react-rsc-kit-version-badge">v{version}</span> : null}
+        </span>
       </span>
     </span>
   );

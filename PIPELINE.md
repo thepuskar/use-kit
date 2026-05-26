@@ -22,7 +22,7 @@ typed reusable React hooks, small utility components, and clear client/server bo
 - [x] `useControllableState`
 - [x] `useDisclosure`
 - [x] `useMediaQuery`
-- [ ] `useWindowSize`
+- [x] `useWindowSize`
 - [ ] `useResizeObserver` or `useElementSize`
 - [ ] `useLockBodyScroll`
 - [ ] `useHotkeys`
