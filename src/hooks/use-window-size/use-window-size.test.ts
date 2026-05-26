@@ -223,6 +223,25 @@ describe("useWindowSize", () => {
     expect(result.current.isBelow("wide")).toBe(true);
   });
 
+  it("derives device flags from unnamed custom breakpoints", () => {
+    const customBreakpoints = {
+      small: 500,
+      large: 1000,
+    } as const;
+    setViewport(600, 700);
+
+    const { result } = renderHook(() =>
+      useWindowSize({
+        breakpoints: customBreakpoints,
+      }),
+    );
+
+    expect(result.current.breakpoint).toBe("small");
+    expect(result.current.isMobile).toBe(false);
+    expect(result.current.isTablet).toBe(true);
+    expect(result.current.isDesktop).toBe(false);
+  });
+
   it("resolves isAbove, isBelow, and isBetween helpers", () => {
     setViewport(800, 700);
 

@@ -171,6 +171,28 @@ function getNamedBreakpointValue(breakpoints: WindowSizeBreakpoints, key: string
   return Number.isFinite(value) ? value : null;
 }
 
+function getDerivedWindowSizeDeviceFlagBreakpoints(
+  breakpoints: WindowSizeBreakpoints,
+): { tabletMin: number; desktopMin: number } | null {
+  const breakpointValues = getWindowSizeBreakpointEntries(breakpoints).map(([, value]) => value);
+
+  if (breakpointValues.length >= 3) {
+    return {
+      tabletMin: breakpointValues[1],
+      desktopMin: breakpointValues[2],
+    };
+  }
+
+  if (breakpointValues.length >= 2) {
+    return {
+      tabletMin: breakpointValues[0],
+      desktopMin: breakpointValues[1],
+    };
+  }
+
+  return null;
+}
+
 export function isAboveWindowSizeBreakpoint<TBreakpoints extends WindowSizeBreakpoints>(
   width: number,
   breakpoints: TBreakpoints,
@@ -207,17 +229,25 @@ export function getWindowSizeDeviceFlags(
   width: number,
   breakpoints: WindowSizeBreakpoints = DEFAULT_WINDOW_SIZE_BREAKPOINTS,
 ): WindowSizeDeviceFlags {
+  const derivedBreakpoints = getDerivedWindowSizeDeviceFlagBreakpoints(breakpoints);
   const tabletMin =
     getNamedBreakpointValue(breakpoints, "md") ??
     getNamedBreakpointValue(breakpoints, "tablet") ??
+    derivedBreakpoints?.tabletMin ??
     DEFAULT_WINDOW_SIZE_BREAKPOINTS.md;
   const desktopMin =
     getNamedBreakpointValue(breakpoints, "lg") ??
     getNamedBreakpointValue(breakpoints, "desktop") ??
+    derivedBreakpoints?.desktopMin ??
     DEFAULT_WINDOW_SIZE_BREAKPOINTS.lg;
-  const resolvedTabletMin = tabletMin < desktopMin ? tabletMin : DEFAULT_WINDOW_SIZE_BREAKPOINTS.md;
+  const resolvedTabletMin =
+    tabletMin < desktopMin
+      ? tabletMin
+      : (derivedBreakpoints?.tabletMin ?? DEFAULT_WINDOW_SIZE_BREAKPOINTS.md);
   const resolvedDesktopMin =
-    tabletMin < desktopMin ? desktopMin : DEFAULT_WINDOW_SIZE_BREAKPOINTS.lg;
+    tabletMin < desktopMin
+      ? desktopMin
+      : (derivedBreakpoints?.desktopMin ?? DEFAULT_WINDOW_SIZE_BREAKPOINTS.lg);
 
   return {
     isMobile: width < resolvedTabletMin,
