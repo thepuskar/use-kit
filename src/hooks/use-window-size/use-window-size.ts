@@ -42,7 +42,10 @@ export function useWindowSize<
     useVisualViewport = false,
     round = false,
   } = options;
-  const breakpointSignature = getWindowSizeBreakpointSignature(breakpoints);
+  const breakpointSignature = useMemo(
+    () => getWindowSizeBreakpointSignature(breakpoints),
+    [breakpoints],
+  );
   const stableBreakpoints = useMemo(() => breakpoints, [breakpointSignature]);
   const disabledSnapshotRef = useRef<WindowSizeStoreSnapshot | null>(null);
   const serverSnapshot = useMemo(
