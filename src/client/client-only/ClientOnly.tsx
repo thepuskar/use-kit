@@ -24,6 +24,12 @@ type WindowWithIdleCallback = Window &
     cancelIdleCallback?: (handle: number) => void;
   };
 
+type EffectDeps = {
+  normalizedDelay: number;
+  requirementKey: string;
+  strategy: ClientOnlyStrategy;
+};
+
 const DEFAULT_STRATEGY: ClientOnlyStrategy = "effect";
 
 const INITIAL_STATE: ClientOnlyState = {
@@ -142,7 +148,7 @@ export function ClientOnly({
   const readyCallbackFiredRef = useRef(false);
   const unsupportedCallbackKeyRef = useRef<string | null>(null);
   const [state, setState] = useState<ClientOnlyState>(INITIAL_STATE);
-  const prevDepsRef = useRef({ normalizedDelay, requirementKey, strategy });
+  const effectDepsRef = useRef<EffectDeps | null>(null);
 
   callbacksRef.current = {
     onError,
@@ -151,20 +157,24 @@ export function ClientOnly({
   };
   requirementsRef.current = requirements;
 
-  if (
-    prevDepsRef.current.normalizedDelay !== normalizedDelay ||
-    prevDepsRef.current.requirementKey !== requirementKey ||
-    prevDepsRef.current.strategy !== strategy
-  ) {
-    prevDepsRef.current = { normalizedDelay, requirementKey, strategy };
-    readyCallbackFiredRef.current = false;
-    unsupportedCallbackKeyRef.current = null;
-  }
-
   useEffect(() => {
     let active = true;
     let strategyCleanup: Cleanup | null = null;
     let delayCleanup: Cleanup | null = null;
+    const effectDeps = { normalizedDelay, requirementKey, strategy };
+    const previousEffectDeps = effectDepsRef.current;
+
+    if (
+      previousEffectDeps !== null &&
+      (previousEffectDeps.normalizedDelay !== normalizedDelay ||
+        previousEffectDeps.requirementKey !== requirementKey ||
+        previousEffectDeps.strategy !== strategy)
+    ) {
+      readyCallbackFiredRef.current = false;
+      unsupportedCallbackKeyRef.current = null;
+    }
+
+    effectDepsRef.current = effectDeps;
 
     const updateState = (nextState: ClientOnlyState) => {
       if (!active) {
