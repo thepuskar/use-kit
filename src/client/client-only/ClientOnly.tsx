@@ -158,9 +158,6 @@ export function ClientOnly({
   requirementsRef.current = requirements;
 
   useEffect(() => {
-    let active = true;
-    let strategyCleanup: Cleanup | null = null;
-    let delayCleanup: Cleanup | null = null;
     const effectDeps = { normalizedDelay, requirementKey, strategy };
     const previousEffectDeps = effectDepsRef.current;
 
@@ -175,6 +172,10 @@ export function ClientOnly({
     }
 
     effectDepsRef.current = effectDeps;
+
+    let active = true;
+    let strategyCleanup: Cleanup | null = null;
+    let delayCleanup: Cleanup | null = null;
 
     const updateState = (nextState: ClientOnlyState) => {
       if (!active) {
