@@ -293,18 +293,18 @@ export function ClientOnly({
   }
 
   if (!state.isSupported) {
-    return withHydrationWarning(unsupportedNode, suppressHydrationWarning);
+    return unsupportedNode;
   }
 
   if (typeof children === "function") {
-    return withHydrationWarning(renderChildren(children, state), suppressHydrationWarning);
+    return renderChildren(children, state);
   }
 
   if (!state.isReady) {
-    return withHydrationWarning(fallback, suppressHydrationWarning);
+    return fallback;
   }
 
-  return withHydrationWarning(renderChildren(children, state), suppressHydrationWarning);
+  return renderChildren(children, state);
 }
 
 ClientOnly.displayName = "ClientOnly";

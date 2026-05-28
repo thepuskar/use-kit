@@ -121,6 +121,24 @@ describe("ClientOnly", () => {
     expect(screen.getByText("Ready")).toBeInTheDocument();
   });
 
+  it("does not wrap post-mount children when suppressing hydration warnings", () => {
+    vi.useFakeTimers();
+
+    const { container } = render(
+      <ClientOnly fallback={<span>Loading</span>} delay={100} suppressHydrationWarning>
+        Ready
+      </ClientOnly>,
+    );
+
+    expect(container.innerHTML).toBe("<span>Loading</span>");
+
+    act(() => {
+      vi.advanceTimersByTime(100);
+    });
+
+    expect(container.innerHTML).toBe("Ready");
+  });
+
   it("supports function-as-child state", () => {
     vi.useFakeTimers();
 
@@ -362,6 +380,24 @@ describe("ClientOnly", () => {
 
     expect(await screen.findByText("Loading")).toBeInTheDocument();
     expect(screen.queryByText("Ready")).not.toBeInTheDocument();
+  });
+
+  it("does not wrap unsupported fallback when suppressing hydration warnings", async () => {
+    installMissingWindowFeature("matchMedia");
+
+    const { container } = render(
+      <ClientOnly
+        fallback={null}
+        unsupportedFallback="Unsupported"
+        require={{ matchMedia: true }}
+        suppressHydrationWarning
+      >
+        <span>Ready</span>
+      </ClientOnly>,
+    );
+
+    expect(await screen.findByText("Unsupported")).toBeInTheDocument();
+    expect(container.innerHTML).toBe("Unsupported");
   });
 
   it("calls onUnsupported once in Strict Mode", async () => {
