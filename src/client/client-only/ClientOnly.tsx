@@ -142,6 +142,7 @@ export function ClientOnly({
   const readyCallbackFiredRef = useRef(false);
   const unsupportedCallbackKeyRef = useRef<string | null>(null);
   const [state, setState] = useState<ClientOnlyState>(INITIAL_STATE);
+  const prevDepsRef = useRef({ normalizedDelay, requirementKey, strategy });
 
   callbacksRef.current = {
     onError,
@@ -149,6 +150,16 @@ export function ClientOnly({
     onUnsupported,
   };
   requirementsRef.current = requirements;
+
+  if (
+    prevDepsRef.current.normalizedDelay !== normalizedDelay ||
+    prevDepsRef.current.requirementKey !== requirementKey ||
+    prevDepsRef.current.strategy !== strategy
+  ) {
+    prevDepsRef.current = { normalizedDelay, requirementKey, strategy };
+    readyCallbackFiredRef.current = false;
+    unsupportedCallbackKeyRef.current = null;
+  }
 
   useEffect(() => {
     let active = true;

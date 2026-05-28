@@ -298,6 +298,35 @@ describe("ClientOnly", () => {
     expect(onReady).toHaveBeenCalledTimes(1);
   });
 
+  it("calls onReady again when readiness config changes", () => {
+    vi.useFakeTimers();
+    const onReady = vi.fn();
+
+    const { rerender } = render(
+      <ClientOnly fallback={<span>Loading</span>} delay={100} onReady={onReady}>
+        <span>Ready</span>
+      </ClientOnly>,
+    );
+
+    act(() => {
+      vi.advanceTimersByTime(100);
+    });
+
+    expect(onReady).toHaveBeenCalledTimes(1);
+
+    rerender(
+      <ClientOnly fallback={<span>Loading</span>} delay={200} onReady={onReady}>
+        <span>Ready</span>
+      </ClientOnly>,
+    );
+
+    act(() => {
+      vi.advanceTimersByTime(200);
+    });
+
+    expect(onReady).toHaveBeenCalledTimes(2);
+  });
+
   it("detects missing localStorage and renders unsupportedFallback", async () => {
     const onUnsupported = vi.fn();
 
@@ -355,6 +384,43 @@ describe("ClientOnly", () => {
 
     expect(await screen.findByText("Unsupported")).toBeInTheDocument();
     expect(onUnsupported).toHaveBeenCalledTimes(1);
+  });
+
+  it("calls onUnsupported again when requirement config changes", async () => {
+    const onUnsupported = vi.fn();
+
+    installMissingWindowFeature("matchMedia");
+
+    const { rerender } = render(
+      <ClientOnly
+        fallback={<span>Loading</span>}
+        unsupportedFallback={<span>Unsupported</span>}
+        require={{ matchMedia: true }}
+        onUnsupported={onUnsupported}
+      >
+        <span>Ready</span>
+      </ClientOnly>,
+    );
+
+    expect(await screen.findByText("Unsupported")).toBeInTheDocument();
+    expect(onUnsupported).toHaveBeenCalledTimes(1);
+    expect(onUnsupported).toHaveBeenLastCalledWith(["matchMedia"]);
+
+    rerender(
+      <ClientOnly
+        fallback={<span>Loading</span>}
+        unsupportedFallback={<span>Unsupported</span>}
+        require={{ window: true, matchMedia: true }}
+        onUnsupported={onUnsupported}
+      >
+        <span>Ready</span>
+      </ClientOnly>,
+    );
+
+    await waitFor(() => {
+      expect(onUnsupported).toHaveBeenCalledTimes(2);
+    });
+    expect(onUnsupported).toHaveBeenLastCalledWith(["matchMedia"]);
   });
 
   it("works inside React Strict Mode", async () => {
