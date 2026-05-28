@@ -121,6 +121,53 @@ describe("ClientOnly", () => {
     expect(screen.getByText("Ready")).toBeInTheDocument();
   });
 
+  it("does not wrap boolean fallback when suppressing hydration warnings", () => {
+    const container = document.createElement("div");
+    const root = createRoot(container);
+
+    flushSync(() => {
+      root.render(
+        <ClientOnly fallback={false} suppressHydrationWarning>
+          <span>Ready</span>
+        </ClientOnly>,
+      );
+    });
+
+    expect(container).toBeEmptyDOMElement();
+
+    act(() => {
+      root.unmount();
+    });
+  });
+
+  it("does not inject hydration warning props into custom fallback components", () => {
+    function CustomFallback({
+      suppressHydrationWarning: receivedSuppressHydrationWarning,
+    }: {
+      suppressHydrationWarning?: boolean;
+    }) {
+      return <span>{receivedSuppressHydrationWarning ? "Injected" : "Clean"}</span>;
+    }
+
+    const container = document.createElement("div");
+    const root = createRoot(container);
+
+    flushSync(() => {
+      root.render(
+        <ClientOnly fallback={<CustomFallback />} suppressHydrationWarning>
+          <span>Ready</span>
+        </ClientOnly>,
+      );
+    });
+
+    expect(container).toHaveTextContent("Clean");
+    expect(container).not.toHaveTextContent("Injected");
+
+    act(() => {
+      root.unmount();
+    });
+  });
+
   it("does not wrap post-mount children when suppressing hydration warnings", () => {
     vi.useFakeTimers();
 

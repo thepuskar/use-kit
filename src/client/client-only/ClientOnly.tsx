@@ -104,11 +104,16 @@ function scheduleWithStrategy(strategy: ClientOnlyStrategy, callback: () => void
 }
 
 function withHydrationWarning(node: React.ReactNode, suppressHydrationWarning: boolean) {
-  if (!suppressHydrationWarning || node === null || node === undefined) {
+  if (
+    !suppressHydrationWarning ||
+    node === null ||
+    node === undefined ||
+    typeof node === "boolean"
+  ) {
     return <>{node}</>;
   }
 
-  if (React.isValidElement(node) && node.type !== React.Fragment) {
+  if (React.isValidElement(node) && node.type !== React.Fragment && typeof node.type === "string") {
     return React.cloneElement(node, {
       suppressHydrationWarning,
     } as Partial<React.HTMLAttributes<HTMLElement>>);
