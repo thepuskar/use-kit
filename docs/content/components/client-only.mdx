@@ -1,0 +1,234 @@
+import { DemoFrame } from "../../components/demo-frame";
+import { ClientOnlyDemo } from "../../components/demos/client-only-demo";
+
+# ClientOnly
+
+`ClientOnly` renders deterministic fallback UI during server rendering and the first hydration pass, then renders browser-only children after the component has mounted in the browser.
+
+Use it when a subtree depends on APIs such as `window`, `document`, storage, media queries, observers, clipboard, geolocation, charts, maps, or widgets that cannot safely render during SSR.
+
+<DemoFrame
+  title="Client-only rendering patterns"
+  description="Fallbacks, delays, feature requirements, render strategies, and hydration-safe browser state."
+>
+  <ClientOnlyDemo />
+</DemoFrame>
+
+## Import
+
+```tsx
+"use client";
+
+import { ClientOnly } from "react-rsc-kit/client";
+```
+
+`ClientOnly` is exported from `react-rsc-kit/client`. It is not exported from `react-rsc-kit` or `react-rsc-kit/server`, so server component entrypoints stay browser-free.
+
+## Why It Exists
+
+Server-rendered React must produce HTML that matches the first client render. Reading browser-only values during render can create hydration mismatches:
+
+```tsx
+// Avoid this during SSR.
+const width = window.innerWidth;
+```
+
+`ClientOnly` avoids that by rendering `fallback` on the server and on the first client render. Browser-only children are evaluated only after mount.
+
+## Basic Usage
+
+```tsx
+"use client";
+
+import { ClientOnly } from "react-rsc-kit/client";
+
+export function ChartPanel() {
+  return (
+    <ClientOnly>
+      <Chart />
+    </ClientOnly>
+  );
+}
+```
+
+## Fallback Usage
+
+```tsx
+<ClientOnly fallback={<div aria-busy="true">Loading chart...</div>}>
+  <Chart />
+</ClientOnly>
+```
+
+If `fallback` is omitted, `ClientOnly` renders `null` before the browser subtree is ready. `fallback={null}` is also supported.
+
+## Function Children
+
+```tsx
+<ClientOnly fallback={<Skeleton />}>
+  {({ isClient, isReady, isSupported, missingFeatures }) =>
+    isClient && isReady && isSupported ? (
+      <Chart />
+    ) : (
+      <Skeleton label={`Missing: ${missingFeatures.join(", ")}`} />
+    )
+  }
+</ClientOnly>
+```
+
+Render-prop children receive:
+
+| Key               | Type                     | Description                                |
+| ----------------- | ------------------------ | ------------------------------------------ |
+| `isClient`        | `boolean`                | Whether the component has mounted.         |
+| `isReady`         | `boolean`                | Whether delay and strategy work completed. |
+| `isSupported`     | `boolean`                | Whether required features are available.   |
+| `missingFeatures` | `MissingClientFeature[]` | Required features that were not detected.  |
+
+## Delay Usage
+
+```tsx
+<ClientOnly fallback={<Skeleton />} delay={300}>
+  <ExpensiveWidget />
+</ClientOnly>
+```
+
+`delay` is measured in milliseconds. Negative delay values are treated as `0`, and timers are cleaned up on unmount.
+
+## Browser Feature Requirements
+
+```tsx
+<ClientOnly
+  fallback={<Skeleton />}
+  unsupportedFallback={<UnsupportedBrowser />}
+  require={{
+    window: true,
+    document: true,
+    localStorage: true,
+    sessionStorage: false,
+    matchMedia: true,
+    intersectionObserver: false,
+    resizeObserver: false,
+    clipboard: false,
+    geolocation: false,
+  }}
+>
+  <BrowserOnlyComponent />
+</ClientOnly>
+```
+
+Only features set to `true` are required. Storage checks use guarded reads and a write/remove probe because browser storage can exist but still throw.
+
+## Unsupported Browser Fallback
+
+```tsx
+<ClientOnly
+  fallback={<Skeleton />}
+  unsupportedFallback={(missingFeatures) => (
+    <p>Your browser is missing: {missingFeatures.join(", ")}</p>
+  )}
+  require={{ localStorage: true, matchMedia: true }}
+>
+  <PreferencesPanel />
+</ClientOnly>
+```
+
+When a required feature is missing, `unsupportedFallback` renders. If it is omitted, `fallback` renders instead. `onUnsupported` receives the missing feature list once per missing feature set.
+
+## Strategy Options
+
+| Strategy          | Behavior                                                  |
+| ----------------- | --------------------------------------------------------- |
+| `effect`          | Default. Marks ready from a React effect after mount.     |
+| `idle`            | Uses `requestIdleCallback`, with `setTimeout` fallback.   |
+| `animation-frame` | Uses `requestAnimationFrame`, with `setTimeout` fallback. |
+
+```tsx
+<ClientOnly fallback={<Skeleton />} strategy="idle">
+  <AnalyticsHeavyPanel />
+</ClientOnly>
+```
+
+All scheduler handles are cleaned up on unmount.
+
+## Lifecycle Callbacks
+
+```tsx
+<ClientOnly
+  onReady={() => logReady()}
+  onUnsupported={(missing) => reportMissingFeatures(missing)}
+  onError={(error) => reportClientOnlyError(error)}
+>
+  <Widget />
+</ClientOnly>
+```
+
+`onReady` and `onUnsupported` are guarded for React Strict Mode so development double-effect checks do not duplicate calls.
+
+## Next.js App Router And RSC
+
+Use `ClientOnly` inside a file with a client boundary:
+
+```tsx
+"use client";
+
+import { ClientOnly } from "react-rsc-kit/client";
+
+export function MapClientBoundary() {
+  return (
+    <ClientOnly fallback={<div aria-busy="true">Loading map...</div>}>
+      <MapWidget />
+    </ClientOnly>
+  );
+}
+```
+
+Server components can render this client component as usual, but should not import `ClientOnly` directly from a server file.
+
+## Testing
+
+```tsx
+import { act, render, screen } from "@testing-library/react";
+import { vi } from "vitest";
+import { ClientOnly } from "react-rsc-kit/client";
+
+it("waits for delay", () => {
+  vi.useFakeTimers();
+
+  render(
+    <ClientOnly fallback={<span>Loading</span>} delay={300}>
+      <span>Ready</span>
+    </ClientOnly>,
+  );
+
+  expect(screen.getByText("Loading")).toBeInTheDocument();
+
+  act(() => {
+    vi.advanceTimersByTime(300);
+  });
+
+  expect(screen.getByText("Ready")).toBeInTheDocument();
+});
+```
+
+For SSR tests, use `renderToString` and assert that fallback HTML is present while browser-only children are absent.
+
+## Accessibility
+
+`ClientOnly` does not add ARIA roles or labels. Put accessible loading states in your fallback:
+
+```tsx
+<ClientOnly fallback={<div aria-busy="true">Loading chart...</div>}>
+  <Chart />
+</ClientOnly>
+```
+
+For unsupported browsers, explain what is missing and provide a recovery path when possible.
+
+## Troubleshooting
+
+- Import from `react-rsc-kit/client`, not from `react-rsc-kit/server`.
+- Keep browser globals out of parent render code; put them inside children rendered after `ClientOnly` is ready.
+- Use `require` when a child depends on optional browser APIs.
+- Use `unsupportedFallback` when feature requirements can fail in privacy-restricted or older browsers.
+- Use fake timers for `delay`, `idle` fallback, and animation-frame tests.
+- Prefer stable `require` objects in large trees, although inline objects are supported.

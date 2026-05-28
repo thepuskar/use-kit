@@ -1,4 +1,5 @@
 {
+  "client-only": "ClientOnly",
   "for": "For",
   "show": "Show",
   "switch": "Switch / Match"
