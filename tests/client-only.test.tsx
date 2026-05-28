@@ -103,6 +103,24 @@ describe("ClientOnly", () => {
     expect(screen.getByText("Ready")).toBeInTheDocument();
   });
 
+  it("does not wrap null fallback when suppressing hydration warnings", () => {
+    vi.useFakeTimers();
+
+    const { container } = render(
+      <ClientOnly fallback={null} delay={100} suppressHydrationWarning>
+        <span>Ready</span>
+      </ClientOnly>,
+    );
+
+    expect(container).toBeEmptyDOMElement();
+
+    act(() => {
+      vi.advanceTimersByTime(100);
+    });
+
+    expect(screen.getByText("Ready")).toBeInTheDocument();
+  });
+
   it("supports function-as-child state", () => {
     vi.useFakeTimers();
 

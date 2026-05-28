@@ -98,7 +98,7 @@ function scheduleWithStrategy(strategy: ClientOnlyStrategy, callback: () => void
 }
 
 function withHydrationWarning(node: React.ReactNode, suppressHydrationWarning: boolean) {
-  if (!suppressHydrationWarning) {
+  if (!suppressHydrationWarning || node === null || node === undefined) {
     return <>{node}</>;
   }
 
