@@ -13,7 +13,7 @@ const EXPORTS: { path: string; note: string }[] = [
 
 const PACKAGE_SUMMARY = [
   { label: "Hooks", value: "14" },
-  { label: "UI primitives", value: "3" },
+  { label: "UI primitives", value: "4" },
   { label: "Entry points", value: "4" },
   { label: "React support", value: "18+" },
 ] as const;
@@ -63,7 +63,7 @@ const RUNTIME_RULES = [
   {
     title: "Use `/client` for hooks and browser APIs",
     description:
-      "Clipboard, storage, intersection observers, effects, and navigator-based helpers belong in a client component boundary.",
+      "ClientOnly, clipboard, storage, intersection observers, effects, and navigator-based helpers belong in a client component boundary.",
   },
   {
     title: "Prefer the narrowest entrypoint",

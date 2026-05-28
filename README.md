@@ -20,6 +20,13 @@ Typed React hooks and utility components with explicit **RSC-safe** and **client
 npm install react-rsc-kit
 ```
 
+## Features
+
+- RSC-safe root and server entrypoints for control-flow primitives.
+- Client entrypoints for hooks and browser-aware utilities.
+- `ClientOnly` for hydration-safe browser-only subtrees, fallbacks, delays, feature checks, and scheduler strategies.
+- TypeScript-first public API with focused React 18+ support.
+
 ## Usage
 
 ### Component (server-safe)
@@ -54,6 +61,26 @@ import { useToggle } from "react-rsc-kit/client";
 export function ToggleButton() {
   const [on, toggle] = useToggle(false);
   return <button onClick={() => toggle()}>{on ? "ON" : "OFF"}</button>;
+}
+```
+
+### ClientOnly (client-only)
+
+```tsx
+"use client";
+
+import { ClientOnly } from "react-rsc-kit/client";
+
+export function ChartBoundary() {
+  return (
+    <ClientOnly
+      fallback={<div aria-busy="true">Loading chart...</div>}
+      require={{ window: true, document: true, matchMedia: true }}
+      strategy="idle"
+    >
+      <Chart />
+    </ClientOnly>
+  );
 }
 ```
 
