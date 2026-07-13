@@ -234,9 +234,11 @@ function getRequestSignature(input: FetchInput, init?: RequestInit): string {
 function mergeSignals(
   controller: AbortController,
   requestSignal?: AbortSignal | null,
-): AbortSignal {
+): [AbortSignal, () => void] {
+  const noopCleanup = () => undefined;
+
   if (!requestSignal) {
-    return controller.signal;
+    return [controller.signal, noopCleanup];
   }
 
   const abortSignalWithAny = AbortSignal as typeof AbortSignal & {
@@ -244,7 +246,7 @@ function mergeSignals(
   };
 
   if (typeof abortSignalWithAny.any === "function") {
-    return abortSignalWithAny.any([controller.signal, requestSignal]);
+    return [abortSignalWithAny.any([controller.signal, requestSignal]), noopCleanup];
   }
 
   const forwardAbort = () => {
@@ -259,7 +261,12 @@ function mergeSignals(
     requestSignal.addEventListener("abort", forwardAbort, { once: true });
   }
 
-  return controller.signal;
+  return [
+    controller.signal,
+    () => {
+      requestSignal.removeEventListener("abort", forwardAbort);
+    },
+  ];
 }
 
 function getCachedValue<T>(cacheKey: string): CacheEntry<T> | null {
@@ -416,10 +423,12 @@ export function useFetch<T = unknown>(
         isFetching: true,
       }));
 
+      const [mergedSignal, cleanupSignal] = mergeSignals(controller, currentInit?.signal);
+
       try {
         const response = await fetch(currentInput, {
           ...currentInit,
-          signal: mergeSignals(controller, currentInit?.signal),
+          signal: mergedSignal,
         });
 
         if (!response.ok) {
@@ -482,6 +491,8 @@ export function useFetch<T = unknown>(
         }));
 
         return null;
+      } finally {
+        cleanupSignal();
       }
     },
     [cacheKey, cacheTime, keepPreviousData],

@@ -68,8 +68,15 @@ function resolveTarget(target: MaybeTargetRef): ListenerTarget | null {
 /**
  * Detect whether the browser supports the options object form of addEventListener
  * (including `passive` / `once` / `signal`) by observing a getter during attach.
+ * Result is memoized after the first client-side probe.
  */
+let memoizedOptionSupported: boolean | undefined;
+
 const isOptionParamSupported = (): boolean => {
+  if (memoizedOptionSupported !== undefined) {
+    return memoizedOptionSupported;
+  }
+
   if (typeof window === "undefined" || typeof window.addEventListener !== "function") {
     return false;
   }
@@ -87,9 +94,11 @@ const isOptionParamSupported = (): boolean => {
     window.addEventListener("test-passive-support", noop, options);
     window.removeEventListener("test-passive-support", noop, options);
   } catch {
+    memoizedOptionSupported = false;
     return false;
   }
 
+  memoizedOptionSupported = optionSupported;
   return optionSupported;
 };
 

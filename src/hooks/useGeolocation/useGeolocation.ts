@@ -85,8 +85,10 @@ export function useGeolocation(
   callback?: (coordinates: GeolocationCoordinates) => void,
   isEnabled = true,
 ): UseGeolocationResult {
-  // Default to a single mount request; opt into watch explicitly to avoid double GPS work.
-  const { enableHighAccuracy, maximumAge, timeout, watch = false, requestOnMount = true } = options;
+  // Default to a single mount request; when watch is enabled, skip getCurrentPosition.
+  const watch = options.watch ?? false;
+  const requestOnMount = options.requestOnMount ?? !watch;
+  const { enableHighAccuracy, maximumAge, timeout } = options;
 
   const supported = isGeolocationSupported();
   const shouldStartPending = isEnabled && supported && (watch || requestOnMount);

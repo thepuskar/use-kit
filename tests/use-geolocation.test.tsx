@@ -180,6 +180,8 @@ describe("useGeolocation", () => {
   it("clears the active watch via cancel", () => {
     const { result } = renderHook(() => useGeolocation({ watch: true }));
 
+    expect(geolocation.watchPosition).toHaveBeenCalledTimes(1);
+    expect(geolocation.getCurrentPosition).not.toHaveBeenCalled();
     expect(result.current.isWatching).toBe(true);
 
     act(() => {
