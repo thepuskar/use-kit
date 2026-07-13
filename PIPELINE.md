@@ -7,7 +7,8 @@ typed reusable React hooks, small utility components, and clear client/server bo
 
 ## Phase 1: Foundation
 
-- [x] Rework `useFetch` into a production-safe primitive with abort support, configurable parsing, cache control, and better typing.
+- [x] Rework `useFetch` into a production-safe primitive with abort support, configurable parsing,
+      cache control (header-aware keys, bounded cache), and better typing.
 - [x] Normalize naming and API consistency across hooks:
       `useAsyncFnc` -> `useAsyncFn` (alias retained), `immidate` -> `immediate`, and align
       `useGetScrollPosition` / `useWindowPosition` SSR safety.
@@ -54,7 +55,7 @@ typed reusable React hooks, small utility components, and clear client/server bo
 
 - [ ] Add `Changesets` for versioning and release notes.
 - [ ] Add `tsd` for public type tests.
-- [ ] Add `publint` and `arethetypeswrong` to package validation.
+- [x] Add `publint` to package validation (`arethetypeswrong` still open).
 - [ ] Add bundle size checks with `size-limit` or equivalent.
 - [ ] Add example apps for Next.js App Router and Vite.
 - [ ] Modernize the docs app dependencies and keep docs aligned with the published API.

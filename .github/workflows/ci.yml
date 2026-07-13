@@ -40,3 +40,6 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Validate package exports
+        run: npx publint
