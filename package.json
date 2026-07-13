@@ -4,6 +4,17 @@
   "description": "React hooks and utility components with RSC-safe server/client entrypoints.",
   "author": "react-rsc-kit contributors",
   "license": "MIT",
+  "keywords": [
+    "react",
+    "hooks",
+    "rsc",
+    "react-server-components",
+    "nextjs",
+    "typescript",
+    "client-only",
+    "ssr",
+    "utilities"
+  ],
   "homepage": "https://react-rsc-kit.puskaradhikari.com.np/",
   "repository": {
     "type": "git",
