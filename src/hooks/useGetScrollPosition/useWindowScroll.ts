@@ -1,31 +1,46 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
-import { useEventListener } from "../index";
+import { useEventListener } from "../useEventListener";
+import { useIsomorphicEffect } from "../useIsomorphicEffect";
 
-/**
- * React hook to track window scroll position.
- * @param {Number} [initialPosition] - The initial scroll position.
- * @returns A number representing the current scroll position of the window.
- */
-
-interface IState {
+interface WindowPosition {
   x: number;
   y: number;
 }
 
-export const useWindowPosition = (): IState => {
-  const [scrollPosition, setScrollPosition] = useState<IState>({
-    x: 0,
-    y: 0,
-  });
+const INITIAL_POSITION: WindowPosition = { x: 0, y: 0 };
 
-  const updatePosition = () => {
-    setScrollPosition({ x: window.pageXOffset, y: window.pageYOffset });
+function readWindowPosition(): WindowPosition {
+  if (typeof window === "undefined") {
+    return INITIAL_POSITION;
+  }
+
+  return {
+    x: window.scrollX,
+    y: window.scrollY,
   };
+}
+
+/**
+ * Track the window scroll position in an SSR-safe way.
+ * Returns `{ x: 0, y: 0 }` until mounted, then syncs and listens for scroll events.
+ */
+export const useWindowPosition = (): WindowPosition => {
+  const [scrollPosition, setScrollPosition] = useState<WindowPosition>(INITIAL_POSITION);
+
+  const updatePosition = useCallback(() => {
+    setScrollPosition(readWindowPosition());
+  }, []);
+
+  useIsomorphicEffect(() => {
+    updatePosition();
+  }, [updatePosition]);
+
   useEventListener({
-    target: window,
+    target: typeof window !== "undefined" ? window : null,
     eventType: "scroll",
     handler: updatePosition,
+    options: { passive: true },
   });
 
   return scrollPosition;
