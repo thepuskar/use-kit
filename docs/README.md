@@ -43,18 +43,20 @@ Those commands set `REACT_RSC_KIT_SOURCE=0` and use the installed package depend
 
 ### Cloudflare Pages (static export)
 
-This app uses Next.js `output: "export"`. Deploy it as a **static** Pages project — do **not** use `@cloudflare/next-on-pages` (that adapter targets SSR/Workers and currently fails with a wrangler / `workers-types` peer conflict under `npx`).
+This app uses Next.js `output: "export"`. Deploy it as a **static** Pages project — do **not** use
+`npx @cloudflare/next-on-pages@1` (deprecated adapter; wrong for static export; pulls Vercel’s builder).
 
-In the Cloudflare Pages project settings:
+In Cloudflare Pages → **Settings → Builds & deployments**:
 
 | Setting                | Value        |
 | ---------------------- | ------------ |
 | Root directory         | `docs`       |
+| Framework preset       | None         |
 | Build command          | `pnpm build` |
 | Build output directory | `out`        |
 | Node.js version        | `20` or `22` |
 
-After changing the build command, retry the deployment.
+After saving those settings, retry the deployment.
 
 ### Adding hook docs
 
