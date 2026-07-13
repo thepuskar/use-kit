@@ -9,7 +9,8 @@ typed reusable React hooks, small utility components, and clear client/server bo
 
 - [x] Rework `useFetch` into a production-safe primitive with abort support, configurable parsing, cache control, and better typing.
 - [x] Normalize naming and API consistency across hooks:
-      `useAsyncFnc` -> `useAsyncFn`, `immidate` -> `immediate`, and align `useGetScrollPosition` naming.
+      `useAsyncFnc` -> `useAsyncFn` (alias retained), `immidate` -> `immediate`, and align
+      `useGetScrollPosition` / `useWindowPosition` SSR safety.
 - [x] Review hooks that mutate inputs and decide whether they belong as React hooks or plain utilities, especially `useArray`.
 - [x] Expand test coverage across the existing public API before adding too many new exports.
 - [x] Tighten docs for client-only vs server-safe imports with examples for Next.js App Router and standard React apps.
@@ -42,7 +43,7 @@ typed reusable React hooks, small utility components, and clear client/server bo
 
 ## Phase 4: Headless Components and Utilities
 
-- [ ] `ClientOnly`
+- [x] `ClientOnly`
 - [ ] `Portal`
 - [ ] `VisuallyHidden`
 - [ ] `composeRefs`
