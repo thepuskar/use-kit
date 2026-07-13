@@ -84,6 +84,34 @@ export function ChartBoundary() {
 }
 ```
 
+### Async data (client-only)
+
+Prefer **`useFetch`** for HTTP reads and **`useMutation`** for writes / side effects. They expose status flags, abort, and typed results.
+
+`useAsync` / `useAsyncFn` remain for lightweight manual runners, but new code should use `useFetch` / `useMutation` when they fit.
+
+```tsx
+"use client";
+
+import { useFetch, useMutation } from "react-rsc-kit/client";
+
+export function Profile({ id }: { id: string }) {
+  const { data, loading, error } = useFetch<{ name: string }>(`/api/users/${id}`);
+  const save = useMutation(async (name: string) => {
+    await fetch(`/api/users/${id}`, { method: "PATCH", body: JSON.stringify({ name }) });
+  });
+
+  if (loading) return <p>Loading…</p>;
+  if (error || !data) return <p>Failed</p>;
+
+  return (
+    <button onClick={() => save.mutate(data.name)} disabled={save.isPending}>
+      {data.name}
+    </button>
+  );
+}
+```
+
 ## RSC Guidance
 
 - `react-rsc-kit` and `react-rsc-kit/server` are **server-safe** entrypoints.
