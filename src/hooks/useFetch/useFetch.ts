@@ -48,6 +48,7 @@ interface CacheEntry<T> {
 }
 
 const responseCache = new Map<string, CacheEntry<unknown>>();
+const MAX_CACHE_ENTRIES = 100;
 
 export class UseFetchError<T = unknown> extends Error {
   readonly status: number;
@@ -140,8 +141,12 @@ function getCacheKey(
 
   const url =
     typeof input === "string" ? input : input instanceof URL ? input.toString() : input.url;
+  const headers = serializeHeaders(
+    init?.headers ?? (input instanceof Request ? input.headers : undefined),
+  );
+  const credentials = init?.credentials ?? (input instanceof Request ? input.credentials : "");
 
-  return `${method}:${url}`;
+  return `${method}:${url}:${headers}:${credentials}`;
 }
 
 function serializeHeaders(headers?: HeadersInit): string {
@@ -227,11 +232,11 @@ function getRequestSignature(input: FetchInput, init?: RequestInit): string {
 }
 
 function mergeSignals(
-  controllerSignal: AbortSignal,
+  controller: AbortController,
   requestSignal?: AbortSignal | null,
 ): AbortSignal {
   if (!requestSignal) {
-    return controllerSignal;
+    return controller.signal;
   }
 
   const abortSignalWithAny = AbortSignal as typeof AbortSignal & {
@@ -239,10 +244,22 @@ function mergeSignals(
   };
 
   if (typeof abortSignalWithAny.any === "function") {
-    return abortSignalWithAny.any([controllerSignal, requestSignal]);
+    return abortSignalWithAny.any([controller.signal, requestSignal]);
   }
 
-  return controllerSignal;
+  const forwardAbort = () => {
+    if (!controller.signal.aborted) {
+      controller.abort();
+    }
+  };
+
+  if (requestSignal.aborted) {
+    forwardAbort();
+  } else {
+    requestSignal.addEventListener("abort", forwardAbort, { once: true });
+  }
+
+  return controller.signal;
 }
 
 function getCachedValue<T>(cacheKey: string): CacheEntry<T> | null {
@@ -261,6 +278,15 @@ function getCachedValue<T>(cacheKey: string): CacheEntry<T> | null {
 }
 
 function setCachedValue<T>(cacheKey: string, data: T, statusCode: number, cacheTime: number) {
+  if (responseCache.has(cacheKey)) {
+    responseCache.delete(cacheKey);
+  } else if (responseCache.size >= MAX_CACHE_ENTRIES) {
+    const oldestKey = responseCache.keys().next().value;
+    if (oldestKey !== undefined) {
+      responseCache.delete(oldestKey);
+    }
+  }
+
   responseCache.set(cacheKey, {
     data,
     statusCode,
@@ -393,7 +419,7 @@ export function useFetch<T = unknown>(
       try {
         const response = await fetch(currentInput, {
           ...currentInit,
-          signal: mergeSignals(controller.signal, currentInit?.signal),
+          signal: mergeSignals(controller, currentInit?.signal),
         });
 
         if (!response.ok) {
@@ -401,6 +427,7 @@ export function useFetch<T = unknown>(
           throw new UseFetchError(response, errorData);
         }
 
+        const responseForState = response.clone();
         const data = await parser(response);
 
         if (requestId !== requestIdRef.current || controller.signal.aborted) {
@@ -416,7 +443,7 @@ export function useFetch<T = unknown>(
         setState({
           data,
           error: null,
-          response,
+          response: responseForState,
           status: "success",
           statusCode: response.status,
           isFetching: false,

@@ -207,4 +207,79 @@ describe("useFetch", () => {
     expect(globalThis.fetch).toHaveBeenCalledTimes(2);
     expect(result.current.data).toEqual({ id: 2 });
   });
+
+  it("keys cache entries by headers and keeps response body readable", async () => {
+    vi.mocked(globalThis.fetch)
+      .mockResolvedValueOnce(jsonResponse({ id: "a" }))
+      .mockResolvedValueOnce(jsonResponse({ id: "b" }));
+
+    const first = renderHook(() =>
+      useFetch<{ id: string }>(
+        "/auth",
+        { headers: { Authorization: "Bearer one" } },
+        { cacheTime: 60_000 },
+      ),
+    );
+
+    await waitFor(() => {
+      expect(first.result.current.data).toEqual({ id: "a" });
+    });
+
+    await expect(first.result.current.response?.json()).resolves.toEqual({ id: "a" });
+
+    first.unmount();
+
+    const second = renderHook(() =>
+      useFetch<{ id: string }>(
+        "/auth",
+        { headers: { Authorization: "Bearer two" } },
+        { cacheTime: 60_000 },
+      ),
+    );
+
+    await waitFor(() => {
+      expect(second.result.current.data).toEqual({ id: "b" });
+    });
+
+    expect(globalThis.fetch).toHaveBeenCalledTimes(2);
+  });
+
+  it("aborts when the caller-provided signal is aborted", async () => {
+    const controller = new AbortController();
+    let seenSignal: AbortSignal | undefined;
+
+    vi.mocked(globalThis.fetch).mockImplementationOnce(async (_input, init) => {
+      seenSignal = init?.signal as AbortSignal | undefined;
+
+      return await new Promise<Response>((_resolve, reject) => {
+        const abortError = () => reject(new DOMException("Aborted", "AbortError"));
+
+        if (seenSignal?.aborted) {
+          abortError();
+          return;
+        }
+
+        seenSignal?.addEventListener("abort", abortError, { once: true });
+      });
+    });
+
+    const { result } = renderHook(() =>
+      useFetch("/abortable", {
+        signal: controller.signal,
+      }),
+    );
+
+    await waitFor(() => {
+      expect(seenSignal).toBeDefined();
+    });
+
+    await act(async () => {
+      controller.abort();
+    });
+
+    await waitFor(() => {
+      expect(seenSignal?.aborted).toBe(true);
+      expect(result.current.isFetching).toBe(false);
+    });
+  });
 });
