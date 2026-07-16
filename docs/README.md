@@ -41,6 +41,23 @@ pnpm build:package
 
 Those commands set `REACT_RSC_KIT_SOURCE=0` and use the installed package dependency.
 
+### Cloudflare Pages (static export)
+
+This app uses Next.js `output: "export"`. Deploy it as a **static** Pages project — do **not** use
+`npx @cloudflare/next-on-pages@1` (deprecated adapter; wrong for static export; pulls Vercel’s builder).
+
+In Cloudflare Pages → **Settings → Builds & deployments**:
+
+| Setting                | Value        |
+| ---------------------- | ------------ |
+| Root directory         | `docs`       |
+| Framework preset       | None         |
+| Build command          | `pnpm build` |
+| Build output directory | `out`        |
+| Node.js version        | `20` or `22` |
+
+After saving those settings, retry the deployment.
+
 ### Adding hook docs
 
 For a new hook, add the MDX page under `docs/content/hooks`, add any live example under

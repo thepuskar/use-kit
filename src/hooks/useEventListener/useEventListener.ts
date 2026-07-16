@@ -1,7 +1,8 @@
 import { RefObject } from "react";
 
 import { offEvent, onEvent } from "../../utils";
-import { useGetLatest, useIsomorphicEffect } from "../index";
+import { useGetLatest } from "../useGetLatest";
+import { useIsomorphicEffect } from "../useIsomorphicEffect";
 
 type ElementEventListener<K extends keyof HTMLElementEventMap> = (
   this: HTMLElement,
@@ -65,32 +66,48 @@ function resolveTarget(target: MaybeTargetRef): ListenerTarget | null {
 }
 
 /**
- * It tries to define a property on an object, and if it fails, it returns false. If it succeeds, it
- * returns true
+ * Detect whether the browser supports the options object form of addEventListener
+ * (including `passive` / `once` / `signal`) by observing a getter during attach.
+ * Result is memoized after the first client-side probe.
  */
-const isOptionParamSupported = (): boolean => {
-  let optionSupported = false;
+let memoizedOptionSupported: boolean | undefined;
 
-  try {
-    Object.defineProperty({}, "passive", {
-      get: () => {
-        optionSupported = true;
-        return null;
-      },
-    });
-  } catch (_error) {
+const isOptionParamSupported = (): boolean => {
+  if (memoizedOptionSupported !== undefined) {
+    return memoizedOptionSupported;
+  }
+
+  if (typeof window === "undefined" || typeof window.addEventListener !== "function") {
     return false;
   }
 
+  let optionSupported = false;
+  try {
+    const options = Object.defineProperty({}, "passive", {
+      get() {
+        optionSupported = true;
+        return false;
+      },
+    });
+
+    const noop = () => undefined;
+    window.addEventListener("test-passive-support", noop, options);
+    window.removeEventListener("test-passive-support", noop, options);
+  } catch {
+    memoizedOptionSupported = false;
+    return false;
+  }
+
+  memoizedOptionSupported = optionSupported;
   return optionSupported;
 };
 
 /**
- * A React hook that handles binding/unbinding event listeners in a smart way.
+ * Bind an event listener to a target (element, document, or window) and clean it up on change/unmount.
  *
  * @param config.target - The target to which the listener will be attached.
  * @param config.eventType - A case-sensitive string representing the event type to listen for.
- * @param config.handler - event listener callback.
+ * @param config.handler - Event listener callback.
  * @param shouldAttach - If set to false, the listener won't be attached. (default = true)
  */
 export const useEventListener: UseEventListener = (
@@ -118,11 +135,14 @@ export const useEventListener: UseEventListener = (
       (cachedHandler.current as (ev: Event) => void)(event);
     };
 
-    let thirdParam = cachedOptions.current;
+    let thirdParam: boolean | AddEventListenerOptions | undefined = cachedOptions.current;
 
-    if (typeof cachedOptions.current !== "boolean") {
-      if (isOptionParamSupported()) thirdParam = cachedOptions.current;
-      else thirdParam = cachedOptions.current?.capture;
+    if (typeof cachedOptions.current !== "boolean" && cachedOptions.current != null) {
+      if (isOptionParamSupported()) {
+        thirdParam = cachedOptions.current;
+      } else {
+        thirdParam = cachedOptions.current.capture;
+      }
     }
 
     if (shouldAttach) {

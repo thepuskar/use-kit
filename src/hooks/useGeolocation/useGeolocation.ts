@@ -85,7 +85,10 @@ export function useGeolocation(
   callback?: (coordinates: GeolocationCoordinates) => void,
   isEnabled = true,
 ): UseGeolocationResult {
-  const { enableHighAccuracy, maximumAge, timeout, watch = true, requestOnMount = true } = options;
+  // Default to a single mount request; when watch is enabled, skip getCurrentPosition.
+  const watch = options.watch ?? false;
+  const requestOnMount = options.requestOnMount ?? !watch;
+  const { enableHighAccuracy, maximumAge, timeout } = options;
 
   const supported = isGeolocationSupported();
   const shouldStartPending = isEnabled && supported && (watch || requestOnMount);

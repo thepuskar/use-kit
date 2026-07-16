@@ -1,4 +1,12 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 
 export type LocalStorageInitialValue<T> = T | (() => T);
 
@@ -15,6 +23,8 @@ interface StoredValueEnvelope {
   kind?: "undefined";
   value?: unknown;
 }
+
+const emptySubscribe = () => () => undefined;
 
 function resolveInitialValue<T>(initialValue: LocalStorageInitialValue<T>): T {
   return typeof initialValue === "function" ? (initialValue as () => T)() : initialValue;
@@ -126,7 +136,12 @@ function removeStoredValue(key: string): void {
 
 /**
  * Persist state in localStorage with JSON-safe serialization and reset helpers.
- * `remove`/`reset` use the latest `initialValue` for a given `key`; `setValue` skips storage when the value is unchanged (`Object.is`).
+ *
+ * Initializes from `initialValue` on the server and during hydration, then syncs from
+ * localStorage after mount to avoid hydration mismatches. `isSupported` is also SSR-safe.
+ *
+ * `remove`/`reset` use the latest `initialValue` for a given `key`; `setValue` skips storage
+ * when the value is unchanged (`Object.is`).
  */
 export function useLocalStorage<T>(
   key: string,
@@ -136,16 +151,37 @@ export function useLocalStorage<T>(
   const initialValueRef = useRef(initialValue);
   initialValueRef.current = initialValue;
 
-  const [value, setStoredValue] = useState<T>(() => readStoredValue(key, initialValue));
+  const [value, setStoredValue] = useState<T>(() => resolveInitialValue(initialValue));
+
+  const isSupported = useSyncExternalStore(
+    emptySubscribe,
+    () => getStorage() !== null,
+    () => false,
+  );
 
   useEffect(() => {
-    if (previousKeyRef.current === key) {
+    if (previousKeyRef.current !== key) {
+      previousKeyRef.current = key;
+      setStoredValue(readStoredValue(key, initialValueRef.current));
       return;
     }
 
-    previousKeyRef.current = key;
-    setStoredValue(readStoredValue(key, initialValue));
-  }, [initialValue, key]);
+    const storage = getStorage();
+    if (storage === null) {
+      return;
+    }
+
+    try {
+      const storedValue = storage.getItem(key);
+      if (storedValue === null) {
+        return;
+      }
+
+      setStoredValue(deserializeStoredValue(storedValue, initialValueRef.current));
+    } catch {
+      // Keep the hydrated initial value when storage reads fail.
+    }
+  }, [key]);
 
   const setValue = useCallback<Dispatch<SetStateAction<T>>>(
     (nextValue) => {
@@ -185,6 +221,6 @@ export function useLocalStorage<T>(
     setValue,
     remove,
     reset,
-    isSupported: getStorage() !== null,
+    isSupported,
   };
 }

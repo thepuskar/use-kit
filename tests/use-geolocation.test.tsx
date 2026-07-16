@@ -110,14 +110,14 @@ describe("useGeolocation", () => {
     });
   });
 
-  it("requests current position and starts watching by default", async () => {
+  it("requests current position on mount without watching by default", async () => {
     const callback = vi.fn();
     const { result } = renderHook(() => useGeolocation({}, callback));
 
     expect(geolocation.getCurrentPosition).toHaveBeenCalledTimes(1);
-    expect(geolocation.watchPosition).toHaveBeenCalledTimes(1);
+    expect(geolocation.watchPosition).not.toHaveBeenCalled();
     expect(result.current.loading).toBe(true);
-    expect(result.current.isWatching).toBe(true);
+    expect(result.current.isWatching).toBe(false);
 
     act(() => {
       geolocation.emitCurrent(
@@ -178,8 +178,10 @@ describe("useGeolocation", () => {
   });
 
   it("clears the active watch via cancel", () => {
-    const { result } = renderHook(() => useGeolocation());
+    const { result } = renderHook(() => useGeolocation({ watch: true }));
 
+    expect(geolocation.watchPosition).toHaveBeenCalledTimes(1);
+    expect(geolocation.getCurrentPosition).not.toHaveBeenCalled();
     expect(result.current.isWatching).toBe(true);
 
     act(() => {
